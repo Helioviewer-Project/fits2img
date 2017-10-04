@@ -1,0 +1,3 @@
+This is the C re-write of fverify, called xfverify during development.
+It was moved into fverify to replace it completely. The original
+(Fortran) fverify was moved at the same time to ofverify.

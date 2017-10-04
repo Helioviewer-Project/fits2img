@@ -1,0 +1,219 @@
+FVERIFY (Jan2003)             ftools.futils            FVERIFY (Jan2003)
+
+
+
+NAME
+    fverify -- Verify that a FITS file conforms to the FITS Standard.
+    
+    
+USAGE
+    fverify infile,   or   fverify @filelist.txt
+    
+    
+DESCRIPTION
+    
+    This task reads a FITS file and verifies that the format conform  to
+    the  specifications  of  the  FITS  Standard  (formally known as the
+    NASA/Science Office of Standards and Technology "Definition  of  the
+    Current  FITS Standard", document number, NOST 100-2.0, available on
+    line  at   http://fits.gsfc.nasa.gov/).   The  following  error   or 
+    warning conditions will be flagged:
+    
+    SEVERE ERROR CONDITIONS
+    
+         - Mandatory keyword not present or out of order
+         - Mandatory keyword has wrong datatype or illegal value
+         - END header keyword is not present
+         - Sum of table column widths is inconsistent with NAXIS1 value
+         - BLANK keyword present in image with floating-point datatype
+         - TNULLn keyword present for floating-point binary table column
+         - Bit column has non-zero fill bits or is not left adjusted(*)
+         - ASCII TABLE column contains illegal value inconsistent with TFORMn(*)
+         - Address to a variable length array not within the data heap(*)
+         - Extraneous bytes in the FITS file following the last HDU
+    
+    ERROR CONDITIONS
+    
+         - Mandatory keyword values not expressed in fixed format
+         - Mandatory keyword duplicated elsewhere in the header
+         - Header contains illegal ASCII character (not ASCII 32 - 126)
+         - Keyword name contains illegal character
+         - Keyword value field has illegal format
+         - Value and comment fields not separated by a slash character
+         - END keyword not filled with blanks in columns 9 - 80
+         - Reserved keyword with wrong datatype or illegal value
+         - EXTEND not present in the primary array if there are extensions
+         - BLOCKED, if present, not among the first 36 keywords
+         - XTENSION keyword in the primary array
+         - Column related keyword (TFIELDS, TTYPEn,TFORMn, etc.) in an image
+         - SIMPLE, EXTEND, or BLOCKED keyword in any extension
+         - BSCALE, BZERO, BUNIT, BLANK, DATAMAX, DATAMIN keywords in a table
+         - Image WCS keywords (CTYPEn, CRPIXn, CRVALn, etc.) in a table
+         - Table WCS keywords (TCTYPn, TCRPXn, TCRVLn, etc.) in an image
+         - TDIMn or THEAP keyword in an ASCII table
+         - TBCOLn keyword in a Binary table
+         - THEAP keyword in a binary table that has PCOUNT = 0
+         - XTENSION, TFORMn, TDISPn or TDIMn value contains leading space(s)
+         - Index of any WCS keyword (CRPIXn, CRVALn, etc.) greater than
+           value of WCSNAXES
+         - Index of any table column descriptor keyword (TTYPEn, TFORMn,
+           etc.) greater than value of TFIELDS
+         - TSCALn or TZEROn present for an ASCII, logical, or Bit column
+         - TDISPn value is inconsistent with the column datatype
+         - Length of a variable length array greater than the maximum
+           length as given by the TFORMn keyword
+         - Logical column contains illegal value not equal to 'T', 'F', or 0(*)
+         - Character string column contains non-ASCII text character(*)
+         - Header fill bytes not all blanks (**)
+         - Data fill bytes not all blanks in ASCII tables or all zeros
+           in any other type of HDU (**)
+         - Gaps between defined ASCII table columns contain characters with
+           ASCII value > 127  (**)
+    
+    WARNING CONDITIONS
+    
+         - SIMPLE = F
+         - Presence of deprecated keywords BLOCKED or EPOCH
+         - 2 HDUs have identical EXTNAME, EXTVER, and EXTLEVEL values
+         - EXTNAME, EXTVER, or EXTLEVEL keyword in primary array
+         - BSCALE or TSCALn value = 0.
+         - BLANK OR TNULLn value exceeds the legal range
+         - TFORMn has 'rAw' format and r is not a multiple of w
+         - DATE = 'dd/mm/yy' and yy is less than 10 (Y2K problem??)
+         - Index of any WCS keyword (CRPIXn, CRVALn, etc.) greater than
+           value of NAXIS, if the WCSAXES keyword is not present
+         - Duplicated keyword (except COMMENT, HISTORY, blank, etc.)
+         - Column name (TTYPEn) does not exist or contains characters
+           other than letter, digit and underscore
+         - Calculated checksum inconsistent with CHECKSUM or DATASUM
+           keyword(***)
+         - Column names are not unique within the first 16 chars (****)
+         - Column name does not begin with a letter character (****)
+         - The HEASARC long string keyword convention is used without the
+           recommended LONGSTRN keyword (****)
+    
+            (*) only checked when "testdata" is 'Yes'
+           (**) only checked when "testdata" and "testfill" are 'Yes'
+          (***) only checked when "testdata" and "tchksum" are 'Yes'
+         (****) only checked when the "heasarc" is 'Yes'
+    
+    Every  HDU in the FITS file is checked in turn until the end of file
+    is detected. A summary table is printed to  the  terminal   (or   to
+    an  optional  output  file)  showing the structure of the FITS file.
+    A  listing  of  all the header keywords may also be produced. At the
+    end  of  the  verification, a summary of the  warnings and errors in
+    each HDU are printed.
+    
+    The amount of information that is displayed can be  controlled  with
+    the prhead, prstat and errreport parameters.
+    
+    
+    
+PARAMETERS
+    
+    infile [file name]
+        Name  of  the FITS file to be verified. If this starts with  "@"
+        then it  is assumed  to be an ascii file containing  a  list  of
+        files (one filename per line) to be verified.
+    
+    (outfile = STDOUT) [file name]
+        Name  of  output  verification report file.  If outfile is blank
+        or  =  'STDOUT'  then  the  results  will  be  written   to  the 
+        standard   output  device  (usually  the user's terminal) rather
+        than to a file.  If preceded by a !, an  existing  file  of  the
+        same name will be overwritten.
+    
+    (prhead = no) [boolean]
+        Should  a  listing  of  the  header  keywords be included in the
+        verification report?
+    
+    (prstat = yes) [boolean]
+        Should a detailed verification report  be  produced?   If  'NO',
+        then  only  a 1-line pass/fail message will be printed.  In this
+        case, the OUTFILE and PRHEAD parameters are ignored.
+    
+    (errreport = "w") [string]
+        The first letter of this parameter controls the level  of  error
+        reporting, as follows:
+           's' for "severe" - only report the most severe errors
+           'e' for "errors" - report all errors
+           'w' for "warnings" - report warnings as well as all errors
+        Any other letter will be treated the same as the default 'w'.
+    
+    (testdata = yes) [boolean]
+        Should  every  data  value  be  read and verified?  Turning this
+        option off greatly increases the execution speed of the task  at
+        the  expense  of  doing a less rigorous verification of the FITS
+        file.
+    
+    (tchksum = yes) [boolean]
+        Should the checksum of the  header  and  data  be  tested?   The
+        tests  are  performed  only if the CHECKSUM and DATASUM keywords
+        exist.
+    
+    (testfill = yes) [boolean]
+        Should the bytes in the fill area be verified?  The  fill  areas
+        are  defined  as  a)  gaps between ASCII table columns, b) bytes
+        following the END card within the same FITS 2880-byte block  and
+        c)  bytes  following  the  end  of the data within the same FITS
+        2880-byte block.  The values of these fill bytes should have  no
+        effect  on  the  data  in  the FITS file, nevertheless, the FITS
+        standard requires that they have a zero, or in  some  cases,  an
+        ASCII  blank value.  Invalid fill values may be an indication of
+        more serious problems in the file.
+    
+    (heasarc = yes) [boolean] 
+        Should  the  HEASARC  conventions  be  verified?   The   HEASARC 
+        conventions  go  beyond  the offical NOST FITS Standard.  At the
+        present time  the only significant HEASARC conventions are  that
+        column  names  must begin with a letter and be unique within the
+        first 16 characters.
+    
+    (numerrs = 0 ) [int] 
+        Number of the errors found in the verification of the FITS file.
+        For  multiple  input  files,  this  is the accumulated number of
+        errors over all the files.
+    
+    (numwrns = 0 ) [int] 
+        Number of the warnings found in the  verification  of  the  FITS
+        file.   For multiple input files, this is the accumulated number
+        of warnings over all the files.
+    
+    (clobber = no) [boolean]
+        If true, a file of the same name as the  requested  output  file
+        will be overwritten.
+        
+        
+EXAMPLES
+    1.  Verify the contents of the FITS file 'test.fits'.
+    
+            ft> fverify test.fits  
+    
+    2.   Verify  the  FITS  file  'test.fits'  and  print all the header
+    keywords:
+            ft> fverify test.fits prhead=yes 
+    3.  Check the FITS   file  'test.fits'  for  only  the  most  severe
+    errors,     ignoring less significant errors and warnings:
+            ft> ftverify test.fits errreport=s
+    4.   Verify a list of FITS files.  In this case 'filelist.txt' is an
+    ASCII text file containing the list of files  to  be  verified,  one
+    per  line.   Since  prstat=no, only a single line of output  will be
+    written per file, stating whether the  file  passed  or  failed  the
+    verification.
+            ft> ftverify @filelist.txt prstat=no
+    
+    
+BUGS
+    
+    If  there  are errors in a Data Unit, the fverify will quit the data
+    test in the first occurrence of errors.  So the error "When  reading
+    data..."  can  only be detected once.  It should not be assumed that
+    there is only one error in data.
+    
+    
+    
+SEE ALSO
+    ftverify, ftlist, ofverify
+    
+    "Definition   of    Current    FITS    Standard",    NOST    100-2.0  
+    (http://fits.gsfc.nasa.gov/).

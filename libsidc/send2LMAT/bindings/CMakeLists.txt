@@ -1,0 +1,2 @@
+
+set(CMAKE_C_FLAGS ${BIND_C_FLAGS})

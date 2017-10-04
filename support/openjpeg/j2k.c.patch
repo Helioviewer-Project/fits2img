@@ -1,0 +1,70 @@
+--- j2k_orig.c	2013-07-04 17:53:58.000000000 +0200
++++ j2k.c	2013-07-04 17:52:45.000000000 +0200
+@@ -3800,6 +3800,37 @@
+ 	tcd->tp_num = j2k->tp_num ;
+ 	tcd->cur_tp_num = j2k->cur_tp_num;
+ 	
++	/* INDEX >> - PLT */
++#define ROUND_UPTO(a, quanta)   (((a) + ((quanta) - 1)) & ~((quanta) - 1))
++	int marker_plt_start;
++	cstr_info = j2k->cstr_info;
++	if (cstr_info) {
++		int precno = 0;
++		for (int compno = 0; compno < cstr_info->numcomps; compno++)
++			for (int resno = 0; resno <= cstr_info->numdecompos[compno]; resno++) {
++				int pw = 1 << cp->tcps->tccps->prcw[resno];
++				int ph = 1 << cp->tcps->tccps->prch[resno];
++
++				int ww = (cstr_info->image_w >> resno);
++				ww = ROUND_UPTO(ww, pw) / pw;
++
++				int hh = (cstr_info->image_h >> resno);
++				hh = ROUND_UPTO(hh, ph) / ph;
++
++				precno += (ww < 1 ? 1 : ww) * (hh < 1 ? 1 : hh);
++			}
++		int plt_num = cstr_info->numlayers * precno;
++
++		cio_write(cio, J2K_MS_PLT, 2);
++		cio_write(cio, plt_num * 3 + 2 + 1, 2);
++		cio_write(cio, 0, 1);
++
++		marker_plt_start = cio_tell(cio);
++		for (int i = 0; i < plt_num * 3; ++i)
++            cio_write(cio, 0, 1);
++	}
++	/* PLT - << INDEX */
++	
+ 	cio_write(cio, J2K_MS_SOD, 2);
+ 
+ 	if( j2k->cstr_info && j2k->cur_tp_num==0){
+@@ -3846,6 +3877,29 @@
+ 	
+ 	l = tcd_encode_tile(tcd, j2k->curtileno, cio_getbp(cio), cio_numbytesleft(cio) - 2, cstr_info);
+ 	
++	/* INDEX >> - PLT */
++	cstr_info = j2k->cstr_info;
++	if (cstr_info) {
++		int marker_end = cio_tell(cio);
++		cio_seek(cio, marker_plt_start);
++		for (int i = 0; i < cstr_info->packno; ++i) {
++			int plen = cstr_info->tile[j2k->curtileno].packet[i].end_pos - cstr_info->tile[j2k->curtileno].packet[i].start_pos + 1;
++
++			int b0 = plen & 0x7F;
++			int b1 = (plen >> 7) & 0x7F;
++			int b2 = (plen >> 14) & 0x7F;
++
++			if (b2) {
++				cio_write(cio, b2 | 0x80, 1);
++				cio_write(cio, b1 | 0x80, 1);
++			} else if (b1)
++				cio_write(cio, b1 | 0x80, 1);
++			cio_write(cio, b0, 1);
++		}
++		cio_seek(cio, marker_end);
++	}
++	/* PLT - << INDEX */
++	
+ 	/* Writing Psot in SOT marker */
+ 	totlen = cio_tell(cio) + l - j2k->sot_start;
+ 	cio_seek(cio, j2k->sot_start + 6);

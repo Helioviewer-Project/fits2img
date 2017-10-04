@@ -1,0 +1,5 @@
+TARGET=libopenjpeg-`date "+%Y-%m-%d"`
+svn export http://openjpeg.googlecode.com/svn/branches/openjpeg-1.5/libopenjpeg $TARGET
+
+svn add $TARGET
+svn propset -R svn:eol-style native $TARGET

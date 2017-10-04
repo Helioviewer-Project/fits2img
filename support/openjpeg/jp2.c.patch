@@ -1,0 +1,29 @@
+--- jp2.c (4497)
++++ jp2.c (4499)
+@@ -100,7 +100,8 @@
+ 									opj_event_mgr_t * p_manager
+ 									);
+ 
+-static void jp2_write_colr(opj_jp2_t *jp2, opj_cio_t *cio);
++extern void jp2_write_colr(opj_jp2_t *jp2, opj_cio_t *cio);
++extern void jp2_write_xml(opj_jp2_t *jp2, opj_cio_t *cio);
+ /**
+ Write the FTYP box - File type box
+ @param jp2 JP2 handle
+@@ -714,7 +715,7 @@
+ 	return OPJ_TRUE;
+ }
+ 
+-static void jp2_write_colr(opj_jp2_t *jp2, opj_cio_t *cio) {
++static void jp2_write_colr_orig(opj_jp2_t *jp2, opj_cio_t *cio) {
+ 	opj_jp2_box_t box;
+ 
+ 	box.init_pos = cio_tell(cio);
+@@ -1926,6 +1927,7 @@
+ 	jp2_write_ftyp(jp2, cio);
+ 	/* JP2 Header box */
+ 	jp2_write_jp2h(jp2, cio);
++	jp2_write_xml(jp2, cio);
+ 
+ 	if( jp2->jpip_on){
+ 	  pos_iptr = cio_tell( cio);
