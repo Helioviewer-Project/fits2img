@@ -25,5 +25,4 @@ sidc_install_lib(swap)
 
 install(DIRECTORY data DESTINATION lib PATTERN ".svn" EXCLUDE)
 
-add_subdirectory(idl)
 add_subdirectory(util)
