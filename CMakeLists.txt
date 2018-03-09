@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.8.4)
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -pedantic -Wall -W -pipe -std=gnu99 -O3 -mssse3")
 
-
 set(SIDC_PROJECT_NAME   ${CMAKE_PROJECT_NAME})
 set(SIDC_INSTALL_LIB    ${CMAKE_INSTALL_PREFIX}/lib)
 set(SIDC_INSTALL_DATA   ${CMAKE_INSTALL_PREFIX}/data)

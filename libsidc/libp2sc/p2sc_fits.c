@@ -14,7 +14,6 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include <glib.h>
 #include <fitsio.h>
 
-#include "p2sc_assert.h"
 #include "p2sc_file.h"
 #include "p2sc_fits.h"
 #include "p2sc_msg.h"
@@ -545,7 +544,10 @@ char *sfts_read_keystring0(sfts_t * f, const char *key)
 char *sfts_read_keystring(sfts_t * f, const char *key)
 {
     char *ret = sfts_read_keystring0(f, key);
-    ASSERT(ret, "%s is NULL", key);
+    if (!ret) {
+        char *_base = f->name ? g_path_get_basename(f->name) : g_strdup("memory");
+        P2SC_Msg(LVL_FATAL_FITS, "FITS: %s is NULL: %s", key, _base);
+    }
     return ret;
 }
 
