@@ -1,6 +1,6 @@
---- putkey.c (3939)
-+++ putkey.c (working copy)
-@@ -2294,13 +2294,13 @@
+--- cfitsio/putkey.c	2018-05-09 21:16:01.000000000 +0200
++++ cfitsio3450/putkey.c	2018-05-17 10:37:19.000000000 +0200
+@@ -2413,12 +2413,12 @@
          }
  
        /* write standard block of self-documentating comments */
@@ -10,9 +10,8 @@
        status);
        ffprec(fptr,
        "COMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H",
-       status);
--    }
-+*/  }
+-      status);
++      status); */
+     }
  
      else  /* an IMAGE extension */
- 

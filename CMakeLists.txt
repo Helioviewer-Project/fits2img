@@ -43,7 +43,7 @@ link_directories(${PKG_LIBRARY_DIRS})
 set(SUPPORT  ${CMAKE_CURRENT_SOURCE_DIR}/support)
 
 set(CDF      ${SUPPORT}/cdf/cdf35)
-set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio3380)
+set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio3450)
 set(GENX     ${SUPPORT}/genx)
 set(JPEG     ${SUPPORT}/jpeg/jpeg-8d)
 set(LIBZDB   ${SUPPORT}/libzdb)
