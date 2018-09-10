@@ -90,6 +90,14 @@
 *                            Updates to WCS keyword checks, plus other V3.0 issues.
 *                            Also check for non-zero heap if binary table has no
 *                            variable length array columns.
+*      2013-08-12  W Pence   v4.17
+*                            Ignore blank keywords preceding the END keyword.
+*                            Support (partially at least) files with PCOUNT > 2GB.
+*      2016-04-13  B Irby    v4.18
+*                            Change verify_fits from void to int; check return
+*                            status for abort conditions and set nerrs (as it
+*                            is not set by close_report) in this case for the
+*                            one-line file summary.
 * Reference:
 *     * fverify.f, original fortran version, William Pence, 1994.
 *     * Defininition of the Flexible Image Transport System(FITS), 
@@ -99,7 +107,7 @@
 *******************************************************************************/
 
 /*================= Function prototypes =====================*/
-// int init_fverify(char *infile, char *outfile, int *status);
+int init_fverify(char *infile, char *outfile, int *status);
 
 /*================= Global variables ========================*/
 int err_report= 0;               /* Amounts of errors and warnings to be
@@ -118,7 +126,7 @@ int testfill = 0;		/* test the bytes in the non-data fill areas,
 				   of the header and data */
 int heasarc_conv = 1;		/* Heasarc convention */
 int totalhdu = 0;		/* total number of hdu */
-static char task[] = "FVERIFY V4.16";
+static char task[] = "FVERIFY V4.18";
 
 long totalerr, totalwrn;
 
@@ -127,7 +135,7 @@ void fverify()
     char infile[FLEN_FILENAME] = "";  	/* Input Fits file */
     char outfile[FLEN_FILENAME] = "";  	/* output ASCII file */
     char *p;
-    int status = 0, filestatus, ferror, fwarn;
+    int status = 0, vfstatus = 0, filestatus, ferror, fwarn;
     int i, nerrs; 
     FILE* list = NULL;
     FILE *out;				/* output ASCII file pointer */
@@ -139,13 +147,13 @@ void fverify()
     c_ptaskn(task);
 
     /* get the input parameters from parameter file*/
-/*    if(init_fverify(infile, outfile, &status) ) {
+    if(init_fverify(infile, outfile, &status) ) {
         strcpy(errmes,"Errors in init_fverfify.");
         c_fcerr(errmes);
 	leave_early(NULL);
 	return;
     } 
-*/
+
     /* if infile name has @ in front of it, then it is a file of a list */ 
     p = infile; 
     if (*p == '@') { 
@@ -216,9 +224,16 @@ void fverify()
 
     /* process each file */ 
     if (list == NULL) { 
-        verify_fits(infile,out);  
+        vfstatus = verify_fits(infile,out);  
+
         if (out == NULL) {  /* print one-line file summary */
-           nerrs = get_total_err();
+
+           /* verify_fits returns a non-zero status for catastrophic
+            * file I/O problems (an abort), and in this case total_err
+            * is not updated via close_report(), so we need to set
+            * nerrs accordingly for the one-line file summary. */
+           if (vfstatus) nerrs = 1; else nerrs = get_total_err();
+
            filestatus = (nerrs>0) ? 1 : 0;
            printf("verification %s: %-20s  nerrors=%d\n", status_str[filestatus],
                    infile, nerrs); 
@@ -226,10 +241,16 @@ void fverify()
     } 
     else { 
        while((p = fgets(infile, FLEN_FILENAME, list))!= NULL) {      
-           verify_fits(infile,out);   
+           vfstatus = verify_fits(infile,out);   
 
            if (out == NULL) { /* print one-line file summary */
-              nerrs = get_total_err();
+
+              /* verify_fits returns a non-zero status for catastrophic
+               * file I/O problems (an abort), and in this case total_err
+               * is not updated via close_report(), so we need to set
+               * nerrs accordingly for the one-line file summary. */
+              if (vfstatus) nerrs = 1; else nerrs = get_total_err();
+
               filestatus = (nerrs>0) ? 1 : 0;
               printf("verification %s: %-20s  nerrors=%d\n",
                  status_str[filestatus], infile, nerrs); 
@@ -245,7 +266,32 @@ void fverify()
 
     return;
 }    
-
-void update_parfile(int numerr, int numwrn)
+        
+/******************************************************************************
+* Function
+*      init_fverify
+*
+* DESCRIPTION:
+*      Get parameters from the par file.
+*
+*******************************************************************************/
+int init_fverify(char *infile, 		/* input filename+filter */
+		char *outfile, 		/* output filename */
+		int *status
+		)
+{
+    return 0;
+}
+    
+/******************************************************************************
+* Function
+*      update_parfile
+*
+*
+* DESCRIPTION:
+*      Update the numerrs and numwrns parameters in the parfile.
+*
+*******************************************************************************/
+    void update_parfile(int nerr, int nwrn)
 {
 }

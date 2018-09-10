@@ -62,6 +62,8 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     int ndesc = 0;		 
     int *desclist;	/* the list of column which is the descriptor of
 			   the variable length array. */
+    int *isVarQFormat;  /* Format type for each of the ndesc variable-length 
+                             columns: 0 = type 'P', 1 = type 'Q' */
 
     long rows_per_loop = 0, offset;
     UserIter usrdata;
@@ -99,6 +101,9 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     int find_badchar = 0; 
     int find_badlog = 0; 
     LONGLONG naxis2;
+    
+    int largeVarLengthWarned = 0;
+    int largeVarOffsetWarned = 0;
 
     if(testcsum)
         test_checksum(infits,out); 
@@ -131,7 +136,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     floatlist =(int*)malloc(ncols * sizeof(int)); 
     cmplist =(int*)malloc(ncols * sizeof(int)); 
     txtlist =(int*)malloc(ncols * sizeof(int)); 
-    desclist =(int*)malloc(ncols * sizeof(int)); 
+    desclist =(int*)malloc(ncols * sizeof(int));
 
     if(hduptr->hdutype == ASCII_TBL) {
 
@@ -264,6 +269,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
       
     if(niter>0) free(iter_col);
     free(numlist);
+    free(floatlist);
     free(cmplist);
     free(txtlist);
     if(nnum > 0) free(usrdata.mask);
@@ -285,6 +291,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     maxlen         = (long *) calloc(ndesc , sizeof(long));
     dflag          = (int *) calloc(ndesc , sizeof(int));
     perbyte        = (int *) calloc(ndesc , sizeof(int));
+    isVarQFormat   = (int *) calloc(ndesc , sizeof(int));
     fits_get_num_rows(infits,&totalrows,&status);
     status = 0;
 
@@ -294,7 +301,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
 
     for (i = 0; i < ndesc; i++) { 
         icol = desclist[i]; 
-        parse_vtform(infits,out,hduptr,icol,&datatype,&maxlen[i]);
+        parse_vtform(infits,out,hduptr,icol,&datatype,&maxlen[i],&isVarQFormat[i]);
 	dflag[i] = 4; 
         switch (datatype) { 
           case -TBIT:
@@ -357,7 +364,27 @@ void test_data(fitsfile *infits, 	/* input fits file   */
                 
                 sprintf(errtmp,"Row #%ld Col.#%d: ",jl,icol);
 	        wrtferr(out,errtmp,&status,2);
-            } 
+            }
+            if (!isVarQFormat[i])
+            { 
+               if (!largeVarLengthWarned && length > 2147483647)
+               {
+                  strcpy(errmes,"Var row length exceeds maximum 32-bit signed int.  ");
+                  sprintf(errtmp,"First detected for Row #%ld Column #%d",jl,icol);
+                  strcat(errmes,errtmp);
+                  wrtwrn(out,errmes,0);
+                  largeVarLengthWarned = 1;
+               }
+               if (!largeVarOffsetWarned && toffset > 2147483647)
+               {
+                  strcpy(errmes,"Heap offset for var length row exceeds maximum 32-bit signed int.  ");
+                  sprintf(errtmp,"First detected for Row #%ld Column #%d",jl,icol);
+                  strcat(errmes,errtmp);
+                  wrtwrn(out,errmes,0);
+                  largeVarOffsetWarned = 1;
+               }
+            }
+            
 	    if(length > maxlen[i] && maxlen[i] > -1 ) { 
 	        sprintf(errmes, "Descriptor of Column #%d at Row %ld: ", 
                      icol, jl);
@@ -473,6 +500,7 @@ void test_data(fitsfile *infits, 	/* input fits file   */
     free(maxlen);
     free(dflag);
     free(perbyte);
+    free(isVarQFormat);
 
 data_end: 
     free(desclist);

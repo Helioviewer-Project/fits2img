@@ -36,7 +36,7 @@ static int curtype;			/* current HDU type  */
 *
 *******************************************************************************/
 /* routine to verify individual fitsfile */
-void verify_fits(char *infile, FILE *out)
+int verify_fits(char *infile, FILE *out)
 {
     char rootnam[FLEN_FILENAME] = "";   /* Input Fits file root name */
     fitsfile *infits;                   /* input fits file pointer */
@@ -56,7 +56,7 @@ void verify_fits(char *infile, FILE *out)
     pfile = p;
     p += (len -1);
     for (i = len - 1; i >= 0 && isspace((int)*p); i--) {*p = '\0'; p--;}
-    if(!strlen(pfile)) return;
+    if(!strlen(pfile)) return status;
 
 #ifndef WEBTOOL
     wrtout(out," ");
@@ -70,20 +70,23 @@ void verify_fits(char *infile, FILE *out)
     if(ffrtnm(pfile, rootnam, &status)) {
         wrtserr(out,"",&status,2);
         leave_early(out);
-        return;
+        status = 1;
+        return status;
     }
 
     if(fits_open_file(&infits, rootnam, READONLY, &status)) {
         wrtserr(out,"",&status,2);
         leave_early(out);
-        return;
+        status = 1;
+        return status;
     }
 
     /* get the total hdus */
     if(fits_get_num_hdus(infits, &totalhdu, &status)) {
         wrtserr(out,"",&status,2);
         leave_early(out);
-        return;
+        status = 1;
+        return status;
     }
 
     /* initialize the report */
@@ -135,6 +138,8 @@ void verify_fits(char *infile, FILE *out)
 
     /* close the input fitsfile  */
     fits_close_file(infits, &status);
+
+    return status;
 }
 
 void leave_early (FILE* out)
@@ -462,7 +467,7 @@ void test_hdu(fitsfile *infits, 	/* input fits file   */
     int hdunum;
     char *p, *p2, *pname = 0;
     int i,j,k,m,n, wcsaxes = 0;
-/*    int taxes; */
+    int taxes;
     int wcsaxesExists = 0, wcsaxesvalue = 0, wcsaxespos = 0, wcskeypos = 1000000000;
     FitsKey *pkey;
     int crota2_exists = 0, matrix_exists[2] = {0,0};  
@@ -579,16 +584,8 @@ void test_hdu(fitsfile *infits, 	/* input fits file   */
     /* keywords for each of the alternate WCS systems (A - Z) against the */
     /* corresponding WCSAXESa keyword.  */
 
-/*  Removed this check on 6/28/2012.  See discussion on FITSBITS related
-    to this requirement.  The sense of this dicussion is that it is not required
-    that every WCSAXESa keyword appear before ANY OTHER WCS keyword.  In principle,
-    each WCSAXESa keyword should appear before any other WCS keyword within the SAME
-    alternate system, but this does not really provide any benefit to software that
-    needs to parse the WCS keywords.  Since it would be somewhat tedious to make
-    this test, we will not not worry about the placement of the WCSAXESa keywords.
-*/
 
-/*
+
     key_match(tmpkwds,numusrkey,&ptemp,0,&k,&n);  
 
     for (j = k; j< n + k ; j++){
@@ -597,15 +594,22 @@ void test_hdu(fitsfile *infits, 	/* input fits file   */
 	    taxes = (int) strtol(pkey->kvalue,NULL,10);
             if (taxes > wcsaxes) wcsaxes = taxes;
             wcsaxesExists = 1;
-*/
+
 	    /* store highest index of any wcsaxes keyword */
 	    /*  (they must appear before other WCS keywords) */
 
-/*
-	    if (pkey->kindex > wcsaxespos) wcsaxespos = pkey->kindex;
+
+/*  Removed this check on 6/28/2012.  See discussion on FITSBITS related
+    to this requirement.  The sense of this dicussion is that it is not required
+    that every WCSAXESa keyword appear before ANY OTHER WCS keyword.  In principle,
+    each WCSAXESa keyword should appear before any other WCS keyword within the SAME
+    alternate system, but this does not really provide any benefit to software that
+    needs to parse the WCS keywords.  Since it would be somewhat tedious to make
+    this test, we will not not worry about the placement of the WCSAXESa keywords.
+*/
+/*	    if (pkey->kindex > wcsaxespos) wcsaxespos = pkey->kindex;  */
 	}
     }
-*/
 
     /* test datatype of reserved indexed floating point WCS keywords */
     for (i = 0; i < ncfltkeys; i++) {
@@ -1827,6 +1831,7 @@ void test_tbl(fitsfile *infits, 	/* input fits file   */
                     strchr(tform[i],'M') == NULL &&   
                     strchr(tform[i],'I') == NULL &&  
                     strchr(tform[i],'J') == NULL &&  
+                    strchr(tform[i],'K') == NULL &&  
                     strchr(tform[i],'B') == NULL &&  
                     strchr(tform[i],'X') == NULL  ){ 
                      sprintf(errmes,
@@ -1871,6 +1876,7 @@ void test_tbl(fitsfile *infits, 	/* input fits file   */
                     strchr(tform[i],'M') == NULL &&   
                     strchr(tform[i],'I') == NULL &&  
                     strchr(tform[i],'J') == NULL &&  
+                    strchr(tform[i],'K') == NULL &&  
                     strchr(tform[i],'B') == NULL &&  
                     strchr(tform[i],'X') == NULL  ){ 
                      sprintf(errmes,
@@ -2765,7 +2771,8 @@ void   parse_vtform(fitsfile *infits,
                 FitsHdu *hduptr, 
 		int colnum,		/* column number */
 		int* datacode,		/* data code */
-		long* maxlen		/* maximum length of the vector */
+		long* maxlen,		/* maximum length of the vector */
+                int* isQFormat          /* true if var col is 'Q' format */
                ) 
 { 
     int i = 0; 
@@ -2790,7 +2797,8 @@ void   parse_vtform(fitsfile *infits,
 	  "TFORM%d is not for the variable length array: %s.", 
         colnum, tform[colnum-1]); 
         wrterr(out,errmes,1);
-    } 
+    }
+    *isQFormat = (*p == 'Q') ? 1 : 0;
 
     fits_get_coltype(infits,colnum, datacode, NULL, NULL, &status); 
     status = 0;

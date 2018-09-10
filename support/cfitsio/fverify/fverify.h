@@ -12,7 +12,7 @@
 #define MAXWRNS  200		
 
 static char errmes[256];
-static char comm[256];
+static char comm[FLEN_FILENAME+6];
 extern int prhead;
 extern int testdata;
 extern int testfill;
@@ -120,7 +120,7 @@ typedef struct {
      int index;
 }ColName;
 
-void verify_fits(char *infile, FILE *out);
+int verify_fits(char *infile, FILE *out);
 void leave_early (FILE* out);
 void close_err(FILE* out);
 void init_hdu(fitsfile *infits, FILE *out, int hdunum, int hdutype,
@@ -138,7 +138,7 @@ void key_match(char **strs, int nstr, char **pattern, int exact,
 	       int *ikey, int *mkey);
 void test_colnam(FILE *out, FitsHdu *hduptr);
 void parse_vtform(fitsfile *infits, FILE *out, FitsHdu *hduptr, 
-	     int colnum, int *datacode, long *maxlen);
+	     int colnum, int *datacode, long *maxlen, int *isQFormat);
 void print_title(FILE* out, int hdunum, int hdutype);
 void print_header(FILE* out);
 void print_summary(fitsfile *infits, FILE *out, FitsHdu *hduptr);
