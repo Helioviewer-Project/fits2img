@@ -6,6 +6,8 @@ include_directories(${SWAP_PKG_INCLUDE_DIRS})
 link_directories(${SWAP_PKG_LIBRARY_DIRS})
 
 add_library(swap SHARED
+    fitsproc.c
+    opj_index.c
     swap_color.c
     swap_coord.c
     swap_draw.c
@@ -16,8 +18,7 @@ add_library(swap SHARED
     swap_qlook.c
     swap_vliet.c
     swap_vliet8.c
-    swap_warp.c
-    opj_index.c)
+    swap_warp.c)
 
 set_target_properties(swap PROPERTIES COMPILE_FLAGS "-ffast-math -Wno-deprecated-declarations" COMPILE_DEFINITIONS SIDC_INSTALL_LIB="${SIDC_INSTALL_LIB}")
 target_link_libraries(swap p2sc ${SWAP_PKG_LIBRARIES} p2scjpeg openjpeg m)

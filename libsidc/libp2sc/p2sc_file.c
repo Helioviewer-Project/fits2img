@@ -308,7 +308,7 @@ void p2sc_strip_strings(char ***sss)
     *sss = (char **) g_array_free(a, FALSE);
 }
 
-int p2sc_create_file(int nuke, const char *name, void *buf, size_t nbyte)
+int p2sc_create_file(int nuke, const char *name, const void *buf, size_t nbyte)
 {
     int fd, flags = O_CREAT | O_TRUNC | O_WRONLY;
 

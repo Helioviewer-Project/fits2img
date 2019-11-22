@@ -1,8 +1,7 @@
 
 /* Author: Bogdan Nicula, ROB */
 
-static const char _versionid_[] __attribute__ ((unused)) =
-    "$Id: fits2pgm.c 5110 2014-06-19 12:37:15Z bogdan $";
+static const char _versionid_[] __attribute__ ((unused)) = "$Id: fits2pgm.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <glib.h>
 

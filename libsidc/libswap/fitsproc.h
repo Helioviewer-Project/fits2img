@@ -26,8 +26,7 @@ extern "C" {
         float *im;
         size_t w;
         size_t h;
-        int swap;
-
+ 
         char *xml;
     } procfits_t;
 

@@ -41,7 +41,7 @@ extern "C" {
 
     void p2sc_strip_strings(char ***);
 
-    int p2sc_create_file(int, const char *, void *, size_t);
+    int p2sc_create_file(int, const char *, const void *, size_t);
 
     void p2sc_copy_file(const char *, const char *);
 

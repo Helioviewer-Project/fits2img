@@ -18,7 +18,10 @@ extern "C" {
 #define OBET_MAX   (((guint64) 1 << 46) - 1)
 #define SIZEOF_CUC 7
 
-    guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC]);
+    guint64 p2sc_cuc2ticks_decoded(int passno, guint32 s, guint32 f);
+
+    guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC], int passno);
+    guint64 p2sc_gp1obt2ticks(double gp1obt, int passno);
     int p2sc_ascii2cuc(guint8 t[SIZEOF_CUC], const char *in);
 
     int p2sc_string2date(const char *, double d[6]);

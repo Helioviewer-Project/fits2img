@@ -30,12 +30,8 @@ procfits_t *fitsproc(const char *name, int noverify)
     p->telescop = sfts_read_keystring(f, "TELESCOP");
     p->instrume = sfts_read_keystring(f, "INSTRUME");
 
-    const char swap[] = "SWAP";
-    if (!strncmp(p->instrume, swap, sizeof swap - 1))
-        p->swap = 1;
-
     p->detector = sfts_read_keystring0(f, "DETECTOR");
-    if (!p->detector || p->swap == 1) {
+    if (!p->detector) {
         g_free(p->detector);
         p->detector = g_strdup(p->instrume);
     }

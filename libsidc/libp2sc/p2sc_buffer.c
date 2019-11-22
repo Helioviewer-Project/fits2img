@@ -99,6 +99,11 @@ size_t p2sc_buffer_size(p2sc_buffer_t * buf)
     return buf->len;
 }
 
+size_t p2sc_buffer_position(p2sc_buffer_t * buf)
+{
+    return buf->pos;
+}
+
 size_t p2sc_buffer_remaining(p2sc_buffer_t * buf)
 {
     return buf->len - buf->pos;

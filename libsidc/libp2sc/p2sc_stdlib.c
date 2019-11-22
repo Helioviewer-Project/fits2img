@@ -126,7 +126,7 @@ const char *p2sc_get_string(const char *key)
         return NULL;
 }
 
-void p2sc_option_ext(int marg, int argc, char **argv, const char *appname,
+void p2sc_option_ext(int marg, int *argc, char ***argv, const char *appname,
                      const char *context, const char *summary,
                      const GOptionEntry * entries)
 {
@@ -146,11 +146,11 @@ void p2sc_option_ext(int marg, int argc, char **argv, const char *appname,
     if (entries)
         g_option_context_add_main_entries(ctxt, entries, NULL);
 
-    ret = g_option_context_parse(ctxt, &argc, &argv, &err);
+    ret = g_option_context_parse(ctxt, argc, argv, &err);
 
-    base_prog = g_path_get_basename(argv[0]);
-    if (argc == 2)
-        base_file = g_path_get_basename(argv[1]);
+    base_prog = g_path_get_basename((*argv)[0]);
+    if (*argc == 2)
+        base_file = g_path_get_basename((*argv)[1]);
 
     p2sc_init(base_prog, appname, base_file, runid);
 
@@ -161,7 +161,7 @@ void p2sc_option_ext(int marg, int argc, char **argv, const char *appname,
         } else
             P2SC_Msg(LVL_FATAL, "Option parsing failed: unknown reason");
     }
-    if (marg > 0 && (argc - 1) < marg) {
+    if (marg > 0 && (*argc - 1) < marg) {
         char *help = g_option_context_get_help(ctxt, TRUE, NULL);
         printf("%s", help);
         g_free(help);
@@ -178,7 +178,7 @@ void p2sc_option(int argc, char **argv, const char *appname,
                  const char *context, const char *summary,
                  const GOptionEntry * entries)
 {
-    p2sc_option_ext(1, argc, argv, appname, context, summary, entries);
+    p2sc_option_ext(1, &argc, &argv, appname, context, summary, entries);
 }
 
 int p2sc_spawn(const char *cmd, char **sout, char **serr)
@@ -339,7 +339,7 @@ static inline guint8 h2b(char c)
 
 char *p2sc_bin2hex(const guint8 * bin, size_t len)
 {
-    static const char hexdig[] = "0123456789abcdef";
+    static const char hexdig[] = "0123456789ABCDEF";
 
     size_t alen = len * 2;
     char *hex = (char *) g_malloc(alen + 1);

@@ -9,16 +9,16 @@ static const char _versionid_[] __attribute__ ((unused)) =
     "$Id: swap_file.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <errno.h>
-#include <string.h>
-#include <png.h>
 #include <setjmp.h>
+#include <string.h>
+#include <unistd.h>
+#include <png.h>
 #include <jpeglib.h>
 #include <glib.h>
 
 #include "p2sc_file.h"
 #include "p2sc_msg.h"
 #include "p2sc_stdlib.h"
-#include "p2sc_time.h"
 
 #include "swap_color.h"
 #include "swap_file.h"
@@ -51,39 +51,23 @@ static void set_text(png_text * txt, const char *key, const char *value)
 {
     memset(txt, 0, sizeof *txt);
 
-    txt->compression = PNG_TEXT_COMPRESSION_NONE;
+    txt->compression = PNG_TEXT_COMPRESSION_zTXt;
     txt->key = (png_charp) key;
     txt->text = (png_charp) value;
 }
 
-static void set_meta(png_structp png_ptr, png_infop info_ptr)
+static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml)
 {
-    char *s_time = p2sc_timestamp(-1, 3);
-    char *s_soft = g_strdup_printf("%s - %s (%s)", p2sc_get_string("appname"),
-                                   p2sc_get_string("prgname"), _versionid_);
-    png_text txt[9];
-
-    set_text(txt + 0, "Title", p2sc_get_string("filename"));
-    set_text(txt + 1, "Author", "ROB");
-    set_text(txt + 2, "Contact", "swap_lyra@oma.be");
-    set_text(txt + 3, "Description", "SWAP EUV 17.4nm Sun Image");
-    set_text(txt + 4, "Copyright", "Public Domain");
-    set_text(txt + 5, "Creation Time", s_time);
-    set_text(txt + 6, "Software", s_soft);
-    set_text(txt + 7, "Source", g_get_host_name());
-    set_text(txt + 8, "Origin", "PROBA2/SWAP");
-
+    png_text txt[1];
+    set_text(txt + 0, "Helioviewer", xml);
     png_set_text(png_ptr, info_ptr, txt, G_N_ELEMENTS(txt));
-
-    g_free(s_soft);
-    g_free(s_time);
 }
 
 #define GRAY_ICC SIDC_INSTALL_LIB "/data/sidc_gray.icc"
 #define SRGB_ICC SIDC_INSTALL_LIB "/data/sRGB_IEC61966-2-1_black_scaled.icc"
 
 void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal)
+                    swap_palette_t * pal, const char *xml)
 {
     const guint8 **rows = NULL;
     p2sc_iofile_t *io = p2sc_open_iofile(name, "w");
@@ -126,7 +110,8 @@ void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
                  PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
                  PNG_FILTER_TYPE_DEFAULT);
 
-    set_meta(png_ptr, info_ptr);
+    if (xml)
+        set_meta(png_ptr, info_ptr, xml);
 
     png_set_compression_mem_level(png_ptr, 9);
     png_set_compression_level(png_ptr, 1);
@@ -276,7 +261,7 @@ jpeg_icc_write_profile(j_compress_ptr cinfo,
 }
 
 void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal, int scale)
+                    swap_palette_t * pal, int scale, const char *xml)
 {
     struct my_err_mgr jerr;
     struct jpeg_compress_struct cinfo;
@@ -323,6 +308,9 @@ void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
                            (const guchar *) g_mapped_file_get_contents(map),
                            g_mapped_file_get_length(map));
     g_mapped_file_unref(map);
+
+    if (xml)
+        jpeg_write_marker(&cinfo, JPEG_COM, (const guchar *) xml, strlen(xml));
 
     line = (unsigned char *) g_malloc(pal ? 3 * w : w);
     while (h--) {

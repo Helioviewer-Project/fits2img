@@ -6,7 +6,7 @@
  */
 
 static const char _versionid_[] __attribute__ ((unused)) =
-    "$Id: p2sc_time.c 5108 2014-06-19 12:29:23Z bogdan $";
+    "$Id: p2sc_time.c 5348 2018-04-25 13:55:17Z bogdan $";
 
 #include <stdlib.h>
 #include <string.h>
@@ -18,29 +18,73 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "p2sc_msg.h"
 #include "p2sc_time.h"
 
-guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC])
+#define TWENTY_EIGHT (1ULL << 28)
+
+#define REFERENCE_DATE 2018-01-01 // A date before the rollover date
+#define REFERENCE_PASS 26206      // A pass number on the day REFERENCE_DATE
+#define REFERENCE_OBET 257630618  // The second part of the OBET of REFERENCE_DATE
+
+static void warn_cuc(const guint8 t[SIZEOF_CUC])
+{
+    static const char hex[] = "0123456789abcdef";
+    char obet[2 * SIZEOF_CUC + 1];
+
+    for (size_t i = 0; i < SIZEOF_CUC; ++i) {
+        obet[2 * i] = hex[t[i] >> 4];
+        obet[2 * i + 1] = hex[t[i] & 0xf];
+    }
+    obet[2 * SIZEOF_CUC] = 0;
+
+    P2SC_Msg(LVL_WARNING_CORRUPT_INPUT_DATA, "Corrupted OBET: %s", obet);
+}
+
+static void warn_cuc_decoded(guint32 s, guint32 f)
+{
+    /* re-encode CUC */
+    guint8 b[SIZEOF_CUC];
+    guint32 ss = GUINT32_TO_BE(s);
+
+    memcpy(b, &ss, 4);
+    b[4] = (f >> 16) & 0xff;
+    b[5] = (f >> 8) & 0xff;
+    b[6] = f & 0xff;
+    warn_cuc(b);
+}
+
+guint64 p2sc_cuc2ticks_decoded(int passno, guint32 s, guint32 f)
+{
+    if (f & 0x3ff)
+        warn_cuc_decoded(s, f);
+
+    guint64 sec = s;
+    if (sec > TWENTY_EIGHT - 1)
+        warn_cuc_decoded(s, f);
+
+    if (passno > REFERENCE_PASS && sec < REFERENCE_OBET)
+        sec += TWENTY_EIGHT;
+
+    return (sec << 14) + (f >> 10);
+}
+
+guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC], int passno)
 {
     if (!t)
         return -1;
 
-    guint32 s, f = (t[4] << 16) + (t[5] << 8) + t[6];
+    guint32 f = (t[4] << 16) + (t[5] << 8) + t[6];
 
-    if (f & 0x3ff) {
-        static const char hex[] = "0123456789abcdef";
-        char obet[2 * SIZEOF_CUC + 1];
-
-        for (size_t i = 0; i < SIZEOF_CUC; ++i) {
-            obet[2 * i] = hex[t[i] >> 4];
-            obet[2 * i + 1] = hex[t[i] & 0xf];
-        }
-        obet[2 * SIZEOF_CUC] = 0;
-
-        P2SC_Msg(LVL_WARNING_CORRUPT_INPUT_DATA, "Corrupted OBET: %s", obet);
-    }
-
+    guint32 s;
     memcpy(&s, t, sizeof s);
+    s = GUINT32_FROM_BE(s);
 
-    return (((guint64) GUINT32_FROM_BE(s)) << 14) + (f >> 10);
+    return p2sc_cuc2ticks_decoded(passno, s, f);
+}
+
+guint64 p2sc_gp1obt2ticks(double gp1obt, int passno)
+{
+    if (passno > REFERENCE_PASS && gp1obt < REFERENCE_OBET)
+        gp1obt += TWENTY_EIGHT;
+    return (guint64) (gp1obt / OBET_RES);
 }
 
 int p2sc_ascii2cuc(guint8 t[SIZEOF_CUC], const char *in)
@@ -82,21 +126,12 @@ char *p2sc_date2string(const double d[6])
 
 char *p2sc_timestamp(double t, int prec)
 {
-    time_t s;
-    double f;
-
     if (t < 0) {
-        GTimeVal tv;
-
-        g_get_current_time(&tv);
-        s = tv.tv_sec;
-        f = tv.tv_usec / 1000000.;
-    } else {
-        double i;
-
-        f = modf(t, &i);
-        s = i;
+        t = g_get_real_time() / 1000000.;
     }
+
+    double i, f = modf(t, &i);
+    time_t s = i;
 
     f = p2sc_round(f, prec);
     if (f >= 1) {
@@ -116,6 +151,25 @@ char *p2sc_timestamp(double t, int prec)
     return p2sc_date2string(tt);
 }
 
+/* Since: 2.56
+int p2sc_string2date(const char *iso_date, double d[6])
+{
+    GDateTime *dt = g_date_time_new_from_iso8601(iso_date, NULL);
+    if (!dt)
+        return -1;
+
+    d[0] = g_date_time_get_year(dt);
+    d[1] = g_date_time_get_month(dt);
+    d[2] = g_date_time_get_day_of_month(dt);
+    d[3] = g_date_time_get_hour(dt);
+    d[4] = g_date_time_get_minute(dt);
+    d[5] = g_date_time_get_seconds(dt);
+
+    g_date_time_unref(dt);
+    return 0;
+}
+*/
+
 /* adapted from glib gtimer.c git 2009-06-02 */
 int p2sc_string2date(const char *iso_date, double d[6])
 {
@@ -134,7 +188,7 @@ int p2sc_string2date(const char *iso_date, double d[6])
 
     val = strtol(date, &date, 10);
     if (*date == '-') {
-        /* YYYY-MM-DD */
+        // YYYY-MM-DD
         year = val;
         date++;
         mon = strtol(date, &date, 10);
@@ -144,7 +198,7 @@ int p2sc_string2date(const char *iso_date, double d[6])
 
         mday = strtol(date, &date, 10);
     } else {
-        /* YYYYMMDD */
+        // YYYYMMDD
         mday = val % 100;
         mon = (val % 10000) / 100;
         year = val / 10000;
@@ -155,7 +209,7 @@ int p2sc_string2date(const char *iso_date, double d[6])
 
     val = strtol(date, &date, 10);
     if (*date == ':') {
-        /* hh:mm:ss */
+        // hh:mm:ss
         hour = val;
         date++;
         min = strtol(date, &date, 10);
@@ -165,7 +219,7 @@ int p2sc_string2date(const char *iso_date, double d[6])
 
         sec = strtol(date, &date, 10);
     } else {
-        /* hhmmss */
+        // hhmmss
         sec = val % 100;
         min = (val % 10000) / 100;
         hour = val / 10000;

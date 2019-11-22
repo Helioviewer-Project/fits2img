@@ -15,9 +15,9 @@ extern "C" {
 /* ---------------------------------------------------------------------- */
 
     void swap_write_png(const char *, const guint8 *, size_t, size_t,
-                        swap_palette_t *);
+                        swap_palette_t *, const char *);
     void swap_write_jpg(const char *, const guint8 *, size_t, size_t,
-                        swap_palette_t *, int);
+                        swap_palette_t *, int, const char *);
 
     void swap_write_pgm(const char *, const guint16 *, size_t, size_t, guint16);
     guint16 *swap_read_pgm(const char *, size_t *, size_t *);

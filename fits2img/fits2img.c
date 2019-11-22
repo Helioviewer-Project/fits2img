@@ -32,10 +32,9 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #define DEF_PRECINCTW    128
 #define DEF_PRECINCTH    128
 
-int main(int argc, char **argv)
-{
-    int datedir = 0, noverify = 0, jhv = 0, debug = 0;
-    char *appname = NULL, *outdir = NULL, *cm = NULL, *func = NULL;
+int main(int argc, char **argv) {
+    int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
+    char *appname = NULL, *outdir = NULL, *yuv = NULL, *cm = NULL, *func = NULL;
 
     double clipmin = DEF_CLIP_MIN, clipmax = DEF_CLIP_MAX;
     double gamma = DEF_GAMMA, cratio = DEF_CRATIO;
@@ -57,6 +56,10 @@ int main(int argc, char **argv)
          "Clip lower pixel values", G_STRINGIFY(DEF_CLIP_MIN)},
         {"max-clip", 'M', 0, G_OPTION_ARG_DOUBLE, &clipmax,
          "Clip higher pixel values", G_STRINGIFY(DEF_CLIP_MAX)},
+        {"jpeg", 'j', 0, G_OPTION_ARG_INT, &jpeg,
+         "Output a JPEG file of a certain quality instead of a PNG", "75"},
+        {"pgm", 'P', 0, G_OPTION_ARG_NONE, &pgm,
+         "Output a PGM file instead of a PNG", NULL},
         {"jhv", 'J', 0, G_OPTION_ARG_NONE, &jhv,
          "Output a file suitable for use with Helioviewer", NULL},
         {"cratio", 0, 0, G_OPTION_ARG_DOUBLE, &cratio,
@@ -71,6 +74,8 @@ int main(int argc, char **argv)
          "OpenJPEG precinct height", G_STRINGIFY(DEF_PRECINCTH)},
         {"debug", 0, 0, G_OPTION_ARG_NONE, &debug,
          "OpenJPEG debug mode", NULL},
+        {"yuv", 'y', 0, G_OPTION_ARG_STRING, &yuv,
+         "Append YUV420 to a file instead", "name"},
         {"colormap", 'C', 0, G_OPTION_ARG_STRING, &cm,
          "Use a colormap: hot, jet, aia171", "name"},
         {"no-verify", 'N', 0, G_OPTION_ARG_NONE, &noverify,
@@ -79,8 +84,7 @@ int main(int argc, char **argv)
     };
 
     p2sc_option(argc, argv, APP_NAME, "FILE - SWAP Media Product Generator",
-                "This program generates quicklook images out of FITS files",
-                entries);
+                "This program generates quicklook images out of FITS files", entries);
     if (appname) {
         p2sc_set_string("appname", appname);
         g_free(appname);
@@ -102,32 +106,42 @@ int main(int argc, char **argv)
         g_free(od);
     }
 
-    char *name;
-    if (jhv) {
-        char *jhvname = p2sc_name_swap_jhv(p->dateobs, p->telescop, p->instrume,
-                                           p->detector, p->wavelnth);
-        name = p2sc_name_swap_qlk(outdir, jhvname, "jp2");
-
-        swap_j2kparams_t j2kp = {
-            .cratio = cratio,
-            .nlayers = nlayers,
-            .nresolutions = nresolutions,
-            .precinct = {precinctw, precincth},
-            .meta = {
-                     .xml = p->xml,
-                     .pal = cm ?
-                     swap_palette_rgb_get(cm) : swap_palette_rgb_get("aia171")
-                     },
-            .debug = debug
-        };
-        swap_write_j2k(name, g, p->w, p->h, &j2kp);
-
-        g_free(jhvname);
+    if (yuv) {
+        swap_y4m(yuv, cm, g, p->w, p->h);
+        g_free(yuv);
     } else {
-        name = p2sc_name_swap_qlk(outdir, p->name, "png");
-        swap_write_png(name, g, p->w, p->h, swap_palette_rgb_get(cm));
+        char *name;
+        if (jhv) {
+            char *jhvname = p2sc_name_swap_jhv(p->dateobs, p->telescop, p->instrume,
+                                               p->detector, p->wavelnth);
+            name = p2sc_name_swap_qlk(outdir, jhvname, "jp2");
+
+            swap_j2kparams_t j2kp = {
+                .cratio = cratio,
+                .nlayers = nlayers,
+                .nresolutions = nresolutions,
+                .precinct = {precinctw, precincth},
+                .meta = {
+                         .xml = p->xml,
+                         .pal = cm ? swap_palette_rgb_get(cm) : swap_palette_rgb_get("aia171")
+                         },
+                .debug = debug
+            };
+            swap_write_j2k(name, g, p->w, p->h, &j2kp);
+
+            g_free(jhvname);
+        } else if (pgm) {
+            name = p2sc_name_swap_qlk(outdir, p->name, "pgm");
+            swap_write_pgm(name, (const guint16 *) g, p->w, p->h, 255);
+        } else if (jpeg) {
+            name = p2sc_name_swap_qlk(outdir, p->name, "jpg");
+            swap_write_jpg(name, g, p->w, p->h, swap_palette_rgb_get(cm), jpeg, p->xml);
+        } else {
+            name = p2sc_name_swap_qlk(outdir, p->name, "png");
+            swap_write_png(name, g, p->w, p->h, swap_palette_rgb_get(cm), p->xml);
+        }
+        g_free(name);
     }
-    g_free(name);
 
     g_free(g);
     procfits_free(p);

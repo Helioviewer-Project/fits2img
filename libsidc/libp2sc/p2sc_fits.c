@@ -350,6 +350,9 @@ void sfts_create_image(sfts_t * f, size_t w, size_t h, int t)
     case SUINT32:
         ft = ULONG_IMG;
         break;
+    case SINT16:
+        ft = SHORT_IMG;
+        break;
     case SINT32:
         ft = LONG_IMG;
         break;
@@ -381,6 +384,10 @@ void sfts_write_image(sfts_t * f, const void *pix, size_t w, size_t h, int t)
     case SUINT32:
         ft = TUINT;
         ls = w * sizeof(guint32);
+        break;
+    case SINT16:
+        ft = TSHORT;
+        ls = w * sizeof(gint16);
         break;
     case SINT32:
         ft = TINT;
@@ -425,6 +432,13 @@ void sfts_write_key(sfts_t * f, const sfkey_t * k)
         /* unknown */
         fits_update_key_null(f->fts, k->k, k->c, s);
         break;
+    case 'X':
+        /* long string */
+        if (!k->v.s)
+            fits_update_key_null(f->fts, k->k, k->c, s);
+        else
+            fits_update_key_longstr(f->fts, k->k, k->v.s, k->c, s);
+        break;
     case 'S':
         /* string */
         if (!k->v.s)
@@ -434,15 +448,15 @@ void sfts_write_key(sfts_t * f, const sfkey_t * k)
         break;
     case 'I':
         /* long long */
-        fits_update_key(f->fts, TLONGLONG, k->k, &k->v.i, k->c, s);
+        fits_update_key(f->fts, TLONGLONG, k->k, /* warning cfits */ (void *) &k->v.i, k->c, s);
         break;
     case 'F':
         /* double */
-        fits_update_key(f->fts, TDOUBLE, k->k, &k->v.f, k->c, s);
+        fits_update_key(f->fts, TDOUBLE, k->k, /* warning cfits */ (void *) &k->v.f, k->c, s);
         break;
     case 'B':
         /* boolean */
-        fits_update_key(f->fts, TLOGICAL, k->k, &k->v.b, k->c, s);
+        fits_update_key(f->fts, TLOGICAL, k->k, /* warning cfits */ (void *) &k->v.b, k->c, s);
         break;
     default:
         P2SC_Msg(LVL_FATAL_INTERNAL_ERROR,
@@ -558,7 +572,7 @@ void sfts_find_hdukey(sfts_t * f, const char *key)
 
     for (i = 1; i <= num; ++i) {
         sfts_goto_hdu(f, i);
-        fits_find_nextkey(f->fts, &key, 1, NULL, 0, c, s);
+        fits_find_nextkey(f->fts, /* warning cfits */ (void *) &key, 1, NULL, 0, c, s);
         if (*s == KEY_NO_EXIST) {
             *s = 0;
             continue;

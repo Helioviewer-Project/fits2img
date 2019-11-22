@@ -38,7 +38,7 @@ extern "C" {
     void p2sc_set_string(const char *, const char *);
     const char *p2sc_get_string(const char *);
 
-    void p2sc_option_ext(int, int, char **, const char *, const char *,
+    void p2sc_option_ext(int, int *, char ***, const char *, const char *,
                          const char *, const GOptionEntry *);
     void p2sc_option(int, char **, const char *, const char *,
                      const char *, const GOptionEntry *);

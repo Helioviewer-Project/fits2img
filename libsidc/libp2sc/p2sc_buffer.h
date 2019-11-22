@@ -21,9 +21,10 @@ extern "C" {
 
     const guint8 *p2sc_buffer_read(p2sc_buffer_t *, size_t);
     void p2sc_buffer_write(p2sc_buffer_t *, size_t, const guint8 *);
+    void p2sc_buffer_rewind(p2sc_buffer_t *);
 
     size_t p2sc_buffer_size(p2sc_buffer_t *);
-    void p2sc_buffer_rewind(p2sc_buffer_t *);
+    size_t p2sc_buffer_position(p2sc_buffer_t *);
     size_t p2sc_buffer_remaining(p2sc_buffer_t *);
 
 /* ---------------------------------------------------------------------- */
