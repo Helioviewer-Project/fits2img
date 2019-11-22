@@ -45,6 +45,7 @@ LDFLAGS =	@LDFLAGS@
 LDFLAGS_BIN =	@LDFLAGS_BIN@
 DEFS =		@DEFS@
 LIBS =		@LIBS@
+LIBS_CURL =	@LIBS_CURL@
 FLEX =		flex
 BISON =		bison
 
@@ -93,7 +94,7 @@ all:
 all-nofitsio:
 		${MAKE} stand_alone "FITSIO_SRC="
 
-stand_alone:	lib${PACKAGE}.a
+stand_alone:	lib${PACKAGE}.a shared
 
 lib${PACKAGE}.a:	${OBJECTS}
 		${ARCHIVE} $@ ${OBJECTS}; \
@@ -102,7 +103,7 @@ lib${PACKAGE}.a:	${OBJECTS}
 shared: lib${PACKAGE}${SHLIB_SUFFIX}
 
 lib${PACKAGE}${SHLIB_SUFFIX}: ${OBJECTS}
-		${SHLIB_LD} ${LDFLAGS} -o ${CFITSIO_SHLIB} ${OBJECTS} -lm ${LIBS}
+		${SHLIB_LD} ${LDFLAGS} -o ${CFITSIO_SHLIB} ${OBJECTS} -lm ${LIBS_CURL} ${LIBS}
 		@if [ "x${CFITSIO_SHLIB_SONAME}" != x ]; then \
 			ln -sf ${CFITSIO_SHLIB} ${CFITSIO_SHLIB_SONAME}; \
 			ln -sf ${CFITSIO_SHLIB_SONAME} $@; \

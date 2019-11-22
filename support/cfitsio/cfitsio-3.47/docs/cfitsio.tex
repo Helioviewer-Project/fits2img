@@ -46,7 +46,7 @@ USA}
 \vfill
 \bigskip
 \begin{center}
-{\Large May 2018\\}
+{\Large May 2019\\}
 \end{center}
 \vfill
 \end{titlepage}
@@ -1729,7 +1729,7 @@ is then opened by the application program with READONLY access.
 Programs can read the input file from the 'stdin' file stream if a dash
 character ('-') is given as the filename. Files can also be opened over
 the network using FTP or HTTP protocols by supplying the appropriate URL
-as the filename.  The HTTPS protocol is also supported if the CFITSIO
+as the filename.  The HTTPS and FTPS protocols are also supported if the CFITSIO
 build includes the libcurl library.  (If the CFITSIO 'configure' script
 finds a usable libcurl library on your system, it will automatically be 
 included in the build.)
@@ -3274,7 +3274,8 @@ spaces).  Trailing blank characters are not significant.
 \item[4 ] Copy 'nrows' consecutive rows from one table to another, beginning
     with row 'firstrow'.  These rows will be appended to any existing
     rows in the output table.
-   Note that the first row in a table is at row = 1. \label{ffcprw}
+   Note that the first row in a table is at row = 1. 
+   \label{ffcprw}
 \end{description}
 
 \begin{verbatim}
@@ -5538,6 +5539,7 @@ See Appendix B for the definition of each function parameter.
 
 \section{FITS File Access Routines}
 
+\subsection{File Access}
 
 \begin{description}
 \item[1 ] Open an existing FITS file residing in core computer memory.  This
@@ -5786,38 +5788,34 @@ the 'exists' parameter will have 1 of the 4 following values:
 \end{verbatim}
 
 \begin{description}
-\item[10 ] Wrapper function for global initialization of the libcurl library used
-   when accessing files with the HTTPS protocol.  If an HTTPS file transfer is to
-   be performed, it is recommended that you call this once near the start of your program
-   before any file\_open calls, and before creating any threads.  This is NOT THREAD-SAFE.
-   Returns 0 if initialization succeeded.
-   A corresponding call to fits\_cleanup\_https should be made later.
+\item[10 ] Wrapper functions for global initialization and cleanup of the libcurl library used
+   when accessing files with the HTTPS or FTPS protocols.  If an HTTPS/FTPS file transfer is to
+   be performed, it is recommended that you call the init function once near the start of your 
+   program before any file\_open calls, and before creating any threads. The cleanup function
+   should be called after all HTTPS/FTPS file accessing is completed, and after all threads are 
+   completed.  The functions return 0 upon successful initialization and cleanup.  These
+   are NOT THREAD-SAFE.    
   \label{ffihtps}
 \end{description}
 
 \begin{verbatim}
   int fits_init_https / ffihtps
       ()
+      
+  int fits_cleanup_https / ffchtps
+      ()
 \end{verbatim}
 
-\begin{description}
-\item[11 ] Wrapper function for global cleanup of the libcurl library used when
-   accessing files with the HTTPS protocol.  This is meant to be used in combination 
-   with fits\_init\_https, and should be called after all HTTPS file accessing is completed,
-   and after all threads are completed.  This is NOT THREAD-SAFE.  Returns 0 upon successful
-   cleanup.
-  \label{ffchtps}
-\end{description}
+\subsection{Download Utility Functions}
 
-\begin{verbatim}
-   int fits_cleanup_https / ffchtps
-       ()
-\end{verbatim}
+These routines do not need to be called for normal file accessing. They are
+primarily intended to help with debugging and diagnosing issues which occur 
+during file downloads.  These routines are NOT THREAD-SAFE.
 
 \begin{description}
-\item[12 ] Toggle the verbosity of the libcurl library diagnostic output when
-   accessing files with the HTTPS protocol.  'flag' = 1 turns the output
-   on, 0 turns it off (the default).  This is NOT THREAD-SAFE.
+\item[1 ] Toggle the verbosity of the libcurl library diagnostic output when
+   accessing files with the HTTPS or FTPS protocol.  `flag' = 1 turns the output
+   on, 0 turns it off (the default).
   \label{ffvhtps}
 \end{description}
 
@@ -5826,6 +5824,36 @@ the 'exists' parameter will have 1 of the 4 following values:
         (int flag)
 \end{verbatim}
 
+\begin{description}
+\item[2] If `flag' is set to 1, this will display (to stderr) a progress 
+  bar during an https file download.  (This is not yet implemented
+  for other file transfer protocols.)  `flag' = 0 by default.
+ \label{ffshdwn}
+\end{description}
+
+\begin{verbatim}
+   void fits_show_download_progress / ffshdwn
+        (int flag)
+\end{verbatim}
+
+\begin{description}
+\item[3] The timeout setting (in seconds) determines the maximum time
+  allowed for a net download to complete.  If a download has not finished within
+  the allowed time, the file transfer will terminate and the CFITSIO calling
+  function will return with an error.  Use fits\_get\_timeout will see the 
+  current timeout setting and fits\_set\_timeout to change the setting.  This
+  adjustmant may be particularly useful when having trouble downloading large 
+  files over slow connections.
+ \label{ffgtmo}
+\end{description}
+
+\begin{verbatim}
+   int fits_get_timeout / ffgtmo
+       ()
+       
+   int fits_set_timeout / ffstmo
+       (int seconds, > int *status)
+\end{verbatim}
 
 \section{HDU Access Routines}
 
@@ -7294,7 +7322,7 @@ be read by converting them on the fly into virtual FITS images.
 
 \item
 FITS files on the Internet can be read (and sometimes written) using the FTP,
-HTTP, HTTPS, or ROOT protocols.
+HTTP, HTTPS, FTPS, or ROOT protocols.
 
 \item
 FITS files can be piped between tasks on the stdin and stdout streams.
@@ -7498,6 +7526,9 @@ CFITSIO to read and/or write the file.  Currently supported types are
        https://  - a readonly file accessed with the HTTPS protocol.  This
                    is available only if CFITSIO was built with the libcurl
                    library (see the following note).
+       ftps://  -  a readonly file accessed with the FTPS protocol.  This
+                   is available only if CFITSIO was built with the libcurl
+                   library.
       stream://  - special driver to read an input FITS file from the stdin
                    stream, and/or write an output FITS file to the stdout
 		   stream.  This driver is fragile and has limited
@@ -7529,10 +7560,10 @@ For example
 will cause CFITSIO to use port 3128 on the heasarc proxy server whenever
 reading a FITS file with HTTP.
 
-\subsection{Notes about HTTPS file access}
+\subsection{Notes about HTTPS and FTPS file access}
 
 CFITSIO depends upon the availability of the libcurl library in order to perform 
-HTTPS file access.  (This should be the development version of the library, as
+HTTPS/FTPS file access.  (This should be the development version of the library, as
 it contains the curl.h header file required by the CFITSIO code.)   The CFITSIO
 'configure' script will search for this library on your system, and if it finds it 
 it will automatically be incorporated into the build.  
@@ -7544,13 +7575,13 @@ more about the features of your libcurl installation.
 If the CFITSIO 'configure' succeeded in finding a usable libcurl, you will see the flag
 '-DCFITSIO\_HAVE\_CURL=1' in the CFITSIO Makefile and in the compilation output.  
 If 'configure' is unable to find a usable libcurl, CFITSIO will still build 
-but it won't have HTTPS capability.
+but it won't have HTTPS/FTPS capability.
 
 The libcurl package is normally included as part of Xcode on Macs.  However on Linux platforms you 
 may need to manually install it. This can be easily done on Ubuntu Linux using
 the 'apt get' command to retrieve the libcurl4-openssl-dev or the libcurl4-gnutls-dev packages.
 
-When accessing a file with HTTPS, the default CFITSIO behavior is to attempt
+When accessing a file with HTTPS or FTPS, the default CFITSIO behavior is to attempt
 to verify both the host name and the SSL certificate.  If it cannot, it will still 
 perform the file access but will issue a warning to the terminal window.
 
@@ -7563,7 +7594,7 @@ setenv CFITSIO\_VERIFY\_HTTPS True
 
 the default setting for this is 'False'.
 
-CFITSIO has 3 functions which apply specifically to HTTPS access:  fits\_init\_https, 
+CFITSIO has 3 functions which apply specifically to HTTPS/FTPS access:  fits\_init\_https, 
 fits\_cleanup\_https, and fits\_verbose\_https. It is recommended that you call the 
 init and cleanup functions near the beginning and end of your program respectively. 
 For more information about these functions, please see the 'FITS File Access Routines'
@@ -8373,29 +8404,6 @@ Either of these examples will delete the keyword named \verb+VEL+.
   -VEL;
   -#VEL;
 \end{verbatim}
-It is also possible to use wildcard expressions to remove any keyword
-that matches a pattern.  Wildcard patterns are: \verb+'*'+, which matches any
-string of characters; \verb+'?'+, which matches any single character; and \verb+'#'+
-which matches any numerical string.  For example these
-statements:
-\begin{verbatim}
-  -#DEC_*;     # remove single keyword beginning with DEC_
-  -#TUNIT#;    # remove single keyword TUNIT ending w. number
-\end{verbatim}
-will remove any keyword beginning with 'DEC\_' and any
-keyword beginning with 'TUNIT' and ending with a number.
-
-However, the above expressions will only delete the {\it first}
-keyword which matches the pattern.  If multiple keywords later
-in the same CHDU match the pattern, they will not be deleted.
-To delete {\it zero or more} keywords that match the pattern, add a
-trailing \verb|'+'|.
-\begin{verbatim}
-  -#DEC_*+;     # remove all keywords beginning with DEC_
-  -#TUNIT#+;    # remove all keywords TUNIT ending w. number
-\end{verbatim}
-Note that this form will succeed if the requested keyword is not
-present.
 
 \item
 Recompute (overwrite) the values in an existing column or keyword by
@@ -8424,6 +8432,39 @@ extend over multiple lines of the  file, but multiple operations must
 still be separated by commas or semi-colons.   Any lines in the external text file
 that begin with 2 slash characters ('//') will be ignored and may be
 used to add comments into the file.
+
+It is possible to use wildcard syntax to delete either keywords or
+columns that match a pattern.  Recall that to delete either a keyword
+or a column, precede its name with a \verb+'-'+ character.
+
+Wildcard patterns are: \verb+'*'+, which matches any
+string of characters; \verb+'?'+, which matches any single character; and \verb+'#'+
+which matches any numerical string.  For example these
+statements:
+\begin{verbatim}
+  -VEL*;       # remove single column (or keyword) beginning with VEL
+  -VEL_?;      # remove single column (or keyword) VEL_? where ? is any character
+  -#DEC_*;     # remove single keyword beginning with DEC_
+  -#TUNIT#;    # remove single keyword TUNIT ending w. number
+\end{verbatim}
+will remove the columns or keywords as noted.  Be aware that if a
+\verb+'#'+ is not present, the CFITSIO engine will check for columns
+with the given name first, followed by keywords.
+
+The above expressions will only delete the {\it first}
+item which matches the pattern.  If following columns or keywords
+in the same CHDU match the pattern, they will not be deleted.
+To delete {\it zero or more} keywords that match the pattern, add a
+trailing \verb|'+'|.
+\begin{verbatim}
+  -VEL*;        # remove all columns (or keywords) beginning with VEL
+  -VEL_?;       # remove all columns (or keyword) VEL_? where ? is any character
+  -#DEC_*+;     # remove all keywords beginning with DEC_
+  -#TUNIT#+;    # remove all keywords TUNIT ending w. number
+\end{verbatim}
+Note that, as a 0-or-more matching pattern, this form will succeed if
+the requested column or keyword is not present.  In that case, the
+deletion expression will silently proceed as if no deletion was requested.
 
 Examples:
 
@@ -9985,7 +10026,7 @@ fits\_calculator\_rng     & \pageref{ffcalcrng} \\
 fits\_calc\_binning[d] & \pageref{calcbinning} \\
 fits\_calc\_rows    & \pageref{ffcrow} \\
 fits\_change\_group  & \pageref{ffgtch} \\
-fits\_cleanup\_https & \pageref{ffchtps} \\
+fits\_cleanup\_https & \pageref{ffihtps} \\
 fits\_clear\_errmark  & \pageref{ffpmrk} \\
 fits\_clear\_errmsg   & \pageref{ffcmsg} \\
 fits\_close\_file     & \pageref{ffclos} \\
@@ -10076,11 +10117,12 @@ fits\_get\_num\_members  & \pageref{ffgtnm} \\
 fits\_get\_num\_rows     & \pageref{ffgnrw} \\
 fits\_get\_rowsize    & \pageref{ffgrsz} \\
 fits\_get\_system\_time  & \pageref{ffdt2s} \\
-fits\_get\_tile\_dim     & \pageref{ffgetcomp} \\
 fits\_get\_tbcol      & \pageref{ffgabc} \\
+fits\_get\_tile\_dim     & \pageref{ffgetcomp} \\
 \end{tabular}
 \newpage
 \begin{tabular}{lr}
+fits\_get\_timeout    & \pageref{ffgtmo} \\
 fits\_get\_version    & \pageref{ffvers} \\
 fits\_hdr2str         & \pageref{ffhdr2str}, \pageref{hdr2str} \\
 fits\_init\_https  & \pageref{ffihtps} \\
@@ -10128,9 +10170,9 @@ fits\_parse\_range    & \pageref{ffrwrg} \\
 fits\_parse\_rootname & \pageref{ffrtnm} \\
 fits\_parse\_template & \pageref{ffgthd} \\
 fits\_parse\_value    & \pageref{ffpsvc} \\
-fits\_pix\_to\_world & \pageref{ffwldp} \\
 \end{tabular}
 \begin{tabular}{lr}
+fits\_pix\_to\_world & \pageref{ffwldp} \\
 fits\_read\_2d\_TYP      & \pageref{ffg2dx} \\
 fits\_read\_3d\_TYP      & \pageref{ffg3dx} \\
 fits\_read\_atblhdr      & \pageref{ffghtb} \\
@@ -10178,9 +10220,9 @@ fits\_remove\_member   & \pageref{ffgmrm} \\
 fits\_reopen\_file      & \pageref{ffreopen} \\
 fits\_report\_error   & \pageref{ffrprt} \\
 fits\_resize\_img     & \pageref{ffrsim} \\
-fits\_rms\_float      & \pageref{imageRMS} \\
 \end{tabular}
 \begin{tabular}{lr}
+fits\_rms\_float      & \pageref{imageRMS} \\
 fits\_rms\_short      & \pageref{imageRMS} \\
 fits\_select\_rows  & \pageref{ffsrow} \\
 fits\_set\_atblnull   & \pageref{ffsnul} \\
@@ -10192,7 +10234,9 @@ fits\_set\_hdustruc   & \pageref{ffrdef} \\
 fits\_set\_imgnull    & \pageref{ffpnul} \\
 fits\_set\_noise\_bits  & \pageref{ffsetcomp} \\
 fits\_set\_tile\_dim  & \pageref{ffsetcomp} \\
+fits\_set\_timeout    & \pageref{ffgtmo} \\
 fits\_set\_tscale     & \pageref{fftscl} \\
+fits\_show\_download\_progress  & \pageref{ffshdwn} \\
 fits\_split\_names    & \pageref{splitnames} \\
 fits\_str2date        & \pageref{ffdt2s} \\
 fits\_str2time        & \pageref{ffdt2s} \\
@@ -10226,12 +10270,12 @@ fits\_write\_col\_TYP     & \pageref{ffpcls} \\
 fits\_write\_col\_null      & \pageref{ffpclu} \\
 fits\_write\_colnull      & \pageref{ffpcn} \\
 fits\_write\_colnull\_TYP & \pageref{ffpcnx} \\
-fits\_write\_comment      & \pageref{ffpcom} \\
-fits\_write\_date         & \pageref{ffpdat} \\
-fits\_write\_descript  & \pageref{ffpdes} \\
 \end{tabular}
 \newpage
 \begin{tabular}{lr}
+fits\_write\_comment      & \pageref{ffpcom} \\
+fits\_write\_date         & \pageref{ffpdat} \\
+fits\_write\_descript  & \pageref{ffpdes} \\
 fits\_write\_errmark   & \pageref{ffpmrk} \\
 fits\_write\_errmsg   & \pageref{ffpmsg} \\
 fits\_write\_ext        & \pageref{ffgextn} \\
@@ -10405,6 +10449,7 @@ ffgtdm         & \pageref{ffgtdm} \\
 ffgthd & \pageref{ffgthd} \\
 ffgtis  & \pageref{ffgtis} \\
 ffgtmg  & \pageref{ffgtmg} \\
+ffgtmo  & \pageref{ffgtmo} \\
 ffgtnm  & \pageref{ffgtnm} \\
 ffgtop    & \pageref{ffgtop} \\
 ffgtrm  & \pageref{ffgtrm} \\
@@ -10417,11 +10462,11 @@ fficol   & \pageref{fficol} \\
 ffifile  & \pageref{ffiurl} \\
 ffihtps  & \pageref{ffihtps} \\
 ffiimg     & \pageref{ffiimg} \\
-ffikls    & \pageref{ffikyx} \\
 
 \end{tabular}
 \begin{tabular}{lr}
 
+ffikls    & \pageref{ffikyx} \\
 ffikyu   & \pageref{ffikyu} \\
 ffiky\_    & \pageref{ffikyx} \\
 ffimem  & \pageref{ffimem} \\
@@ -10469,11 +10514,11 @@ ffphext       & \pageref{ffphpr} \\
 ffphis      & \pageref{ffphis} \\
 ffphpr       & \pageref{ffphpr} \\
 ffphps       & \pageref{ffphps} \\
-ffphtb      & \pageref{ffphtb} \\
 
 \end{tabular}
 \begin{tabular}{lr}
 
+ffphtb      & \pageref{ffphtb} \\
 ffpkls  & \pageref{ffpkls} \\
 ffpkn\_     & \pageref{ffpknx} \\
 ffpktp & \pageref{ffpktp} \\
@@ -10511,23 +10556,25 @@ ffrtnm & \pageref{ffrtnm} \\
 ffrwrg    & \pageref{ffrwrg} \\
 ffs2dt  & \pageref{ffdt2s} \\
 ffs2tm  & \pageref{ffdt2s} \\
+ffshdwn  & \pageref{ffshdwn} \\
 ffsnul   & \pageref{ffsnul} \\
 ffsrow  & \pageref{ffsrow} \\
+ffstmo  & \pageref{ffgtmo} \\
 fftexp    & \pageref{fftexp} \\
 ffthdu   & \pageref{ffthdu} \\
 fftheap  & \pageref{fftheap} \\
 fftkey   & \pageref{fftkey} \\
 fftm2s  & \pageref{ffdt2s} \\
 fftnul   & \pageref{fftnul} \\
-fftopn & \pageref{ffopen} \\
-fftplt & \pageref{fftplt} \\
-fftrec    & \pageref{fftrec} \\
 
 
 \end{tabular}
 \newpage
 \begin{tabular}{lr}
 
+fftopn & \pageref{ffopen} \\
+fftplt & \pageref{fftplt} \\
+fftrec    & \pageref{fftrec} \\
 fftscl     & \pageref{fftscl} \\
 ffucrd       & \pageref{ffucrd} \\
 ffukls    & \pageref{ffukyx} \\
@@ -10820,6 +10867,7 @@ improve the readability of their code.
  BAD_FILEPTR       114    invalid fitsfile pointer
  NULL_INPUT_PTR    115    NULL input pointer to routine
  SEEK_ERROR        116    error seeking position in file
+ BAD_NETTIMEOUT    117    bad value for file download timeout setting
 
  BAD_URL_PREFIX     121   invalid URL prefix on file name
  TOO_MANY_DRIVERS   122   tried to register too many IO drivers

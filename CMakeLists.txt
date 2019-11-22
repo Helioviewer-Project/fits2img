@@ -18,10 +18,6 @@ set(SIDC_SUPPORT_LIB    ${SIDC_SUPPORT}/lib)
 
 set(CMAKE_INSTALL_RPATH ${SIDC_INSTALL_LIB} ${SIDC_SUPPORT_LIB})
 
-# temporary stop of clang errors on unknown arguments
-set(CLANGFLAGS "") # ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future")
-set(PIPI "${CLANGFLAGS} ${SIDC_INSTALL_PYTHON}/bin/pip install --upgrade")
-
 macro(sidc_install_lib target)
     set_target_properties(${target} PROPERTIES VERSION 1.0 SOVERSION 1.0 INSTALL_NAME_DIR ${SIDC_INSTALL_LIB})
     install(TARGETS ${target} EXPORT ${SIDC_PROJECT_NAME} DESTINATION ${SIDC_INSTALL_LIB})
@@ -36,28 +32,21 @@ include_before(${SIDC_SUPPORT_INC})
 link_directories(${SIDC_SUPPORT_LIB})
 
 include(FindPkgConfig)
-pkg_check_modules(PKG REQUIRED glib-2.0>=2.24)
+pkg_check_modules(PKG REQUIRED glib-2.0>=2.28 freetype2 libpng)
 include_directories(${PKG_INCLUDE_DIRS})
 link_directories(${PKG_LIBRARY_DIRS})
 
 set(SUPPORT  ${CMAKE_CURRENT_SOURCE_DIR}/support)
 
-set(CDF      ${SUPPORT}/cdf/cdf35)
-set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio3450)
+set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio-3.47)
 set(GENX     ${SUPPORT}/genx)
 set(JPEG     ${SUPPORT}/jpeg/jpeg-8d)
-set(LIBZDB   ${SUPPORT}/libzdb)
 set(OPENJPEG ${SUPPORT}/openjpeg/libopenjpeg-2012-03-08)
-set(SHTNS    ${SUPPORT}/shtns/shtns-2.5-r493)
-set(WCS      ${SUPPORT}/wcslib/wcslib-4.23)
 
 add_subdirectory(support)
-
-set(FITSPROCESSING ${CMAKE_INSTALL_PREFIX}/fitsprocessing)
 
 set(LIBSIDC libsidc)
 include_directories(${LIBSIDC}/send2LMAT ${LIBSIDC}/libp2sc ${LIBSIDC}/libswap)
 add_subdirectory(libsidc)
 
 add_subdirectory(fits2img)
-

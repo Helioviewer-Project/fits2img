@@ -631,6 +631,7 @@ SHLIB_SUFFIX
 SHLIB_LD
 LIBPRE
 ARCH
+LIBS_CURL
 CURLCONFIG
 GCCVERSION
 SSE_FLAGS
@@ -706,6 +707,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_curl
 enable_reentrant
 enable_sse2
 enable_ssse3
@@ -1335,6 +1337,8 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-curl          Disable linking with the curl library. Disables
+                          remote file i/o support
   --enable-reentrant      Enable reentrant multithreading
   --enable-sse2           Enable use of instructions in the SSE2 extended
                           instruction set
@@ -1721,6 +1725,73 @@ $as_echo "$ac_res" >&6; }
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_header_compile
+
+# ac_fn_c_check_func LINENO FUNC VAR
+# ----------------------------------
+# Tests whether FUNC exists, setting the cache variable VAR accordingly
+ac_fn_c_check_func ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+$as_echo_n "checking for $2... " >&6; }
+if eval \${$3+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+/* Define $2 to an innocuous variant, in case <limits.h> declares $2.
+   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+#define $2 innocuous_$2
+
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char $2 (); below.
+    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+    <limits.h> exists even on freestanding compilers.  */
+
+#ifdef __STDC__
+# include <limits.h>
+#else
+# include <assert.h>
+#endif
+
+#undef $2
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char $2 ();
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined __stub_$2 || defined __stub___$2
+choke me
+#endif
+
+int
+main ()
+{
+return $2 ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  eval "$3=yes"
+else
+  eval "$3=no"
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_func
 cat >config.log <<_ACEOF
 This file contains any messages produced by compilers while
 running configure, to aid debugging if configure makes a mistake.
@@ -2219,15 +2290,27 @@ test -n "$target_alias" &&
 #--------------------------------------------------------------------
 CFITSIO_MAJOR=3
 
-CFITSIO_MINOR=45
+CFITSIO_MINOR=47
 
 # Increment soname each time the interface changes:
-CFITSIO_SONAME=7
+CFITSIO_SONAME=8
 
 
 #--------------------------------------------------------------------
 # Command options
 #--------------------------------------------------------------------
+
+ADD_CURL=yes
+# Check whether --enable-curl was given.
+if test "${enable_curl+set}" = set; then :
+  enableval=$enable_curl;  if test $enableval = no; then ADD_CURL=no; fi
+
+fi
+
+if test "x$ADD_CURL" = xno; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Not linking with curl for remote file i/o support" >&5
+$as_echo "$as_me: WARNING: Not linking with curl for remote file i/o support" >&2;}
+fi
 
 # Check whether --enable-reentrant was given.
 if test "${enable_reentrant+set}" = set; then :
@@ -4780,16 +4863,11 @@ if test "x$CFITSIO_SHLIB" = x; then CFITSIO_SHLIB="lib\${PACKAGE}\${SHLIB_SUFFIX
 
 # Curl library (will be pulled in to the shared CFITSIO library):
 # ---------------------------------------------------------------
-CURL_LIB=""
 CURL_INC=""
-# Use curl-config to get compiler & linker flags, if available.
-# On Macs, prefer XCode curl-config, and reject MacPorts version
-# until further notice to prevent build errors:
-if test "x$EXT" = xdarwin -a -x /usr/bin/curl-config; then
-  CURLCONFIG="/usr/bin/curl-config"
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: checking for curl-config... choosing /usr/bin/curl-config on Mac" >&5
-$as_echo "checking for curl-config... choosing /usr/bin/curl-config on Mac" >&6; }
-else
+CURL_LIB=""
+CURL_LIB_PATH=""
+if test "x$ADD_CURL" = xyes; then
+  # Use curl-config to get compiler & linker flags, if available.
   # Extract the first word of "curl-config", so it can be a program name with args.
 set dummy curl-config; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -4800,7 +4878,6 @@ else
   if test -n "$CURLCONFIG"; then
   ac_cv_prog_CURLCONFIG="$CURLCONFIG" # Let the user override the test.
 else
-  ac_prog_rejected=no
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
@@ -4808,10 +4885,6 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    if test "$as_dir/$ac_word$ac_exec_ext" = "/opt/local/bin/curl-config"; then
-       ac_prog_rejected=yes
-       continue
-     fi
     ac_cv_prog_CURLCONFIG="curl-config"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
@@ -4820,18 +4893,6 @@ done
   done
 IFS=$as_save_IFS
 
-if test $ac_prog_rejected = yes; then
-  # We found a bogon in the path, so make sure we never use it.
-  set dummy $ac_cv_prog_CURLCONFIG
-  shift
-  if test $# != 0; then
-    # We chose a different compiler from the bogus one.
-    # However, it has the same basename, so the bogon will be chosen
-    # first if we set CURLCONFIG to just the basename; use the full file name.
-    shift
-    ac_cv_prog_CURLCONFIG="$as_dir/$ac_word${1+' '}$@"
-  fi
-fi
 fi
 fi
 CURLCONFIG=$ac_cv_prog_CURLCONFIG
@@ -4844,31 +4905,38 @@ $as_echo "no" >&6; }
 fi
 
 
-fi
-if test "x$CURLCONFIG" != x; then
-  CURL_LIB=`$CURLCONFIG --libs`
-  CURL_INC=`$CURLCONFIG --cflags`
-  # Also reject anaconda curl on Macs until further notice:
-  if test "x$EXT" = xdarwin -a `echo $CURL_LIB $CURL_INC | grep -ci anaconda` -gt 0; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Rejecting Anaconda curl. Disabling HTTPS support." >&5
-$as_echo "$as_me: WARNING: Rejecting Anaconda curl. Disabling HTTPS support." >&2;}
-  else
-    LIBS="$CURL_LIB $LIBS"
+  if test "x$CURLCONFIG" != x; then
+    CURL_LIB=`$CURLCONFIG --libs`
+    CURL_INC=`$CURLCONFIG --cflags`
+    if test "x$CURL_LIB" != x; then
+      LIBS_CURL="$CURL_LIB"
+      # Mac OS: For third-party curl-config, acquire an rpath:
+      if test `echo $host | grep -c apple-darwin` -ne 0 -a `echo $CURL_LIB | grep -c "^\-L"` -gt 0; then
+        CURL_LIB_PATH=`echo ${CURL_LIB} | tr " " "\012" | grep "^\-L" | tr "\012" " " | sed 's:-L::' | sed 's: $::'`
+        if test "x$CURL_LIB_PATH" != x; then
+          LIBS_CURL="-Wl,-rpath,$CURL_LIB_PATH $CURL_LIB"
+        fi
+      fi
+      if test `echo $host | grep -c cygwin` -ne 0 -o `echo $host | grep -c mingw32` -ne 0; then
+          LIBS="$CURL_LIB $LIBS"
+      fi
+      $as_echo "#define CFITSIO_HAVE_CURL 1" >>confdefs.h
+
+    fi
     if test "x$CURL_INC" != x; then
       CFLAGS="$CURL_INC $CFLAGS"
     fi
-    $as_echo "#define CFITSIO_HAVE_CURL 1" >>confdefs.h
-
+  # No curl-config:
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: curl-config not found. Disabling curl support." >&5
+$as_echo "$as_me: WARNING: curl-config not found. Disabling curl support." >&2;}
+  # Incomplete stubs for possible future use:
+  #  AC_CHECK_LIB([curl],[main],[],
+  #       [AC_MSG_WARN(Not building curl support for CFITSIO)])
+  #  AC_CHECK_HEADER(curl.h,[])
   fi
-# No curl-config:
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: curl-config not found. Disabling HTTPS support." >&5
-$as_echo "$as_me: WARNING: curl-config not found. Disabling HTTPS support." >&2;}
-# Incomplete stubs for possible future use:
-#  AC_CHECK_LIB([curl],[main],[],
-#       [AC_MSG_WARN(Not building curl support for CFITSIO)])
-#  AC_CHECK_HEADER(curl.h,[])
 fi
+
 
 # GSIFTP flags:
 if test "x$GSIFTP_PATH" != x -a "x$GSIFTP_FLAVOUR" != x; then
@@ -5004,8 +5072,8 @@ rm -f core conftest.err conftest.$ac_objext \
 # some systems define flock_t, for others we have to define it ourselves
 # -------------------------------------------------------------------------
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking do we have flock_t defined in sys/fcntl.h" >&5
-$as_echo_n "checking do we have flock_t defined in sys/fcntl.h... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether flock_t is defined in sys/fcntl.h" >&5
+$as_echo_n "checking whether flock_t is defined in sys/fcntl.h... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <sys/fcntl.h>
@@ -5034,8 +5102,8 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 if test "$HAVE_FLOCK_T" != 1; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking do we have flock_t defined in sys/flock.h" >&5
-$as_echo_n "checking do we have flock_t defined in sys/flock.h... " >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether flock_t is defined in sys/flock.h" >&5
+$as_echo_n "checking whether flock_t is defined in sys/flock.h... " >&6; }
    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <sys/flock.h>
@@ -5126,8 +5194,8 @@ fi
 # does not define it at all
 # -------------------------------------------------------------------------
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking do we have union semun defined" >&5
-$as_echo_n "checking do we have union semun defined... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether union semun is defined" >&5
+$as_echo_n "checking whether union semun is defined... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <sys/ipc.h>
@@ -5156,6 +5224,20 @@ else
 $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# -------------------------------------------------------------------------
+# fmemopen is not available on e.g. older Macs:
+# -------------------------------------------------------------------------
+
+ac_fn_c_check_func "$LINENO" "fmemopen" "ac_cv_func_fmemopen"
+if test "x$ac_cv_func_fmemopen" = xyes; then :
+  $as_echo "#define HAVE_FMEMOPEN 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Disabling support for compressed files via FTPS" >&5
+$as_echo "$as_me: WARNING: Disabling support for compressed files via FTPS" >&2;}
+fi
+
 
 # ==================== END OF SHARED MEMORY DRIVER SECTION ================
 # ================= test for the unix networking functions ================
