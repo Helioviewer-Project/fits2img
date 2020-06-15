@@ -17,11 +17,10 @@ extern "C" {
     void swap_denoise(float *, size_t, size_t, int, double);
     void swap_crispen(float *, size_t, size_t);
 
-    void swap_diff(float *, size_t, size_t, const float *, size_t, size_t,
-                   double);
+    void swap_diff(float *, size_t, size_t, const float *, size_t, size_t, double);
 
-    guint8 *swap_xfer_gamma(const float *, size_t, size_t, float, float,
-                            double);
+    void swap_clamp(float *, size_t, size_t, float, float);
+    guint8 *swap_xfer_gamma(const float *, size_t, size_t, float, float, double);
     guint8 *swap_xfer_log(const float *, size_t, size_t, float, float);
 
 /* ---------------------------------------------------------------------- */

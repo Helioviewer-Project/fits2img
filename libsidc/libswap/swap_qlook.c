@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_qlook.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <math.h>
@@ -16,8 +16,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "swap_qlook.h"
 #include "swap_vliet.h"
 
-void swap_denoise(float *out, size_t w, size_t h, int dc, double ns)
-{
+void swap_denoise(float *out, size_t w, size_t h, int dc, double ns) {
     size_t i, j;
     float d[9], a[9], t, p, med, mad;
     float *in = (float *) g_malloc(w * h * sizeof *in);
@@ -88,8 +87,7 @@ void swap_denoise(float *out, size_t w, size_t h, int dc, double ns)
 #define WIDE   .5
 #define BLUR   1
 
-void swap_crispen(float *out, size_t w, size_t h)
-{
+void swap_crispen(float *out, size_t w, size_t h) {
     size_t i, l = w * h;
     float *in = (float *) g_malloc(3 * l * sizeof *in);
 
@@ -111,8 +109,7 @@ void swap_crispen(float *out, size_t w, size_t h)
 }
 
 void swap_diff(float *im2, size_t w2, size_t h2, const float *im1, size_t w1,
-               size_t h1, double th)
-{
+               size_t h1, double th) {
     size_t W = MIN(w2, w1), H = MIN(h2, h1), i, j;
 
     for (j = 0; j < H; ++j)
@@ -131,9 +128,16 @@ void swap_diff(float *im2, size_t w2, size_t h2, const float *im1, size_t w1,
             im2[j * w2 + i] = 2047;
 }
 
-guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi,
-                        double g)
-{
+void swap_clamp(float *out, size_t w, size_t h, float lo, float hi) {
+    size_t len = w * h, i;
+
+    for (i = 0; i < len; ++i) {
+        float p = out[i];
+        out[i] = CLAMP(isfinite(p) ? p : lo, lo, hi);
+    }
+}
+
+guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi, double g) {
     size_t len = w * h, i;
     guint8 *out = (guint8 *) g_malloc(len * sizeof *out), *o = out;
 
@@ -150,7 +154,7 @@ guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi,
 
     double g1 = 1. / g, pr = 255. / pow(r, g1);
     for (i = 0; i < len; ++i) {
-        double p = *in++ - lo;
+        double p = in[i] - lo;
         p = pow(CLAMP(p, 0, r), g1) * pr + .5;
         *o++ = CLAMP(p, 0, 255);
     }
@@ -158,8 +162,7 @@ guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi,
     return out;
 }
 
-guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi)
-{
+guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi) {
     size_t len = w * h, i;
     guint8 *out = (guint8 *) g_malloc(len * sizeof *out), *o = out;
 
@@ -176,7 +179,7 @@ guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi)
 
     double lr = 255 / log1p(r);
     for (i = 0; i < len; ++i) {
-        double p = *in++ - lo;
+        double p = in[i] - lo;
         p = log1p(CLAMP(p, 0, r)) * lr + .5;
         *o++ = CLAMP(p, 0, 255);
     }

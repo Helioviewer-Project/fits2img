@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: fits2img.c 2636 2014-11-21 18:22:17Z bogdan $";
 
 #include <string.h>
@@ -42,45 +42,45 @@ int main(int argc, char **argv) {
     int precinctw = DEF_PRECINCTW, precincth = DEF_PRECINCTH;
 
     GOptionEntry entries[] = {
-        {"appname", 'a', 0, G_OPTION_ARG_STRING, &appname,
-         "Present to LMAT other appname than " APP_NAME, APP_NAME},
-        {"out-dir", 'o', 0, G_OPTION_ARG_STRING, &outdir,
-         "Output directory", "name"},
-        {"out-dateobs-dir", 'O', 0, G_OPTION_ARG_NONE, &datedir,
-         "Use the date of observation for the output directory name", NULL},
-        {"function", 'f', 0, G_OPTION_ARG_STRING, &func,
-         "Pixel transfer function: gamma, log", "gamma"},
-        {"gamma", 'g', 0, G_OPTION_ARG_DOUBLE, &gamma,
-         "Gamma correction exponent", G_STRINGIFY(DEF_GAMMA)},
-        {"min-clip", 'm', 0, G_OPTION_ARG_DOUBLE, &clipmin,
-         "Clip lower pixel values", G_STRINGIFY(DEF_CLIP_MIN)},
-        {"max-clip", 'M', 0, G_OPTION_ARG_DOUBLE, &clipmax,
-         "Clip higher pixel values", G_STRINGIFY(DEF_CLIP_MAX)},
-        {"jpeg", 'j', 0, G_OPTION_ARG_INT, &jpeg,
-         "Output a JPEG file of a certain quality instead of a PNG", "75"},
-        {"pgm", 'P', 0, G_OPTION_ARG_NONE, &pgm,
-         "Output a PGM file instead of a PNG", NULL},
-        {"jhv", 'J', 0, G_OPTION_ARG_NONE, &jhv,
-         "Output a file suitable for use with Helioviewer", NULL},
-        {"cratio", 0, 0, G_OPTION_ARG_DOUBLE, &cratio,
-         "OpenJPEG compression ratio", G_STRINGIFY(DEF_CRATIO)},
-        {"nlayers", 0, 0, G_OPTION_ARG_INT, &nlayers,
-         "OpenJPEG number of layers", G_STRINGIFY(DEF_NLAYERS)},
-        {"nresolutions", 0, 0, G_OPTION_ARG_INT, &nresolutions,
-         "OpenJPEG number of resolutions", G_STRINGIFY(DEF_NRESOLUTIONS)},
-        {"precinctw", 0, 0, G_OPTION_ARG_INT, &precinctw,
-         "OpenJPEG precinct width", G_STRINGIFY(DEF_PRECINCTW)},
-        {"precincth", 0, 0, G_OPTION_ARG_INT, &precincth,
-         "OpenJPEG precinct height", G_STRINGIFY(DEF_PRECINCTH)},
-        {"debug", 0, 0, G_OPTION_ARG_NONE, &debug,
-         "OpenJPEG debug mode", NULL},
-        {"yuv", 'y', 0, G_OPTION_ARG_STRING, &yuv,
-         "Append YUV420 to a file instead", "name"},
-        {"colormap", 'C', 0, G_OPTION_ARG_STRING, &cm,
-         "Use a colormap: hot, jet, aia171", "name"},
-        {"no-verify", 'N', 0, G_OPTION_ARG_NONE, &noverify,
-         "Do not verify FITS checksums", NULL},
-        {NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL}
+        { "appname", 'a', 0, G_OPTION_ARG_STRING, &appname,
+         "Present to LMAT other appname than " APP_NAME, APP_NAME },
+        { "out-dir", 'o', 0, G_OPTION_ARG_STRING, &outdir,
+         "Output directory", "name" },
+        { "out-dateobs-dir", 'O', 0, G_OPTION_ARG_NONE, &datedir,
+         "Use the date of observation for the output directory name", NULL },
+        { "function", 'f', 0, G_OPTION_ARG_STRING, &func,
+         "Pixel transfer function: gamma, log", "gamma" },
+        { "gamma", 'g', 0, G_OPTION_ARG_DOUBLE, &gamma,
+         "Gamma correction exponent", G_STRINGIFY(DEF_GAMMA) },
+        { "min-clip", 'm', 0, G_OPTION_ARG_DOUBLE, &clipmin,
+         "Clip lower pixel values", G_STRINGIFY(DEF_CLIP_MIN) },
+        { "max-clip", 'M', 0, G_OPTION_ARG_DOUBLE, &clipmax,
+         "Clip higher pixel values", G_STRINGIFY(DEF_CLIP_MAX) },
+        { "jpeg", 'j', 0, G_OPTION_ARG_INT, &jpeg,
+         "Output a JPEG file of a certain quality instead of a PNG", "75" },
+        { "pgm", 'P', 0, G_OPTION_ARG_NONE, &pgm,
+         "Output a PGM file instead of a PNG", NULL },
+        { "jhv", 'J', 0, G_OPTION_ARG_NONE, &jhv,
+         "Output a file suitable for use with Helioviewer", NULL },
+        { "cratio", 0, 0, G_OPTION_ARG_DOUBLE, &cratio,
+         "OpenJPEG compression ratio", G_STRINGIFY(DEF_CRATIO) },
+        { "nlayers", 0, 0, G_OPTION_ARG_INT, &nlayers,
+         "OpenJPEG number of layers", G_STRINGIFY(DEF_NLAYERS) },
+        { "nresolutions", 0, 0, G_OPTION_ARG_INT, &nresolutions,
+         "OpenJPEG number of resolutions", G_STRINGIFY(DEF_NRESOLUTIONS) },
+        { "precinctw", 0, 0, G_OPTION_ARG_INT, &precinctw,
+         "OpenJPEG precinct width", G_STRINGIFY(DEF_PRECINCTW) },
+        { "precincth", 0, 0, G_OPTION_ARG_INT, &precincth,
+         "OpenJPEG precinct height", G_STRINGIFY(DEF_PRECINCTH) },
+        { "debug", 0, 0, G_OPTION_ARG_NONE, &debug,
+         "OpenJPEG debug mode", NULL },
+        { "yuv", 'y', 0, G_OPTION_ARG_STRING, &yuv,
+         "Append YUV420 to a file instead", "name" },
+        { "colormap", 'C', 0, G_OPTION_ARG_STRING, &cm,
+         "Use a colormap: hot, jet, aia171", "name" },
+        { "no-verify", 'N', 0, G_OPTION_ARG_NONE, &noverify,
+         "Do not verify FITS checksums", NULL },
+        { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
     };
 
     p2sc_option(argc, argv, APP_NAME, "FILE - SWAP Media Product Generator",
@@ -93,6 +93,7 @@ int main(int argc, char **argv) {
     procfits_t *p = fitsproc(argv[1], noverify);
 
     guint8 *g;
+    swap_clamp(p->im, p->w, p->h, clipmin, clipmax);
     swap_crispen(p->im, p->w, p->h);
     if (func && !strcmp(func, "log"))
         g = swap_xfer_log(p->im, p->w, p->h, clipmin, clipmax);
@@ -120,11 +121,11 @@ int main(int argc, char **argv) {
                 .cratio = cratio,
                 .nlayers = nlayers,
                 .nresolutions = nresolutions,
-                .precinct = {precinctw, precincth},
+                .precinct = { precinctw, precincth },
                 .meta = {
                          .xml = p->xml,
                          .pal = cm ? swap_palette_rgb_get(cm) : swap_palette_rgb_get("aia171")
-                         },
+                          },
                 .debug = debug
             };
             swap_write_j2k(name, g, p->w, p->h, &j2kp);
