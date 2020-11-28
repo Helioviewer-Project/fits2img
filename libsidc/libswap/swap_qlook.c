@@ -133,7 +133,8 @@ void swap_clamp(float *out, size_t w, size_t h, float lo, float hi) {
 
     for (i = 0; i < len; ++i) {
         float p = out[i];
-        out[i] = CLAMP(isfinite(p) ? p : lo, lo, hi);
+        p = isfinite(p) ? p : (isinf(p) ? hi : lo);
+        out[i] = CLAMP(p, lo, hi);
     }
 }
 
