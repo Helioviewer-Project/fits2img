@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
         { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
     };
 
-    p2sc_option(argc, argv, APP_NAME, "FILE - SWAP Media Product Generator",
+    p2sc_option(argc, argv, APP_NAME, "FILE - SWHV Media Product Generator",
                 "This program generates quicklook images out of FITS files", entries);
     if (appname) {
         p2sc_set_string("appname", appname);
