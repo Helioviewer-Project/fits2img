@@ -58,7 +58,7 @@ extern "C" {
     } while (0)
 
     void _p2sc_msg(const char *, const char *, int, const char *, int,
-                   const char *, ...) __attribute__ ((format(printf, 6, 7)));
+                   const char *, ...) __attribute__((format(printf, 6, 7)));
 
 /* ---------------------------------------------------------------------- */
 

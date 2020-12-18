@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_draw.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <string.h>
@@ -18,8 +18,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "swap_draw.h"
 
 /* [[1,2,1], [2,4,2], [1,2,1]] */
-static void blur(guint8 * buf, int w, int h)
-{
+static void blur(guint8 * buf, int w, int h) {
     int x, y;
     unsigned int osum, nsum;
 
@@ -48,8 +47,7 @@ typedef struct {
     int h;
 } bmap_t;
 
-static bmap_t *new_bmap(int w, int h)
-{
+static bmap_t *new_bmap(int w, int h) {
     bmap_t *b = (bmap_t *) g_malloc(sizeof *b);
 
     b->b = (guint8 *) g_malloc(w * h);
@@ -58,16 +56,14 @@ static bmap_t *new_bmap(int w, int h)
     return b;
 }
 
-static void del_bmap(bmap_t * b)
-{
+static void del_bmap(bmap_t * b) {
     if (b) {
         g_free(b->b);
         g_free(b);
     }
 }
 
-static void ft2bmap(FT_Bitmap * bt, bmap_t * bm, int bord)
-{
+static void ft2bmap(FT_Bitmap * bt, bmap_t * bm, int bord) {
     int i, w = bt->width, h = bt->rows;
     guint8 *src = bt->buffer, *dst = bm->b + bord * bm->w + bord;
 
@@ -85,9 +81,7 @@ static void ft2bmap(FT_Bitmap * bt, bmap_t * bm, int bord)
     else if ((_a) > (int) (_b) - 1) \
         break \
 
-static inline void draw_bmap(bmap_t * bm, int x, int y, guint8 * im,
-                             size_t w, size_t h)
-{
+static inline void draw_bmap(bmap_t * bm, int x, int y, guint8 * im, size_t w, size_t h) {
     for (int j = 0; j < bm->h; ++j) {
         int yy = y + j;
         _CHK(yy, h);
@@ -104,9 +98,7 @@ static inline void draw_bmap(bmap_t * bm, int x, int y, guint8 * im,
     }
 }
 
-static inline void draw_bmap_inv(bmap_t * bm, int x, int y, guint8 * im,
-                                 size_t w, size_t h)
-{
+static inline void draw_bmap_inv(bmap_t * bm, int x, int y, guint8 * im, size_t w, size_t h) {
     for (int j = 0; j < bm->h; ++j) {
         int yy = y + j;
         _CHK(yy, h);
@@ -125,9 +117,7 @@ static inline void draw_bmap_inv(bmap_t * bm, int x, int y, guint8 * im,
 
 /* draw blurred to reduce bits allocated to timestamp */
 /* draw grey shadow to be visible on light background */
-static void draw_glyph(FT_Glyph glyph, int x, int y, guint8 * im, size_t w,
-                       size_t h)
-{
+static void draw_glyph(FT_Glyph glyph, int x, int y, guint8 * im, size_t w, size_t h) {
     if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_LIGHT, 0, 0))
         return;
 
@@ -158,9 +148,7 @@ static void draw_glyph(FT_Glyph glyph, int x, int y, guint8 * im, size_t w,
 }
 
 static void draw_string(const char *font, size_t size,
-                        const char *text, int x, int y,
-                        guint8 * im, size_t w, size_t h)
-{
+                        const char *text, int x, int y, guint8 * im, size_t w, size_t h) {
     FT_Library lib;
     FT_Face face;
 
@@ -177,8 +165,7 @@ static void draw_string(const char *font, size_t size,
     for (i = 0; i < len; ++i) {
         FT_UInt idx = FT_Get_Char_Index(face, text[i]);
 
-        if (FT_Load_Glyph(face, idx, FT_LOAD_DEFAULT) ||
-            FT_Get_Glyph(slot, &glyph))
+        if (FT_Load_Glyph(face, idx, FT_LOAD_DEFAULT) || FT_Get_Glyph(slot, &glyph))
             continue;
 
         draw_glyph(glyph, x, y, im, w, h);
@@ -196,10 +183,8 @@ static void draw_string(const char *font, size_t size,
 #define P2SC_FONT_REGULAR   SIDC_INSTALL_LIB "/data/LiberationSans-Regular.ttf"
 #define P2SC_FONT_DROIDBOLD SIDC_INSTALL_LIB "/data/DroidSans-Bold.ttf"
 
-void swap_drawstring(const char *str, guint8 * im, size_t w, size_t h)
-{
+void swap_drawstring(const char *str, guint8 * im, size_t w, size_t h) {
     size_t fs = ROUND_UPTO(h / 32, 4);
     size_t bd = CLAMP(h / 64, 8, 16);
-    draw_string(P2SC_FONT_DROIDBOLD, CLAMP(fs, 20, 32), str, bd, h - 3 - bd,
-                im, w, h);
+    draw_string(P2SC_FONT_DROIDBOLD, CLAMP(fs, 20, 32), str, bd, h - 3 - bd, im, w, h);
 }

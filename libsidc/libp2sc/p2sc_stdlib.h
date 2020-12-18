@@ -20,16 +20,14 @@ extern "C" {
 #define P_OBET_FHEX    "%012"G_GINT64_MODIFIER"x"
 #define P_OBET_F       "%014"G_GINT64_MODIFIER"u"
 
-    void p2sc_init(const char *, const char *, const char *, int);
-
-    void p2sc_set_runid(int);
-    int p2sc_get_runid(void);
+    void p2sc_init(const char *, const char *, const char *, const char *);
 
     /*
        generic
        "filename"
        "prgname"
        "appname"
+       "runid"
        "history"
 
        SW-TMR

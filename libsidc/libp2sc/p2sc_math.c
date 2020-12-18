@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_math.c 5108 2014-06-19 12:29:23Z bogdan $";
 
 #include <math.h>
@@ -20,8 +20,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #define UPSIDE_DOWN 180.
 #define MOUNT_ROLL   90.        /* some people say 92 */
 
-double p2sc_swaproll(double lar)
-{
+double p2sc_swaproll(double lar) {
     int ilar = lar * 1000;
     double a = UPSIDE_DOWN + MOUNT_ROLL;
 
@@ -39,8 +38,7 @@ double p2sc_swaproll(double lar)
         a += 270;
         break;
     default:
-        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "Unknown LAR quaternion: %g",
-                 lar);
+        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "Unknown LAR quaternion: %g", lar);
     }
 
     while (a >= 360)
@@ -49,8 +47,7 @@ double p2sc_swaproll(double lar)
     return a;
 }
 
-static inline double ipow10(int power)
-{
+static inline double ipow10(int power) {
     static const double powers[] = {
         1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
         1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15
@@ -62,8 +59,7 @@ static inline double ipow10(int power)
     return powers[power];
 }
 
-double p2sc_round(double v, int d)
-{
+double p2sc_round(double v, int d) {
     int p;
     double i, f = modf(v, &i);
 
@@ -82,16 +78,11 @@ double p2sc_round(double v, int d)
 }
 
 /* matrix multiplication code lifted from SPICE for convenience */
-static void mtxm(void *m1, void *m2, int ncol1, int nr1r2, int ncol2,
-                 void *mout);
-static void mxm(void *m1, void *m2, int nrow1, int ncol1, int ncol2,
-                void *mout);
-static void mxmt(void *m1, void *m2, int nrow1, int nc1c2, int nrow2,
-                 void *mout);
+static void mtxm(void *m1, void *m2, int ncol1, int nr1r2, int ncol2, void *mout);
+static void mxm(void *m1, void *m2, int nrow1, int ncol1, int ncol2, void *mout);
+static void mxmt(void *m1, void *m2, int nrow1, int nc1c2, int nrow2, void *mout);
 
-static void mtxm(void *m1, void *m2, int ncol1, int nr1r2, int ncol2,
-                 void *mout)
-{
+static void mtxm(void *m1, void *m2, int ncol1, int nr1r2, int ncol2, void *mout) {
 #define INDEX(width, row, col) ((row)*(width) + (col))
 
     double innerProduct;
@@ -109,8 +100,7 @@ static void mtxm(void *m1, void *m2, int ncol1, int nr1r2, int ncol2,
         for (col = 0; col < ncol2; col++) {
             innerProduct = 0;
             for (i = 0; i < nr1r2; i++)
-                innerProduct +=
-                    loc_m1[INDEX(ncol1, i, row)] * loc_m2[INDEX(ncol2, i, col)];
+                innerProduct += loc_m1[INDEX(ncol1, i, row)] * loc_m2[INDEX(ncol2, i, col)];
 
             tmpmat[INDEX(ncol2, row, col)] = innerProduct;
         }
@@ -121,8 +111,7 @@ static void mtxm(void *m1, void *m2, int ncol1, int nr1r2, int ncol2,
 #undef INDEX
 }
 
-static void mxm(void *m1, void *m2, int nrow1, int ncol1, int ncol2, void *mout)
-{
+static void mxm(void *m1, void *m2, int nrow1, int ncol1, int ncol2, void *mout) {
 #define INDEX(width, row, col) ((row)*(width) + (col))
 
     double innerProduct;
@@ -140,8 +129,7 @@ static void mxm(void *m1, void *m2, int nrow1, int ncol1, int ncol2, void *mout)
         for (col = 0; col < ncol2; col++) {
             innerProduct = 0;
             for (i = 0; i < ncol1; i++)
-                innerProduct +=
-                    loc_m1[INDEX(ncol1, row, i)] * loc_m2[INDEX(ncol2, i, col)];
+                innerProduct += loc_m1[INDEX(ncol1, row, i)] * loc_m2[INDEX(ncol2, i, col)];
 
             tmpmat[INDEX(ncol2, row, col)] = innerProduct;
         }
@@ -152,9 +140,7 @@ static void mxm(void *m1, void *m2, int nrow1, int ncol1, int ncol2, void *mout)
 #undef INDEX
 }
 
-static void mxmt(void *m1, void *m2, int nrow1, int nc1c2, int nrow2,
-                 void *mout)
-{
+static void mxmt(void *m1, void *m2, int nrow1, int nc1c2, int nrow2, void *mout) {
 #define INDEX(width, row, col) ((row)*(width) + (col))
 
     double innerProduct;
@@ -172,8 +158,7 @@ static void mxmt(void *m1, void *m2, int nrow1, int nc1c2, int nrow2,
         for (col = 0; col < nrow2; col++) {
             innerProduct = 0;
             for (i = 0; i < nc1c2; i++)
-                innerProduct +=
-                    loc_m1[INDEX(nc1c2, row, i)] * loc_m2[INDEX(nc1c2, col, i)];
+                innerProduct += loc_m1[INDEX(nc1c2, row, i)] * loc_m2[INDEX(nc1c2, col, i)];
 
             tmpmat[INDEX(nrow2, row, col)] = innerProduct;
         }
@@ -184,8 +169,7 @@ static void mxmt(void *m1, void *m2, int nrow1, int nc1c2, int nrow2,
 #undef INDEX
 }
 
-void p2sc_dctm(double *m, int N)
-{
+void p2sc_dctm(double *m, int N) {
     int i, j;
     double s1 = 1 / sqrt(N), s2 = M_SQRT2 / sqrt(N);
 
@@ -196,21 +180,18 @@ void p2sc_dctm(double *m, int N)
             m[j * N + i] = s2 * cos(M_PI * (2 * i + 1) * j / (2 * N));
 }
 
-void p2sc_fdct(double *n, double *m, int N)
-{
+void p2sc_fdct(double *n, double *m, int N) {
     mxmt(n, m, N, N, N, n);
     mxm(m, n, N, N, N, n);
 }
 
-void p2sc_idct(double *n, double *m, int N)
-{
+void p2sc_idct(double *n, double *m, int N) {
     mxm(n, m, N, N, N, n);
     mtxm(m, n, N, N, N, n);
 }
 
 /* http://mathworld.wolfram.com/Circle-CircleIntersection.html */
-double p2sc_circleoverlap(double R, double r, double d)
-{
+double p2sc_circleoverlap(double R, double r, double d) {
     double f, R2 = R * R, r2 = r * r, d2 = d * d;
 
     if (d >= R + r)
@@ -225,8 +206,7 @@ double p2sc_circleoverlap(double R, double r, double d)
 
         if (fabs(a1) <= 1 && fabs(a2) <= 1) {
             ia = r2 * acos(a1) + R2 * acos(a2) -
-                0.5 * sqrt((-d + r + R) * (d + r - R) * (d - r + R) *
-                           (d + r + R));
+                0.5 * sqrt((-d + r + R) * (d + r - R) * (d - r + R) * (d + r + R));
 
             f = ia / (M_PI * R2);
         }
@@ -245,8 +225,7 @@ double p2sc_circleoverlap(double R, double r, double d)
 #define R2D (180 / M_PI)
 #define TRIG_TOL 1e-10
 
-double cosd(double angle)
-{
+double cosd(double angle) {
     int i;
 
     if (fmod(angle, 90.0) == 0.0) {
@@ -266,8 +245,7 @@ double cosd(double angle)
     return cos(angle * D2R);
 }
 
-double sind(double angle)
-{
+double sind(double angle) {
     int i;
 
     if (fmod(angle, 90.0) == 0.0) {
@@ -287,8 +265,7 @@ double sind(double angle)
     return sin(angle * D2R);
 }
 
-void sincosd(double angle, double *s, double *c)
-{
+void sincosd(double angle, double *s, double *c) {
     int i;
 
     if (fmod(angle, 90.0) == 0.0) {
@@ -318,8 +295,7 @@ void sincosd(double angle, double *s, double *c)
     *c = cos(angle);
 }
 
-double tand(double angle)
-{
+double tand(double angle) {
     double resid;
 
     resid = fmod(angle, 360.0);
@@ -334,8 +310,7 @@ double tand(double angle)
     return tan(angle * D2R);
 }
 
-double acosd(double v)
-{
+double acosd(double v) {
     if (v >= 1.0) {
         if (v - 1.0 < TRIG_TOL)
             return 0.0;
@@ -349,8 +324,7 @@ double acosd(double v)
     return acos(v) * R2D;
 }
 
-double asind(double v)
-{
+double asind(double v) {
     if (v <= -1.0) {
         if (v + 1.0 > -TRIG_TOL)
             return -90.0;
@@ -364,8 +338,7 @@ double asind(double v)
     return asin(v) * R2D;
 }
 
-double atand(double v)
-{
+double atand(double v) {
     if (v == -1.0) {
         return -45.0;
     } else if (v == 0.0) {
@@ -377,8 +350,7 @@ double atand(double v)
     return atan(v) * R2D;
 }
 
-double atan2d(double y, double x)
-{
+double atan2d(double y, double x) {
     if (y == 0.0) {
         if (x >= 0.0) {
             return 0.0;

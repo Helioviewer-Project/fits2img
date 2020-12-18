@@ -27,8 +27,7 @@ extern "C" {
         int debug;
     } swap_j2kparams_t;
 
-    void swap_write_j2k(const char *, const guint8 *, size_t, size_t,
-                        const swap_j2kparams_t *);
+    void swap_write_j2k(const char *, const guint8 *, size_t, size_t, const swap_j2kparams_t *);
 
     guint8 *swap_read_j2k(const char *name, size_t *, size_t *, size_t *);
 

@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_coord.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <math.h>
@@ -24,24 +24,21 @@ static const char _versionid_[] __attribute__ ((unused)) =
 /* right ascension should be atan(X) */
 /* declination should be atan2(Y, hypot(1, X)) */
 
-static inline void pix2ra(int ss, double x, double ra[2])
-{
+static inline void pix2ra(int ss, double x, double ra[2]) {
     double X = (+x - SWAP_NP2(ss)) * SWAP_P2R(ss);
 
     ra[0] = sin(X);
     ra[1] = cos(X);
 }
 
-static inline void pix2de(int ss, double y, double de[2])
-{
+static inline void pix2de(int ss, double y, double de[2]) {
     double Y = (-y + SWAP_NP2(ss)) * SWAP_P2R(ss);
 
     de[0] = sin(Y);
     de[1] = cos(Y);
 }
 
-void swap_pix2vec(int ss, double x, double y, double v[3])
-{
+void swap_pix2vec(int ss, double x, double y, double v[3]) {
     double ra[2], de[2];
 
     pix2ra(ss, x, ra);
@@ -53,9 +50,7 @@ void swap_pix2vec(int ss, double x, double y, double v[3])
 }
 
 static inline void rade2vec4(const double ra[2], const double de[2],
-                             double v0[3], double v1[3], double v2[3],
-                             double v3[3])
-{
+                             double v0[3], double v1[3], double v2[3], double v3[3]) {
     /* radrec, Z mirrored */
     double x = +de[1] * ra[0];  /* +cos(de) * sin(ra) */
     double y = -de[0];          /* +sin(de)   !!!!!   <- -de[0] from LUT */
@@ -86,8 +81,7 @@ struct swap_pix2vec_lut_t {
     size_t s;
 };
 
-swap_pix2vec_lut_t *swap_pix2vec_lut_alloc(size_t ss)
-{
+swap_pix2vec_lut_t *swap_pix2vec_lut_alloc(size_t ss) {
     swap_pix2vec_lut_t *lut = (swap_pix2vec_lut_t *) g_malloc(sizeof *lut);
 
     lut->l = (double (*)[2]) g_malloc((SWAP_NP * ss) / 2 * sizeof *(lut->l));
@@ -98,8 +92,7 @@ swap_pix2vec_lut_t *swap_pix2vec_lut_alloc(size_t ss)
     return lut;
 }
 
-void swap_pix2vec_lut_free(swap_pix2vec_lut_t * lut)
-{
+void swap_pix2vec_lut_free(swap_pix2vec_lut_t * lut) {
     if (lut) {
         g_free(lut->l);
         memset(lut, 0, sizeof *lut);
@@ -128,8 +121,7 @@ void swap_pix2vec_lut_free(swap_pix2vec_lut_t * lut)
 
 #endif
 
-double *swap_vbore(swap_pix2vec_lut_t * lut)
-{
+double *swap_vbore(swap_pix2vec_lut_t * lut) {
     size_t w = SWAP_NP * lut->s;
     double (*l)[2] = lut->l;
     double *vbore = (double *) g_malloc(3 * w * w * sizeof *vbore);
@@ -140,8 +132,7 @@ double *swap_vbore(swap_pix2vec_lut_t * lut)
 
         for (size_t i = 0; i < w / 2; ++i)
             rade2vec4(l[i], l[j],
-                      vb1 + 3 * i, vb1 + 3 * (w - 1 - i),
-                      vb2 + 3 * i, vb2 + 3 * (w - 1 - i));
+                      vb1 + 3 * i, vb1 + 3 * (w - 1 - i), vb2 + 3 * i, vb2 + 3 * (w - 1 - i));
     }
     END_LOOP;
 
@@ -150,8 +141,7 @@ double *swap_vbore(swap_pix2vec_lut_t * lut)
 
 /* ---------------------------------------------------------------------- */
 
-void swap_vec2pix(int ss, double v[3], double *x, double *y)
-{
+void swap_vec2pix(int ss, double v[3], double *x, double *y) {
     /* Z mirrored, recrad */
     double ra = atan2(v[0], -v[2]);
     double de = atan2(v[1], hypot(v[0], v[2]));

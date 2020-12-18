@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_xml.c 5108 2014-06-19 12:29:23Z bogdan $";
 
 #include <stdarg.h>
@@ -19,8 +19,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "p2sc_msg.h"
 #include "p2sc_xml.h"
 
-static void genx_addtext(genxWriter w, const char *fmt, va_list args)
-{
+static void genx_addtext(genxWriter w, const char *fmt, va_list args) {
     gint len;
     gchar *text;
     genxStatus status;
@@ -40,8 +39,7 @@ static void genx_addtext(genxWriter w, const char *fmt, va_list args)
     GENX_Try(w, status);
 }
 
-void p2sc_xml_addtext(genxWriter w, const char *fmt, ...)
-{
+void p2sc_xml_addtext(genxWriter w, const char *fmt, ...) {
     va_list va;
 
     va_start(va, fmt);
@@ -49,8 +47,7 @@ void p2sc_xml_addtext(genxWriter w, const char *fmt, ...)
     va_end(va);
 }
 
-void p2sc_xml_element(genxWriter w, const char *name, const char *fmt, ...)
-{
+void p2sc_xml_element(genxWriter w, const char *name, const char *fmt, ...) {
     va_list va;
 
     GENX_Try(w, genxStartElementLiteral(w, NULL, (constUtf8) name));
@@ -62,14 +59,12 @@ void p2sc_xml_element(genxWriter w, const char *name, const char *fmt, ...)
     GENX_Try(w, genxEndElement(w));
 }
 
-static genxStatus _xsend(void *u, constUtf8 s)
-{
+static genxStatus _xsend(void *u, constUtf8 s) {
     p2sc_buffer_write((p2sc_buffer_t *) u, strlen((const char *) s), s);
     return GENX_SUCCESS;
 }
 
-static genxStatus _xsendbounded(void *u, constUtf8 start, constUtf8 end)
-{
+static genxStatus _xsendbounded(void *u, constUtf8 start, constUtf8 end) {
     if (end < start)
         return GENX_INTERNAL_ERROR;
 
@@ -77,15 +72,13 @@ static genxStatus _xsendbounded(void *u, constUtf8 start, constUtf8 end)
     return GENX_SUCCESS;
 }
 
-static genxStatus _xflush(void *u G_GNUC_UNUSED)
-{
+static genxStatus _xflush(void *u G_GNUC_UNUSED) {
     return GENX_SUCCESS;
 }
 
 static genxSender bufSender = { _xsend, _xsendbounded, _xflush };
 
-genxWriter p2sc_xml_start(p2sc_buffer_t * buf)
-{
+genxWriter p2sc_xml_start(p2sc_buffer_t * buf) {
     genxStatus status;
     genxWriter w = genxNew(NULL, NULL, buf);
 
@@ -100,8 +93,7 @@ genxWriter p2sc_xml_start(p2sc_buffer_t * buf)
     return w;
 }
 
-void p2sc_xml_end(genxWriter w)
-{
+void p2sc_xml_end(genxWriter w) {
     GENX_Try(w, genxEndDocument(w));
     genxDispose(w);
 }

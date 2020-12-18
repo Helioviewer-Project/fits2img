@@ -15,14 +15,11 @@ extern "C" {
 /* ---------------------------------------------------------------------- */
 
     float *swap_affine(swap_bicubic_t *, const float *, size_t, size_t,
-                       double, double, double, double, double, double, size_t,
-                       size_t);
+                       double, double, double, double, double, double, size_t, size_t);
 
-    float *swap_polar(const float *, size_t, size_t, size_t, size_t,
-                      double, double);
+    float *swap_polar(const float *, size_t, size_t, size_t, size_t, double, double);
 
-    float *swap_polar2(const float *, size_t, size_t, size_t, size_t, double,
-                       double, double);
+    float *swap_polar2(const float *, size_t, size_t, size_t, size_t, double, double, double);
 
     float *swap_rebin(const float *, size_t, size_t, size_t, size_t);
 

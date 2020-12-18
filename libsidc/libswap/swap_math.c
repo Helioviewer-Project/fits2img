@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_math.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <string.h>
@@ -16,17 +16,14 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "swap_math.h"
 #include "swap_vliet.h"
 
-static inline float fetch(const float *in, int w, int h, int i, int j)
-{
+static inline float fetch(const float *in, int w, int h, int i, int j) {
     if (i < 0 || i > w - 1 || j < 0 || j > h - 1)
         return 0;
     else
         return in[j * w + i];
 }
 
-static inline void fetch16(const float *in, int w, int h, int i, int j,
-                           float a[16])
-{
+static inline void fetch16(const float *in, int w, int h, int i, int j, float a[16]) {
     int im1 = i - 1, ip1 = i + 1, ip2 = i + 2;
     int jm1 = j - 1, jp1 = j + 1, jp2 = j + 2;
 
@@ -59,8 +56,7 @@ static inline void fetch16(const float *in, int w, int h, int i, int j,
     }
 }
 
-float swap_fetch9(const float *in, int w, int h, int i, int j, float a[9])
-{
+float swap_fetch9(const float *in, int w, int h, int i, int j, float a[9]) {
     int im1 = i - 1, ip1 = i + 1;
     int jm1 = j - 1, jp1 = j + 1;
 
@@ -95,14 +91,12 @@ struct swap_bicubic_t {
 };
 
 /* (8) http://userweb.cs.utexas.edu/users/fussell/courses/cs384g/lectures/mitchell/Mitchell.pdf */
-static inline float cc(float x, float Q[4])
-{
+static inline float cc(float x, float Q[4]) {
     float xx = x * x;
     return Q[0] + Q[1] * x + Q[2] * xx + Q[3] * xx * x;
 }
 
-swap_bicubic_t *swap_bicubic_alloc(double B, double C)
-{
+swap_bicubic_t *swap_bicubic_alloc(double B, double C) {
     float Q0[4], Q1[4], s;
     swap_bicubic_t *f = (swap_bicubic_t *) g_malloc(sizeof *f);
     float *l = f->l;
@@ -139,25 +133,21 @@ swap_bicubic_t *swap_bicubic_alloc(double B, double C)
     return f;
 }
 
-void swap_bicubic_free(swap_bicubic_t * f)
-{
+void swap_bicubic_free(swap_bicubic_t * f) {
     if (f) {
         memset(f, 0, sizeof *f);
         g_free(f);
     }
 }
 
-static inline int _floor(float f)
-{
+static inline int _floor(float f) {
     if (f >= 0)
         return f;
     else
         return floorf(f);
 }
 
-float swap_bicubic(swap_bicubic_t * f, const float *in, int w, int h, float x,
-                   float y)
-{
+float swap_bicubic(swap_bicubic_t * f, const float *in, int w, int h, float x, float y) {
     float *hf, *vf, a0, a1, a2, a3;
     int i = (int) _floor(x), j = (int) _floor(y), idx = (j << 16) + i;
     float *l = f->l, *n = f->n;
@@ -191,8 +181,7 @@ float swap_bicubic(swap_bicubic_t * f, const float *in, int w, int h, float x,
 #define ELEM_SWAP(a,b) { register elem_type t=(a);(a)=(b);(b)=t; }
 #define PIX_SORT(a,b) { if ((a)>(b)) ELEM_SWAP((a),(b)); }
 
-elem_type swap_median(elem_type * arr, int n)
-{
+elem_type swap_median(elem_type * arr, int n) {
 
     /*
      * The following routines have been built from knowledge gathered
@@ -426,8 +415,7 @@ elem_type swap_median(elem_type * arr, int n)
     }
 }
 
-float *swap_dog(const float *in, size_t w, size_t h, double s1, double s2)
-{
+float *swap_dog(const float *in, size_t w, size_t h, double s1, double s2) {
     size_t i, l = w * h;
     float *b1 = (float *) g_malloc(l * sizeof *b1);
     float *b2 = (float *) g_malloc(l * sizeof *b2);
@@ -443,8 +431,7 @@ float *swap_dog(const float *in, size_t w, size_t h, double s1, double s2)
 }
 
 double swap_mse(const float *im1, const float *im2, size_t w, size_t h,
-                size_t X1, size_t Y1, size_t X2, size_t Y2)
-{
+                size_t X1, size_t Y1, size_t X2, size_t Y2) {
     double d, mse = 0;
     size_t i, j, n = 0;
 
@@ -462,8 +449,7 @@ double swap_mse(const float *im1, const float *im2, size_t w, size_t h,
 #define NH 32768
 #define HC(x)   ((size_t) ((NH - 1) * (x - min) / (max - min) + .5))
 
-static void top_quant(float *in, size_t len, float min, float max, double quant)
-{
+static void top_quant(float *in, size_t len, float min, float max, double quant) {
     size_t i, q = 0, qi = (1 - quant) * len + .5;
     size_t *hist = (size_t *) g_malloc0(NH * sizeof *hist);
 
@@ -488,8 +474,7 @@ static void top_quant(float *in, size_t len, float min, float max, double quant)
 
 #define SF(k,l) fetch(in, w, h, i + (k), j + (l))
 
-float *swap_madmax(const float *in, size_t w, size_t h)
-{
+float *swap_madmax(const float *in, size_t w, size_t h) {
     size_t i, j, l = w * h;
     float h1 = 0.5, h2 = 0.2 * sqrt(5), h3 = 0.25 * sqrt(2), m;
     float min = FLT_MAX, max = FLT_MIN;
@@ -532,8 +517,7 @@ float *swap_madmax(const float *in, size_t w, size_t h)
 
 #define BARY_TRESH .66
 
-void swap_bary(const float *in, size_t w, size_t h, float *xc, float *yc)
-{
+void swap_bary(const float *in, size_t w, size_t h, float *xc, float *yc) {
     size_t i, j;
     double s = 0, v;
 

@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_time.c 5348 2018-04-25 13:55:17Z bogdan $";
 
 #include <stdlib.h>
@@ -20,12 +20,11 @@ static const char _versionid_[] __attribute__ ((unused)) =
 
 #define TWENTY_EIGHT (1ULL << 28)
 
-#define REFERENCE_DATE 2018-01-01 // A date before the rollover date
-#define REFERENCE_PASS 26206      // A pass number on the day REFERENCE_DATE
-#define REFERENCE_OBET 257630618  // The second part of the OBET of REFERENCE_DATE
+#define REFERENCE_DATE 2018-01-01   // A date before the rollover date
+#define REFERENCE_PASS 26206    // A pass number on the day REFERENCE_DATE
+#define REFERENCE_OBET 257630618    // The second part of the OBET of REFERENCE_DATE
 
-static void warn_cuc(const guint8 t[SIZEOF_CUC])
-{
+static void warn_cuc(const guint8 t[SIZEOF_CUC]) {
     static const char hex[] = "0123456789abcdef";
     char obet[2 * SIZEOF_CUC + 1];
 
@@ -38,8 +37,7 @@ static void warn_cuc(const guint8 t[SIZEOF_CUC])
     P2SC_Msg(LVL_WARNING_CORRUPT_INPUT_DATA, "Corrupted OBET: %s", obet);
 }
 
-static void warn_cuc_decoded(guint32 s, guint32 f)
-{
+static void warn_cuc_decoded(guint32 s, guint32 f) {
     /* re-encode CUC */
     guint8 b[SIZEOF_CUC];
     guint32 ss = GUINT32_TO_BE(s);
@@ -51,8 +49,7 @@ static void warn_cuc_decoded(guint32 s, guint32 f)
     warn_cuc(b);
 }
 
-guint64 p2sc_cuc2ticks_decoded(int passno, guint32 s, guint32 f)
-{
+guint64 p2sc_cuc2ticks_decoded(int passno, guint32 s, guint32 f) {
     if (f & 0x3ff)
         warn_cuc_decoded(s, f);
 
@@ -66,8 +63,7 @@ guint64 p2sc_cuc2ticks_decoded(int passno, guint32 s, guint32 f)
     return (sec << 14) + (f >> 10);
 }
 
-guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC], int passno)
-{
+guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC], int passno) {
     if (!t)
         return -1;
 
@@ -80,15 +76,13 @@ guint64 p2sc_cuc2ticks(const guint8 t[SIZEOF_CUC], int passno)
     return p2sc_cuc2ticks_decoded(passno, s, f);
 }
 
-guint64 p2sc_gp1obt2ticks(double gp1obt, int passno)
-{
+guint64 p2sc_gp1obt2ticks(double gp1obt, int passno) {
     if (passno > REFERENCE_PASS && gp1obt < REFERENCE_OBET)
         gp1obt += TWENTY_EIGHT;
     return (guint64) (gp1obt / OBET_RES);
 }
 
-int p2sc_ascii2cuc(guint8 t[SIZEOF_CUC], const char *in)
-{
+int p2sc_ascii2cuc(guint8 t[SIZEOF_CUC], const char *in) {
     guint8 c, i = 0;
 
     if (!t || !in || strlen(in) != 2 * SIZEOF_CUC)
@@ -115,17 +109,14 @@ int p2sc_ascii2cuc(guint8 t[SIZEOF_CUC], const char *in)
     return 0;
 }
 
-char *p2sc_date2string(const double d[6])
-{
+char *p2sc_date2string(const double d[6]) {
     return g_strdup_printf(d[5] < 10 ?
                            "%04d-%02d-%02dT%02d:%02d:0%.3fZ" :
                            "%04d-%02d-%02dT%02d:%02d:%.3fZ",
-                           (int) d[0], (int) d[1], (int) d[2],
-                           (int) d[3], (int) d[4], d[5]);
+                           (int) d[0], (int) d[1], (int) d[2], (int) d[3], (int) d[4], d[5]);
 }
 
-char *p2sc_timestamp(double t, int prec)
-{
+char *p2sc_timestamp(double t, int prec) {
     if (t < 0) {
         t = g_get_real_time() / 1000000.;
     }
@@ -171,8 +162,7 @@ int p2sc_string2date(const char *iso_date, double d[6])
 */
 
 /* adapted from glib gtimer.c git 2009-06-02 */
-int p2sc_string2date(const char *iso_date, double d[6])
-{
+int p2sc_string2date(const char *iso_date, double d[6]) {
     char *date = (char *) iso_date;
     long year, mon, mday, hour, min, sec, usec = 0;
     long val;

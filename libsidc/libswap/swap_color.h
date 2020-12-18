@@ -27,8 +27,7 @@ extern "C" {
     swap_image_yuv_t *swap_image_yuv_alloc(size_t, size_t);
     void swap_image_yuv_free(swap_image_yuv_t *);
 
-    swap_image_yuv_t *swap_mono2yuv(const char *, const guint8 *, size_t,
-                                    size_t);
+    swap_image_yuv_t *swap_mono2yuv(const char *, const guint8 *, size_t, size_t);
     void swap_yuv2yuv420(swap_image_yuv_t *);
 
 /* ---------------------------------------------------------------------- */

@@ -34,7 +34,8 @@ static const char _versionid_[] __attribute__((unused)) =
 
 int main(int argc, char **argv) {
     int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
-    char *appname = NULL, *outdir = NULL, *yuv = NULL, *cm = NULL, *func = NULL;
+    char *appname = NULL, *contact = NULL, *outdir = NULL;
+    char *yuv = NULL, *cm = NULL, *func = NULL;
 
     double clipmin = DEF_CLIP_MIN, clipmax = DEF_CLIP_MAX;
     double gamma = DEF_GAMMA, cratio = DEF_CRATIO;
@@ -44,6 +45,8 @@ int main(int argc, char **argv) {
     GOptionEntry entries[] = {
         { "appname", 'a', 0, G_OPTION_ARG_STRING, &appname,
          "Present to LMAT other appname than " APP_NAME, APP_NAME },
+        { "contact", 'c', 0, G_OPTION_ARG_STRING, &contact,
+         "Contact information", "swhv@oma.be" },
         { "out-dir", 'o', 0, G_OPTION_ARG_STRING, &outdir,
          "Output directory", "name" },
         { "out-dateobs-dir", 'O', 0, G_OPTION_ARG_NONE, &datedir,
@@ -90,7 +93,9 @@ int main(int argc, char **argv) {
         g_free(appname);
     }
 
-    procfits_t *p = fitsproc(argv[1], noverify);
+    contact = contact == NULL ? g_strdup("swhv@oma.be") : contact;
+    procfits_t *p = fitsproc(argv[1], contact, noverify);
+    g_free(contact);
 
     guint8 *g;
     swap_clamp(p->im, p->w, p->h, clipmin, clipmax);

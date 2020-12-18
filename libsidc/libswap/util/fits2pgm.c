@@ -1,7 +1,8 @@
 
 /* Author: Bogdan Nicula, ROB */
 
-static const char _versionid_[] __attribute__ ((unused)) = "$Id: fits2pgm.c 5110 2014-06-19 12:37:15Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) =
+    "$Id: fits2pgm.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <glib.h>
 
@@ -9,8 +10,7 @@ static const char _versionid_[] __attribute__ ((unused)) = "$Id: fits2pgm.c 5110
 #include "swap_color.h"
 #include "swap_file.h"
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     if (argc < 3)
         return 1;
 

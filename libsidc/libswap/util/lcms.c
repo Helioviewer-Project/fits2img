@@ -7,8 +7,7 @@
 
 #include <lcms2.h>
 
-int main(void)
-{
+int main(void) {
     cmsCIExyY d65;
     cmsCIEXYZ D65;
 

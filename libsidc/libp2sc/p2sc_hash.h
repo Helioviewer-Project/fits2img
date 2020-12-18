@@ -18,8 +18,7 @@ extern "C" {
     extern const guint32 crc32table[256];
 
     /* initialise crc16 = 0xffff */
-    static inline guint16 p2sc_crc16(guint16 crc, const guint8 * data,
-                                     size_t len) {
+    static inline guint16 p2sc_crc16(guint16 crc, const guint8 * data, size_t len) {
         while (len--)
             crc = (crc << 8) ^ crc16table[(crc >> 8) ^ *data++];
         return crc;

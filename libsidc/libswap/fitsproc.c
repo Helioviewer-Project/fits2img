@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: fitsproc.c 4468 2015-04-30 12:51:27Z bogdan $";
 
 #include <string.h>
@@ -18,8 +18,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 
 static char *process_header(sfts_t *, const char *);
 
-procfits_t *fitsproc(const char *name, int noverify)
-{
+procfits_t *fitsproc(const char *name, const char *contact, int noverify) {
     sfts_t *f = sfts_openro(name, noverify ? SFTS_SUM_NOVERIFY : 0);
 
     sfts_find_hdukey(f, "DATE-OBS");
@@ -38,7 +37,7 @@ procfits_t *fitsproc(const char *name, int noverify)
 
     p->wavelnth = sfts_read_keystring(f, "WAVELNTH");
 
-    p->xml = process_header(f, "swhv@oma.be");
+    p->xml = process_header(f, contact);
     p->im = (float *) sfts_read_image(f, &(p->w), &(p->h), SFLOAT);
 
     g_free(sfts_free(f));
@@ -46,8 +45,7 @@ procfits_t *fitsproc(const char *name, int noverify)
     return p;
 }
 
-void procfits_free(procfits_t * p)
-{
+void procfits_free(procfits_t * p) {
     if (p) {
         g_free(p->im);
         g_free(p->name);
@@ -63,8 +61,7 @@ void procfits_free(procfits_t * p)
     }
 }
 
-static char *process_header(sfts_t *f, const char *contact)
-{
+static char *process_header(sfts_t * f, const char *contact) {
     int z1 = -1, z2 = -1;
     int naxis1, naxis2, znaxis1, znaxis2;
     sfkey_t k = {.c = NULL };

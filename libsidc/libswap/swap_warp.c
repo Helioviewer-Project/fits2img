@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_warp.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <unistd.h>
@@ -20,42 +20,36 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "swap_math.h"
 #include "swap_warp.h"
 
-static inline void mxm(double m1[3][3], double m2[3][3], double mo[3][3])
-{
+static inline void mxm(double m1[3][3], double m2[3][3], double mo[3][3]) {
     double mt[3][3];
 
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
-            mt[i][j] =
-                m1[i][0] * m2[0][j] + m1[i][1] * m2[1][j] + m1[i][2] * m2[2][j];
+            mt[i][j] = m1[i][0] * m2[0][j] + m1[i][1] * m2[1][j] + m1[i][2] * m2[2][j];
     memcpy(mo, mt, sizeof mt);
 }
 
-static void trns(double tx, double ty, double mo[3][3])
-{
-    double m[3][3] = { {1, 0, tx}, {0, 1, ty}, {0, 0, 1} };
+static void trns(double tx, double ty, double mo[3][3]) {
+    double m[3][3] = { { 1, 0, tx }, { 0, 1, ty }, { 0, 0, 1 } };
     mxm(mo, m, mo);
 }
 
-static void scal(double sx, double sy, double mo[3][3])
-{
-    double m[3][3] = { {sx, 0, 0}, {0, sy, 0}, {0, 0, 1} };
+static void scal(double sx, double sy, double mo[3][3]) {
+    double m[3][3] = { { sx, 0, 0 }, { 0, sy, 0 }, { 0, 0, 1 } };
     mxm(mo, m, mo);
 }
 
-static void rota(double a, double mo[3][3])
-{
+static void rota(double a, double mo[3][3]) {
     double s, c;
     sincosd(a, &s, &c);
-    double m[3][3] = { {c, s, 0}, {-s, c, 0}, {0, 0, 1} };
+    double m[3][3] = { { c, s, 0 }, { -s, c, 0 }, { 0, 0, 1 } };
 
     mxm(mo, m, mo);
 }
 
 float *swap_affine(swap_bicubic_t * f, const float *in, size_t w, size_t h,
                    double sx, double sy, double roll, double tx, double ty,
-                   double a, size_t ow, size_t oh)
-{
+                   double a, size_t ow, size_t oh) {
     size_t i, j;
     float *out = (float *) g_malloc0(ow * oh * sizeof *out), *outi = out;
 
@@ -63,8 +57,8 @@ float *swap_affine(swap_bicubic_t * f, const float *in, size_t w, size_t h,
     double oxc = xc - ((double) w - (double) ow) / 2.;
     double oyc = yc - ((double) h - (double) oh) / 2.;
 
-    const double iden[3][3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
-    double m[3][3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
+    const double iden[3][3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+    double m[3][3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
     /* mapping output to input: build it the reverse to avoid inverting */
     /* apply the inverse transforms + backmultiply the matrices */
@@ -106,8 +100,7 @@ float *swap_affine(swap_bicubic_t * f, const float *in, size_t w, size_t h,
 #define AA 2.
 
 static void polar_prep(guint32 * lut, size_t w, size_t h, guint16 * num,
-                       int nang, int nrad, double xc, double yc)
-{
+                       int nang, int nrad, double xc, double yc) {
     int ri, ai, k;
     size_t i, j, idx = 0;
     double x, y, r0, r1, r2, r3, rm, lrm, a, r, lr;
@@ -148,8 +141,7 @@ static void polar_prep(guint32 * lut, size_t w, size_t h, guint16 * num,
 }
 
 static void polar_intp(swap_bicubic_t * f, const float *in, size_t w, size_t h,
-                       guint32 * lut, guint16 * num, float *out)
-{
+                       guint32 * lut, guint16 * num, float *out) {
     size_t i, j, k, idx = 0;
 
     for (j = 0; j <= AA * (h - 1); ++j)
@@ -170,8 +162,7 @@ static void polar_intp(swap_bicubic_t * f, const float *in, size_t w, size_t h,
 #define POLAR_FITS SIDC_INSTALL_LIB "/data/polar.fits"
 
 float *swap_polar(const float *in, size_t w, size_t h, size_t nang, size_t nrad,
-                  double xc, double yc)
-{
+                  double xc, double yc) {
     guint32 *lut;
     guint16 *num;
 
@@ -226,8 +217,7 @@ float *swap_polar(const float *in, size_t w, size_t h, size_t nang, size_t nrad,
     return out;
 }
 
-float *swap_rebin(const float *in, size_t w, size_t h, size_t fx, size_t fy)
-{
+float *swap_rebin(const float *in, size_t w, size_t h, size_t fx, size_t fy) {
     size_t ow = w / fx, oh = h / fy, i, j, k, l;
 
     if (ow != w / (double) fx || oh != h / (double) fy)
@@ -248,8 +238,7 @@ float *swap_rebin(const float *in, size_t w, size_t h, size_t fx, size_t fy)
     return out;
 }
 
-static inline int rnd(double a)
-{
+static inline int rnd(double a) {
     if (a < 0.)
         return a - .5;
     else
@@ -261,8 +250,7 @@ static inline int rnd(double a)
 #define AAR 4
 
 float *swap_polar2(const float *in, size_t w, size_t h, size_t nang,
-                   size_t nrad, double xc, double yc, double R)
-{
+                   size_t nrad, double xc, double yc, double R) {
     size_t i, j, ssa = AAA * nang, ssr = AAR * nrad;
     float *pol = (float *) g_malloc(ssa * ssr * sizeof *pol), *p = pol, *out;
     double *s = (double *) g_malloc(ssa * sizeof *s);

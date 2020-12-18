@@ -20,15 +20,13 @@
 
 int IDL_Load(void);
 
-static void flip(const float *in, size_t w, size_t h, float *out)
-{
+static void flip(const float *in, size_t w, size_t h, float *out) {
     for (size_t j = 0; j < h; ++j)
         memcpy(out + j * w, in + (h - 1 - j) * w, w * sizeof *in);
 }
 
-static IDL_VPTR sa(int argc __attribute__ ((unused)), IDL_VPTR argv[],
-                   char *argk __attribute__ ((unused)))
-{
+static IDL_VPTR sa(int argc __attribute__((unused)), IDL_VPTR argv[],
+                   char *argk __attribute__((unused))) {
     IDL_VPTR ain = IDL_BasicTypeConversion(1, &argv[0], IDL_TYP_FLOAT);
     IDL_ARRAY *arr = ain->value.arr;
 
@@ -51,18 +49,15 @@ static IDL_VPTR sa(int argc __attribute__ ((unused)), IDL_VPTR argv[],
     IDL_VPTR ret;
     IDL_MEMINT dim[] = { ow, oh };
 
-    flip(a, ow, oh,
-         (float *) IDL_MakeTempArray(IDL_TYP_FLOAT, 2, dim, IDL_ARR_INI_NOP,
-                                     &ret));
+    flip(a, ow, oh, (float *) IDL_MakeTempArray(IDL_TYP_FLOAT, 2, dim, IDL_ARR_INI_NOP, &ret));
     g_free(a);
 
     return ret;
 }
 
-int IDL_Load(void)
-{
+int IDL_Load(void) {
     static IDL_SYSFUN_DEF2 fun[] = {
-        {(IDL_SYSRTN_FUN) sa, "SWAP_AFFINE", 9, 9, 0, NULL}
+        { (IDL_SYSRTN_FUN) sa, "SWAP_AFFINE", 9, 9, 0, NULL }
     };
     return IDL_SysRtnAdd(fun, IDL_TRUE, IDL_CARRAY_ELTS(fun));
 }

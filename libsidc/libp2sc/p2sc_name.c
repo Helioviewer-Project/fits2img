@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_name.c 5108 2014-06-19 12:29:23Z bogdan $";
 
 #include <string.h>
@@ -20,8 +20,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #define DS G_DIR_SEPARATOR_S
 #define DN(dir) (dir ? dir : ".")
 
-static char *p2sc_dirtree(const char *dir, const char *dateobs, double d[6])
-{
+static char *p2sc_dirtree(const char *dir, const char *dateobs, double d[6]) {
     if (p2sc_string2date(dateobs, d))
         P2SC_Msg(LVL_FATAL, "p2sc_string2time(%s)", dateobs);
 
@@ -29,38 +28,31 @@ static char *p2sc_dirtree(const char *dir, const char *dateobs, double d[6])
                            (int) d[0], (int) d[1], (int) d[2]);
 }
 
-char *p2sc_name_dirtree(const char *dir, const char *dateobs)
-{
+char *p2sc_name_dirtree(const char *dir, const char *dateobs) {
     double d[6];
     return p2sc_dirtree(dir, dateobs, d);
 }
 
-char *p2sc_name_swap_tmr(const char *dir, const guint8 * data, size_t len,
-                         guint64 o)
-{
+char *p2sc_name_swap_tmr(const char *dir, const guint8 * data, size_t len, guint64 o) {
     guint32 crc = p2sc_crc32_finalise(p2sc_crc32(0, data, len), len);
     char acrc[2 * sizeof crc + 1];
 
     sprintf(acrc, "%08x", crc);
-    return g_strdup_printf("%s" DS "swap_" P_OBET_F "_%s.fits", DN(dir),
-                           o, acrc);
+    return g_strdup_printf("%s" DS "swap_" P_OBET_F "_%s.fits", DN(dir), o, acrc);
 }
 
-char *p2sc_name_swap_lv0(const char *dir, const char *dateobs)
-{
+char *p2sc_name_swap_lv0(const char *dir, const char *dateobs) {
     double d[6];
     char *tri = p2sc_dirtree(dir, dateobs, d);
-    char *ret =
-        g_strdup_printf("%s" DS "swap_lv0_%04d%02d%02d_%02d%02d%02d.fits", tri,
-                        (int) d[0], (int) d[1], (int) d[2], (int) d[3],
-                        (int) d[4], (int) d[5]);
+    char *ret = g_strdup_printf("%s" DS "swap_lv0_%04d%02d%02d_%02d%02d%02d.fits", tri,
+                                (int) d[0], (int) d[1], (int) d[2], (int) d[3],
+                                (int) d[4], (int) d[5]);
 
     g_free(tri);
     return ret;
 }
 
-char *p2sc_name_swap_qlk(const char *dir, const char *name, const char *ext)
-{
+char *p2sc_name_swap_qlk(const char *dir, const char *name, const char *ext) {
     char *ret, *base = g_path_get_basename(name);
 
     if ((ret = strrchr(base, '.')))
@@ -72,8 +64,7 @@ char *p2sc_name_swap_qlk(const char *dir, const char *name, const char *ext)
     return ret;
 }
 
-static char *p2sc_strdup_replace(const char *str, char oc, char nc)
-{
+static char *p2sc_strdup_replace(const char *str, char oc, char nc) {
     size_t l = strlen(str), i;
     char *ret = (char *) g_malloc(l + 1);
 
@@ -88,9 +79,7 @@ static char *p2sc_strdup_replace(const char *str, char oc, char nc)
 }
 
 char *p2sc_name_swap_jhv(const char *dateobs, const char *telescop,
-                         const char *instrume, const char *detector,
-                         const char *wavelnth)
-{
+                         const char *instrume, const char *detector, const char *wavelnth) {
     double d[6];
     if (p2sc_string2date(dateobs, d))
         P2SC_Msg(LVL_FATAL, "p2sc_string2date(%s)", dateobs);

@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_msg.c 5108 2014-06-19 12:29:23Z bogdan $";
 
 #include <stdarg.h>
@@ -21,8 +21,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 static char *p2sc_backtrace(void);
 
 void _p2sc_msg(const char *func, const char *file, int line,
-               const char *versionid, int severity, const char *fmt, ...)
-{
+               const char *versionid, int severity, const char *fmt, ...) {
     va_list va;
     gint len;
     char *msg, *loc, *back;
@@ -55,9 +54,7 @@ void _p2sc_msg(const char *func, const char *file, int line,
     }
 
     /* add location */
-    loc =
-        g_strdup_printf("%s - %s() in %s:%d", p2sc_get_string("prgname"), func,
-                        file, line);
+    loc = g_strdup_printf("%s - %s() in %s:%d", p2sc_get_string("prgname"), func, file, line);
     /* add backtrace */
     if (severity >= LVL_WARNING && (back = p2sc_backtrace())) {
         if (*back) {
@@ -78,12 +75,12 @@ void _p2sc_msg(const char *func, const char *file, int line,
     }
 
     /* finally send the message */
-    send2LMAT(p2sc_get_string("appname"), versionid, p2sc_get_runid(), msg,
+    send2LMAT(p2sc_get_string("appname"), versionid, p2sc_get_string("runid"), msg,
               severity, loc, NULL);
 
     /* send additional message if killed from PPT */
     if (fatal_in_ppt)
-        send2LMAT(p2sc_get_string("appname"), NULL, p2sc_get_runid(),
+        send2LMAT(p2sc_get_string("appname"), NULL, p2sc_get_string("runid"),
                   "Terminated by PPT", LVL_CONTROL_FINISH_STOP_PPT, NULL, NULL);
 
     g_free(loc);
@@ -111,8 +108,7 @@ void _p2sc_msg(const char *func, const char *file, int line,
 
 #endif
 
-static char *p2sc_backtrace(void)
-{
+static char *p2sc_backtrace(void) {
 #ifdef HAVE_BACKTRACE
 
 #define BT_DEPTH 128

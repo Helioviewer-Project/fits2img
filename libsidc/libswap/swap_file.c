@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_file.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <errno.h>
@@ -23,32 +23,25 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "swap_color.h"
 #include "swap_file.h"
 
-static void png_warning_fn(png_structp png_ptr G_GNUC_UNUSED,
-                           png_const_charp msg)
-{
+static void png_warning_fn(png_structp png_ptr G_GNUC_UNUSED, png_const_charp msg) {
     P2SC_Msg(LVL_WARNING_CORRUPT_INPUT_DATA, "libpng: %s", msg);
 }
 
-static void png_error_fn(png_structp png_ptr, png_const_charp msg)
-{
+static void png_error_fn(png_structp png_ptr, png_const_charp msg) {
     /* fatal, subsequent code will not be executed */
     P2SC_Msg(LVL_FATAL_INTERNAL_ERROR, "libpng: %s", msg);
     longjmp(png_jmpbuf(png_ptr), 1);
 }
 
-static void png_write_fn(png_structp png_ptr, png_bytep data, png_size_t length)
-{
-    p2sc_write((p2sc_iofile_t *) png_get_io_ptr(png_ptr), (const char *) data,
-               length);
+static void png_write_fn(png_structp png_ptr, png_bytep data, png_size_t length) {
+    p2sc_write((p2sc_iofile_t *) png_get_io_ptr(png_ptr), (const char *) data, length);
 }
 
-static void png_flush_fn(png_structp png_ptr)
-{
+static void png_flush_fn(png_structp png_ptr) {
     p2sc_flush((p2sc_iofile_t *) png_get_io_ptr(png_ptr));
 }
 
-static void set_text(png_text * txt, const char *key, const char *value)
-{
+static void set_text(png_text * txt, const char *key, const char *value) {
     memset(txt, 0, sizeof *txt);
 
     txt->compression = PNG_TEXT_COMPRESSION_zTXt;
@@ -56,8 +49,7 @@ static void set_text(png_text * txt, const char *key, const char *value)
     txt->text = (png_charp) value;
 }
 
-static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml)
-{
+static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml) {
     png_text txt[1];
     set_text(txt + 0, "Helioviewer", xml);
     png_set_text(png_ptr, info_ptr, txt, G_N_ELEMENTS(txt));
@@ -67,14 +59,12 @@ static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml)
 #define SRGB_ICC SIDC_INSTALL_LIB "/data/sRGB_IEC61966-2-1_black_scaled.icc"
 
 void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal, const char *xml)
-{
+                    swap_palette_t * pal, const char *xml) {
     const guint8 **rows = NULL;
     p2sc_iofile_t *io = p2sc_open_iofile(name, "w");
 
-    png_structp png_ptr =
-        png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_error_fn,
-                                png_warning_fn);
+    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_error_fn,
+                                                  png_warning_fn);
     if (!png_ptr)
         P2SC_Msg(LVL_FATAL_INTERNAL_ERROR, "PNG initialization error");
     png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -95,20 +85,17 @@ void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
             color_type = PNG_COLOR_TYPE_PALETTE;
             png_set_PLTE(png_ptr, info_ptr, (png_color *) pal, 256);
         }
-        png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr,
-                                   PNG_sRGB_INTENT_PERCEPTUAL);
+        png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr, PNG_sRGB_INTENT_PERCEPTUAL);
     } else {
         GMappedFile *map = p2sc_map_file(GRAY_ICC);
         png_set_iCCP(png_ptr, info_ptr, "sidc_gray", PNG_COMPRESSION_TYPE_BASE,
-                     (gpointer) g_mapped_file_get_contents(map),
-                     g_mapped_file_get_length(map));
+                     (gpointer) g_mapped_file_get_contents(map), g_mapped_file_get_length(map));
         g_mapped_file_unref(map);
     }
 
     png_set_write_fn(png_ptr, io, png_write_fn, png_flush_fn);
     png_set_IHDR(png_ptr, info_ptr, w, h, 8, color_type,
-                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-                 PNG_FILTER_TYPE_DEFAULT);
+                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
     if (xml)
         set_meta(png_ptr, info_ptr, xml);
@@ -135,8 +122,7 @@ struct my_err_mgr {
     jmp_buf setjmp_buffer;
 };
 
-static void jpeg_error_exit(j_common_ptr cinfo)
-{
+static void jpeg_error_exit(j_common_ptr cinfo) {
     char msg[JMSG_LENGTH_MAX];
 
     /* fatal, subsequent code will not be executed */
@@ -148,8 +134,7 @@ static void jpeg_error_exit(j_common_ptr cinfo)
 */
 }
 
-static void jpeg_output_msg(j_common_ptr cinfo)
-{
+static void jpeg_output_msg(j_common_ptr cinfo) {
     char msg[JMSG_LENGTH_MAX];
 
     cinfo->err->format_message(cinfo, msg);
@@ -206,9 +191,7 @@ static void jpeg_output_msg(j_common_ptr cinfo)
 
 static void
 jpeg_icc_write_profile(j_compress_ptr cinfo,
-                       const unsigned char *icc_data_ptr,
-                       unsigned int icc_data_len)
-{
+                       const unsigned char *icc_data_ptr, unsigned int icc_data_len) {
     unsigned int num_markers;   /* total number of markers we'll write */
     int cur_marker = 1;         /* per spec, counting starts at 1 */
     unsigned int length;        /* number of bytes to write in this marker */
@@ -227,8 +210,7 @@ jpeg_icc_write_profile(j_compress_ptr cinfo,
         icc_data_rem -= length;
 
         /* Write the JPEG marker header (APP2 code and marker length) */
-        jpeg_write_m_header(cinfo, ICC_MARKER,
-                            (unsigned int) (length + ICC_OVERHEAD_LEN));
+        jpeg_write_m_header(cinfo, ICC_MARKER, (unsigned int) (length + ICC_OVERHEAD_LEN));
 
         /* Write the marker identifying string "ICC_PROFILE" (null-terminated).
          * We code it in this less-than-transparent way so that the code works
@@ -261,8 +243,7 @@ jpeg_icc_write_profile(j_compress_ptr cinfo,
 }
 
 void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal, int scale, const char *xml)
-{
+                    swap_palette_t * pal, int scale, const char *xml) {
     struct my_err_mgr jerr;
     struct jpeg_compress_struct cinfo;
     unsigned char *obuff = NULL, *line = NULL;
@@ -339,9 +320,7 @@ void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
     g_free(obuff);
 }
 
-void swap_write_pgm(const char *name, const guint16 * ptr, size_t w, size_t h,
-                    guint16 max)
-{
+void swap_write_pgm(const char *name, const guint16 * ptr, size_t w, size_t h, guint16 max) {
     size_t i, len, over = 0;
     guint16 v;
     void *buf;
@@ -386,15 +365,13 @@ void swap_write_pgm(const char *name, const guint16 * ptr, size_t w, size_t h,
     g_free(buf);
 }
 
-static int blank(FILE * f, const char *name)
-{
+static int blank(FILE * f, const char *name) {
     int c;
 
     do {
         c = fgetc(f);
         if (c == EOF) {
-            P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: unexpected end of file",
-                     name);
+            P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: unexpected end of file", name);
             return -1;
         }
     } while (c == ' ' || c == '\t' || c == '\n' || c == '\r');
@@ -403,8 +380,7 @@ static int blank(FILE * f, const char *name)
     return 0;
 }
 
-guint16 *swap_read_pgm(const char *name, size_t * w, size_t * h)
-{
+guint16 *swap_read_pgm(const char *name, size_t *w, size_t *h) {
     FILE *f;
     int c, i, len, isize, width, height, maxval;
 
@@ -415,24 +391,19 @@ guint16 *swap_read_pgm(const char *name, size_t * w, size_t * h)
 
     c = fgetc(f);
     if (c != 'P')
-        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: expected P, got %d", name,
-                 c);
+        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: expected P, got %d", name, c);
     c = fgetc(f);
     if (c != '5')
-        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: expected 5, got %d", name,
-                 c);
+        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: expected 5, got %d", name, c);
     blank(f, name);
     if (fscanf(f, "%d", &width) != 1)
-        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: failed read of width",
-                 name);
+        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: failed read of width", name);
     blank(f, name);
     if (fscanf(f, "%d", &height) != 1)
-        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: failed read of height",
-                 name);
+        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: failed read of height", name);
     blank(f, name);
     if (fscanf(f, "%d", &maxval) != 1)
-        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: failed read of maxval",
-                 name);
+        P2SC_Msg(LVL_FATAL_CORRUPT_INPUT_DATA, "%s: failed read of maxval", name);
     blank(f, name);
 
     if (width <= 0 || height <= 0 || maxval <= 0 ||
@@ -466,9 +437,7 @@ guint16 *swap_read_pgm(const char *name, size_t * w, size_t * h)
     return ret;
 }
 
-void swap_y4m(const char *name, const char *cm, const guint8 * in, size_t w,
-              size_t h)
-{
+void swap_y4m(const char *name, const char *cm, const guint8 * in, size_t w, size_t h) {
     FILE *f;
     size_t l = w * h;
 
@@ -480,8 +449,7 @@ void swap_y4m(const char *name, const char *cm, const guint8 * in, size_t w,
 
         if (!(f = fopen(name, "wb")))
             P2SC_Msg(LVL_FATAL_FILESYSTEM, "%s: %s", name, g_strerror(errno));
-        head =
-            g_strdup_printf("YUV4MPEG2 W%zd H%zd F10:1 Ip A1:1 C420\n", w, h);
+        head = g_strdup_printf("YUV4MPEG2 W%zd H%zd F10:1 Ip A1:1 C420\n", w, h);
         fwrite(head, strlen(head), 1, f);
         g_free(head);
     } else {

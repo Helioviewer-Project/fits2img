@@ -26,11 +26,11 @@ extern "C" {
         float *im;
         size_t w;
         size_t h;
- 
+
         char *xml;
     } procfits_t;
 
-    procfits_t *fitsproc(const char *, int);
+    procfits_t *fitsproc(const char *, const char *, int);
     void procfits_free(procfits_t *);
 
 /* ---------------------------------------------------------------------- */

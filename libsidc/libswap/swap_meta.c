@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_meta.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <string.h>
@@ -19,8 +19,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 #include "p2sc_xml.h"
 #include "swap_meta.h"
 
-static void head2xml(sfts_t * f, genxWriter w)
-{
+static void head2xml(sfts_t * f, genxWriter w) {
     GENX_Try(w, genxStartElementLiteral(w, NULL, (constUtf8) "fits"));
 
     char **keys, **vals, **typs;
@@ -41,8 +40,7 @@ static void head2xml(sfts_t * f, genxWriter w)
     GENX_Try(w, genxEndElement(w)); /* fits */
 }
 
-char *swap_fits2xml(sfts_t * f)
-{
+char *swap_fits2xml(sfts_t * f) {
     p2sc_buffer_t *b = p2sc_buffer_new(NULL, 4096);
 
     genxWriter w = p2sc_xml_start(b);
@@ -55,8 +53,7 @@ char *swap_fits2xml(sfts_t * f)
     return (char *) p2sc_buffer_del(b, TRUE);
 }
 
-char *swap_fits2hv(sfts_t * f, const char *contact)
-{
+char *swap_fits2hv(sfts_t * f, const char *contact) {
     p2sc_buffer_t *b = p2sc_buffer_new(NULL, 4096);
     genxWriter w = p2sc_xml_start(b);
 
@@ -68,21 +65,15 @@ char *swap_fits2hv(sfts_t * f, const char *contact)
     GENX_Try(w, genxStartElementLiteral(w, NULL, (constUtf8) "HV_COMMENT"));
     {
         char *s_time = p2sc_timestamp(-1, 3);
-        char *s_soft =
-            g_strdup_printf("%s - %s (%s)", p2sc_get_string("appname"),
-                            p2sc_get_string("prgname"), _versionid_);
-
         p2sc_xml_addtext(w, "\n"
                          " Title         : %s\n"
-                         " Author        : ROB\n"
                          " Contact       : %s\n"
                          " Copyright     : Public Domain\n"
                          " Creation Time : %s\n"
-                         " Software      : %s\n"
+                         " Software      : fits2img\n"
                          " Source        : %s\n",
-                         p2sc_get_string("filename"), contact, s_time, s_soft,
-                         g_get_host_name());
-        g_free(s_time), g_free(s_soft);
+                         p2sc_get_string("filename"), contact, s_time, g_get_host_name());
+        g_free(s_time);
     }
     GENX_Try(w, genxEndElement(w)); /* HV_COMMENT */
     GENX_Try(w, genxEndElement(w)); /* helioviewer */

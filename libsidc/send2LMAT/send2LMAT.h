@@ -14,7 +14,7 @@ extern "C" {
 
 /* ---------------------------------------------------------------------- */
 
-    void send2LMAT(const char *, const char *, int, const char *, int,
+    void send2LMAT(const char *, const char *, const char *, const char *, int,
                    const char *, const char *);
 
 /* ---------------------------------------------------------------------- */

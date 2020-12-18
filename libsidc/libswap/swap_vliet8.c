@@ -1,5 +1,5 @@
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_vliet8.c 5248 2016-05-18 23:02:15Z bogdan $";
 
 #include <glib.h>
@@ -11,13 +11,10 @@ static const char _versionid_[] __attribute__ ((unused)) =
 
 static void YvVfilterCoef(double sigma, double *filter);
 static void TriggsM(double *filter, double *M);
-static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy,
-                  double *filter);
-static void yline(DSTTYPE * src, DSTTYPE * dest, int sx, int sy,
-                  double *filter);
+static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter);
+static void yline(DSTTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter);
 
-void swap_gauss8(SRCTYPE * c, DSTTYPE * b, int w, int h, double s)
-{
+void swap_gauss8(SRCTYPE * c, DSTTYPE * b, int w, int h, double s) {
     double filter[7];
 
     /* calculate filter coefficients of x-direction */
@@ -29,8 +26,7 @@ void swap_gauss8(SRCTYPE * c, DSTTYPE * b, int w, int h, double s)
     yline(b, b, w, h, filter);
 }
 
-static void YvVfilterCoef(double sigma, double *filter)
-{
+static void YvVfilterCoef(double sigma, double *filter) {
     /* the recipe in the Young-van Vliet paper:
      * I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
      * IEEE Trans. Sig. Proc., vol. 50, pp. 2799-2805, 2002.
@@ -56,8 +52,7 @@ static void YvVfilterCoef(double sigma, double *filter)
 
     /* calculate scale, and b[0,1,2,3] */
     scale = (m0 + q) * (m1sq + m2sq + 2 * m1 * q + qsq);
-    b1 = -q * (2 * m0 * m1 + m1sq + m2sq + (2 * m0 + 4 * m1) * q +
-               3 * qsq) / scale;
+    b1 = -q * (2 * m0 * m1 + m1sq + m2sq + (2 * m0 + 4 * m1) * q + 3 * qsq) / scale;
     b2 = qsq * (m0 + 2 * m1 + 3 * q) / scale;
     b3 = -qsq * q / scale;
 
@@ -74,8 +69,7 @@ static void YvVfilterCoef(double sigma, double *filter)
     filter[6] = -b3;
 }
 
-static void TriggsM(double *filter, double *M)
-{
+static void TriggsM(double *filter, double *M) {
     double scale;
     double a1, a2, a3;
 
@@ -83,9 +77,7 @@ static void TriggsM(double *filter, double *M)
     a2 = filter[1];
     a1 = filter[2];
 
-    scale =
-        1.0 / ((1.0 + a1 - a2 + a3) * (1.0 - a1 - a2 - a3) *
-               (1.0 + a2 + (a1 - a3) * a3));
+    scale = 1.0 / ((1.0 + a1 - a2 + a3) * (1.0 - a1 - a2 - a3) * (1.0 + a2 + (a1 - a3) * a3));
     M[0] = scale * (-a3 * a1 + 1.0 - a3 * a3 - a2);
     M[1] = scale * (a3 + a1) * (a2 + a3 * a1);
     M[2] = scale * a3 * (a1 + a3 * a2);
@@ -93,9 +85,7 @@ static void TriggsM(double *filter, double *M)
     M[4] = -scale * (a2 - 1.0) * (a2 + a3 * a1);
     M[5] = -scale * a3 * (a3 * a1 + a3 * a3 + a2 - 1.0);
     M[6] = scale * (a3 * a1 + a2 + a1 * a1 - a2 * a2);
-    M[7] =
-        scale * (a1 * a2 + a3 * a2 * a2 - a1 * a3 * a3 - a3 * a3 * a3 -
-                 a3 * a2 + a3);
+    M[7] = scale * (a1 * a2 + a3 * a2 * a2 - a1 * a3 * a3 - a3 * a3 * a3 - a3 * a2 + a3);
     M[8] = scale * a3 * (a1 + a3 * a2);
 }
 
@@ -110,8 +100,7 @@ static void TriggsM(double *filter, double *M)
    and SRCTYPE should be DSTTYPE
 */
 
-static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter)
-{
+static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter) {
     int i, j;
     double b1, b2, b3;
     double pix, p1, p2, p3;
@@ -179,8 +168,7 @@ static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter)
     }
 }
 
-static void yline(DSTTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter)
-{
+static void yline(DSTTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter) {
     double *p0, *p1, *p2, *p3, *pswap;
     double *buf0, *buf1, *buf2, *buf3;
     double *uplusbuf;

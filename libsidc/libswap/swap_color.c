@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_color.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <string.h>
@@ -18,8 +18,7 @@ static const char _versionid_[] __attribute__ ((unused)) =
 
 #include "swap_color.h"
 
-swap_palette_t *swap_palette_rgb_get(const char *cm)
-{
+swap_palette_t *swap_palette_rgb_get(const char *cm) {
     if (cm) {
         if (!strcmp(cm, "aia171"))
             return &cmaia171_rgb;
@@ -37,8 +36,7 @@ swap_palette_t *swap_palette_rgb_get(const char *cm)
     return NULL;
 }
 
-swap_image_yuv_t *swap_image_yuv_alloc(size_t w, size_t h)
-{
+swap_image_yuv_t *swap_image_yuv_alloc(size_t w, size_t h) {
     size_t l = w * h;
     swap_image_yuv_t *i = (swap_image_yuv_t *) g_malloc(sizeof *i);
 
@@ -50,8 +48,7 @@ swap_image_yuv_t *swap_image_yuv_alloc(size_t w, size_t h)
     return i;
 }
 
-void swap_image_yuv_free(swap_image_yuv_t * i)
-{
+void swap_image_yuv_free(swap_image_yuv_t * i) {
     if (i) {
         g_free(i->v), g_free(i->u), g_free(i->y);
         memset(i, 0, sizeof *i);
@@ -59,8 +56,7 @@ void swap_image_yuv_free(swap_image_yuv_t * i)
     }
 }
 
-static void rgb2yuv(const double (*cmrgb)[3], unsigned char (*cmyuv)[3])
-{
+static void rgb2yuv(const double (*cmrgb)[3], unsigned char(*cmyuv)[3]) {
     const double wr = 0.299, wb = 0.114, umax = 0.436, vmax = 0.615;
     const double wg = 1 - wr - wb;
 
@@ -80,10 +76,9 @@ static void rgb2yuv(const double (*cmrgb)[3], unsigned char (*cmyuv)[3])
     }
 }
 
-static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3])
-{
-    if (cm) {
-        if (!strcmp(cm, "aia171")) {
+static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3]) {
+    if(cm) {
+        if(!strcmp(cm, "aia171")) {
             rgb2yuv(cmaia171, cmyuv);
             return;
         } else if (!strcmp(cm, "hot")) {
@@ -98,9 +93,7 @@ static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3])
     memcpy(cmyuv, cmgrayuv, 256 * 3);
 }
 
-swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 * in, size_t w,
-                                size_t h)
-{
+swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 * in, size_t w, size_t h) {
     size_t l = w * h;
     unsigned char lutyuv[256][3];
     cm_rgb2yuv(cm, lutyuv);
@@ -118,8 +111,7 @@ swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 * in, size_t w,
     return im;
 }
 
-void swap_yuv2yuv420(swap_image_yuv_t * im)
-{
+void swap_yuv2yuv420(swap_image_yuv_t * im) {
     size_t w = im->w, h = im->h, i, j;
     unsigned char *u = im->u, *v = im->v;
 
@@ -131,8 +123,7 @@ void swap_yuv2yuv420(swap_image_yuv_t * im)
             val =
                 ((int) u[j * w + i] +
                  (int) u[j * w + (i + 1)] +
-                 (int) u[(j + 1) * w + i] +
-                 (int) u[(j + 1) * w + (i + 1)] + 2) >> 2;
+                 (int) u[(j + 1) * w + i] + (int) u[(j + 1) * w + (i + 1)] + 2) >> 2;
             if (val > 255)
                 val = 255;
             u[idx] = val;
@@ -140,8 +131,7 @@ void swap_yuv2yuv420(swap_image_yuv_t * im)
             val =
                 ((int) v[j * w + i] +
                  (int) v[j * w + (i + 1)] +
-                 (int) v[(j + 1) * w + i] +
-                 (int) v[(j + 1) * w + (i + 1)] + 2) >> 2;
+                 (int) v[(j + 1) * w + i] + (int) v[(j + 1) * w + (i + 1)] + 2) >> 2;
             if (val > 255)
                 val = 255;
             v[idx] = val;

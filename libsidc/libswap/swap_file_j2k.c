@@ -5,7 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__ ((unused)) =
+static const char _versionid_[] __attribute__((unused)) =
     "$Id: swap_file_j2k.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <stdio.h>
@@ -28,26 +28,22 @@ static const char _versionid_[] __attribute__ ((unused)) =
 
 static void write_data(const char *, const guint8 *, size_t);
 
-static void error_cb(const char *msg, void *client_data)
-{
+static void error_cb(const char *msg, void *client_data) {
     FILE *stream = (FILE *) client_data;
     fprintf(stream, "[ERROR] %s", msg);
 }
 
-static void warn_cb(const char *msg, void *client_data)
-{
+static void warn_cb(const char *msg, void *client_data) {
     FILE *stream = (FILE *) client_data;
     fprintf(stream, "[WARNING] %s", msg);
 }
 
-static void info_cb(const char *msg, void *client_data)
-{
+static void info_cb(const char *msg, void *client_data) {
     FILE *stream = (FILE *) client_data;
     fprintf(stream, "[INFO] %s", msg);
 }
 
-guint8 *swap_read_j2k(const char *name, size_t * ww, size_t * hh, size_t * nc)
-{
+guint8 *swap_read_j2k(const char *name, size_t *ww, size_t *hh, size_t *nc) {
     guint8 *ret = NULL, *r;
     opj_event_mgr_t event_mgr;
 
@@ -85,8 +81,7 @@ guint8 *swap_read_j2k(const char *name, size_t * ww, size_t * hh, size_t * nc)
          && image->comps[1].sgnd == image->comps[2].sgnd
          && image->comps[2].sgnd == 0
          && image->comps[0].prec == image->comps[1].prec
-         && image->comps[1].prec == image->comps[2].prec
-         && image->comps[2].prec == 8)) {
+         && image->comps[1].prec == image->comps[2].prec && image->comps[2].prec == 8)) {
 
         int w = image->comps[0].w, h = image->comps[0].h, l = w * h;
         ret = (guint8 *) g_malloc(l * ncomps), r = ret;
@@ -117,8 +112,7 @@ guint8 *swap_read_j2k(const char *name, size_t * ww, size_t * hh, size_t * nc)
 }
 
 void swap_write_j2k(const char *name, const guint8 * in, size_t w, size_t h,
-                    const swap_j2kparams_t * p)
-{
+                    const swap_j2kparams_t * p) {
     int subsampling_dx = 1, subsampling_dy = 1;
 
     opj_event_mgr_t event_mgr;
@@ -208,8 +202,7 @@ void swap_write_j2k(const char *name, const guint8 * in, size_t w, size_t h,
     g_free(params.cp_comment);
 }
 
-static void write_data(const char *name, const guint8 * code, size_t code_len)
-{
+static void write_data(const char *name, const guint8 * code, size_t code_len) {
     FILE *f = fopen(name, "wb");
     if (!f) {
         fprintf(stderr, "failed to open %s for writing\n", name);
