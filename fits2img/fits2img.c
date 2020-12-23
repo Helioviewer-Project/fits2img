@@ -31,6 +31,7 @@ static const char _versionid_[] __attribute__((unused)) =
 #define DEF_NRESOLUTIONS 6
 #define DEF_PRECINCTW    128
 #define DEF_PRECINCTH    128
+#define DEF_STRATEGY     3
 
 int main(int argc, char **argv) {
     int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
@@ -41,6 +42,7 @@ int main(int argc, char **argv) {
     double gamma = DEF_GAMMA, cratio = DEF_CRATIO;
     int nlayers = DEF_NLAYERS, nresolutions = DEF_NRESOLUTIONS;
     int precinctw = DEF_PRECINCTW, precincth = DEF_PRECINCTH;
+    int strategy = DEF_STRATEGY;
 
     GOptionEntry entries[] = {
         { "appname", 'a', 0, G_OPTION_ARG_STRING, &appname,
@@ -77,6 +79,8 @@ int main(int argc, char **argv) {
          "OpenJPEG precinct height", G_STRINGIFY(DEF_PRECINCTH) },
         { "debug", 0, 0, G_OPTION_ARG_NONE, &debug,
          "OpenJPEG debug mode", NULL },
+        { "strategy", 0, 0, G_OPTION_ARG_INT, &strategy,
+         "PNG compression strategy", G_STRINGIFY(DEF_STRATEGY) },
         { "yuv", 'y', 0, G_OPTION_ARG_STRING, &yuv,
          "Append YUV420 to a file instead", "name" },
         { "colormap", 'C', 0, G_OPTION_ARG_STRING, &cm,
@@ -144,7 +148,7 @@ int main(int argc, char **argv) {
             swap_write_jpg(name, g, p->w, p->h, swap_palette_rgb_get(cm), jpeg, p->xml);
         } else {
             name = p2sc_name_swap_qlk(outdir, p->name, "png");
-            swap_write_png(name, g, p->w, p->h, swap_palette_rgb_get(cm), p->xml);
+            swap_write_png(name, g, p->w, p->h, swap_palette_rgb_get(cm), p->xml, strategy);
         }
         g_free(name);
     }

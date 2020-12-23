@@ -59,7 +59,7 @@ void swap_image_yuv_free(swap_image_yuv_t * i) {
     }
 }
 
-static void rgb2yuv(const double (*cmrgb)[3], unsigned char(*cmyuv)[3]) {
+static void rgb2yuv(const double (*cmrgb)[3], unsigned char (*cmyuv)[3]) {
     const double wr = 0.299, wb = 0.114, umax = 0.436, vmax = 0.615;
     const double wg = 1 - wr - wb;
 
@@ -80,8 +80,8 @@ static void rgb2yuv(const double (*cmrgb)[3], unsigned char(*cmyuv)[3]) {
 }
 
 static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3]) {
-    if(cm) {
-        if(!strcmp(cm, "aia171")) {
+    if (cm) {
+        if (!strcmp(cm, "aia171")) {
             rgb2yuv(cm_aia171, cmyuv);
             return;
         } else if (!strcmp(cm, "citrus")) {

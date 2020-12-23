@@ -254,11 +254,11 @@ int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                start_pos;
+                                                cstr_info->tile[tileno].
+                                                packet[pack_nb].start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                end_ph_pos;
+                                                cstr_info->tile[tileno].
+                                                packet[pack_nb].end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
                                             disto =
@@ -334,11 +334,11 @@ int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                start_pos;
+                                                cstr_info->tile[tileno].
+                                                packet[pack_nb].start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                end_ph_pos;
+                                                cstr_info->tile[tileno].
+                                                packet[pack_nb].end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
                                             disto =
@@ -414,11 +414,11 @@ int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                start_pos;
+                                                cstr_info->tile[tileno].
+                                                packet[pack_nb].start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                end_ph_pos;
+                                                cstr_info->tile[tileno].
+                                                packet[pack_nb].end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
                                             disto =

@@ -59,7 +59,7 @@ static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml) {
 #define SRGB_ICC SIDC_INSTALL_LIB "/data/sRGB_IEC61966-2-1_black_scaled.icc"
 
 void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal, const char *xml) {
+                    swap_palette_t * pal, const char *xml, int strategy) {
     const guint8 **rows = NULL;
     p2sc_iofile_t *io = p2sc_open_iofile(name, "w");
 
@@ -101,8 +101,8 @@ void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
         set_meta(png_ptr, info_ptr, xml);
 
     png_set_compression_mem_level(png_ptr, 9);
-    png_set_compression_level(png_ptr, 1);
-    png_set_compression_strategy(png_ptr, 3);
+    png_set_compression_level(png_ptr, 9);
+    png_set_compression_strategy(png_ptr, strategy);
 
     rows = (const guint8 **) g_malloc(h * sizeof *rows);
     for (size_t i = 0; i < h; ++i)
