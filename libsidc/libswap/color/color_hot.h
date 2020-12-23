@@ -1,12 +1,12 @@
 /* This file is part of the PROBA2 Science Operations Center software.
- * Copyright (C) 2007-2014 Royal Observatory of Belgium.
+ * Copyright (C) 2007-2021 Royal Observatory of Belgium.
  * For copying permission, see the file COPYING in the distribution.
  *
  * Author: Bogdan Nicula
  */
 
-#ifndef __SWAP_COLOR_HOT_H__
-#define __SWAP_COLOR_HOT_H__
+#ifndef __COLOR_HOT_H__
+#define __COLOR_HOT_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +14,7 @@ extern "C" {
 
 /* ---------------------------------------------------------------------- */
 
-    static const double cmhot[][3] = {
+    static const double cm_hot[][3] = {
         { 0.0104167, 0, 0 },
         { 0.0208333, 0, 0 },
         { 0.03125, 0, 0 },
@@ -273,7 +273,7 @@ extern "C" {
         { 1, 1, 1 }
     };
 
-    static const unsigned char cmhot_rgb[][3] = {
+    static const unsigned char cm_hot_rgb[][3] = {
         { 3, 0, 0 },
         { 5, 0, 0 },
         { 8, 0, 0 },

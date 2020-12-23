@@ -11,19 +11,22 @@ static const char _versionid_[] __attribute__((unused)) =
 #include <string.h>
 #include <glib.h>
 
-#include "color/swap_color_gray.h"
-#include "color/swap_color_jet.h"
-#include "color/swap_color_hot.h"
-#include "color/swap_color_aia171.h"
+#include "color/color_aia171.h"
+#include "color/color_citrus.h"
+#include "color/color_gray.h"
+#include "color/color_hot.h"
+#include "color/color_jet.h"
 
 #include "swap_color.h"
 
 swap_palette_t *swap_palette_rgb_get(const char *cm) {
     if (cm) {
         if (!strcmp(cm, "aia171"))
-            return &cmaia171_rgb;
+            return &cm_aia171_rgb;
+        if (!strcmp(cm, "citrus"))
+            return &cm_citrus_rgb;
         else if (!strcmp(cm, "hot"))
-            return &cmhot_rgb;
+            return &cm_hot_rgb;
         else if (!strcmp(cm, "jet"))
 /*            for (j = 0; j < 256; ++j) {
                 for (i = 0; i < 3; ++i)
@@ -31,7 +34,7 @@ swap_palette_t *swap_palette_rgb_get(const char *cm) {
                 printf("\t{%d, %d, %d},\n", cmjet_rgb[j][0], cmjet_rgb[j][1], cmjet_rgb[j][2]);
             }
 */
-            return &cmjet_rgb;
+            return &cm_jet_rgb;
     }
     return NULL;
 }
@@ -79,18 +82,21 @@ static void rgb2yuv(const double (*cmrgb)[3], unsigned char(*cmyuv)[3]) {
 static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3]) {
     if(cm) {
         if(!strcmp(cm, "aia171")) {
-            rgb2yuv(cmaia171, cmyuv);
+            rgb2yuv(cm_aia171, cmyuv);
+            return;
+        } else if (!strcmp(cm, "citrus")) {
+            rgb2yuv(cm_citrus, cmyuv);
             return;
         } else if (!strcmp(cm, "hot")) {
-            rgb2yuv(cmhot, cmyuv);
+            rgb2yuv(cm_hot, cmyuv);
             return;
         } else if (!strcmp(cm, "jet")) {
-            rgb2yuv(cmjet, cmyuv);
+            rgb2yuv(cm_jet, cmyuv);
             return;
         }
     }
     /* gray */
-    memcpy(cmyuv, cmgrayuv, 256 * 3);
+    memcpy(cmyuv, cm_gray_yuv, 256 * 3);
 }
 
 swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 * in, size_t w, size_t h) {

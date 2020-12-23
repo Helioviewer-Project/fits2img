@@ -1,12 +1,12 @@
 /* This file is part of the PROBA2 Science Operations Center software.
- * Copyright (C) 2007-2014 Royal Observatory of Belgium.
+ * Copyright (C) 2007-2021 Royal Observatory of Belgium.
  * For copying permission, see the file COPYING in the distribution.
  *
  * Author: Bogdan Nicula
  */
 
-#ifndef __SWAP_COLOR_AIA171_H__
-#define __SWAP_COLOR_AIA171_H__
+#ifndef __COLOR_AIA171_H__
+#define __COLOR_AIA171_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +14,7 @@ extern "C" {
 
 /* ---------------------------------------------------------------------- */
 
-    static const double cmaia171[][3] = {
+    static const double cm_aia171[][3] = {
         { 0, 0, 0 },
         { 0.00392157, 0.00392157, 0 },
         { 0.00784314, 0.00784314, 0 },
@@ -273,7 +273,7 @@ extern "C" {
         { 1, 1, 1 }
     };
 
-    static const unsigned char cmaia171_rgb[][3] = {
+    static const unsigned char cm_aia171_rgb[][3] = {
         { 0, 0, 0 },
         { 1, 1, 0 },
         { 2, 2, 0 },

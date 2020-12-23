@@ -1,12 +1,12 @@
 /* This file is part of the PROBA2 Science Operations Center software.
- * Copyright (C) 2007-2014 Royal Observatory of Belgium.
+ * Copyright (C) 2007-2021 Royal Observatory of Belgium.
  * For copying permission, see the file COPYING in the distribution.
  *
  * Author: Bogdan Nicula
  */
 
-#ifndef __SWAP_COLOR_JET_H__
-#define __SWAP_COLOR_JET_H__
+#ifndef __COLOR_JET_H__
+#define __COLOR_JET_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +14,7 @@ extern "C" {
 
 /* ---------------------------------------------------------------------- */
 
-    static const double cmjet[][3] = {
+    static const double cm_jet[][3] = {
         { 0, 0, 0.515625 },
         { 0, 0, 0.53125 },
         { 0, 0, 0.546875 },
@@ -273,7 +273,7 @@ extern "C" {
         { 0.5, 0, 0 }
     };
 
-    static const unsigned char cmjet_rgb[][3] = {
+    static const unsigned char cm_jet_rgb[][3] = {
         { 0, 0, 131 },
         { 0, 0, 135 },
         { 0, 0, 139 },
