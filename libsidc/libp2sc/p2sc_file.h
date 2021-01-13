@@ -31,6 +31,7 @@ extern "C" {
     char *p2sc_read_line(p2sc_iofile_t *);
     size_t p2sc_get_lineno(p2sc_iofile_t *);
 
+    void p2sc_read(p2sc_iofile_t *, char *, gsize);
     void p2sc_write(p2sc_iofile_t *, const char *, gssize);
     void p2sc_flush(p2sc_iofile_t *);
 

@@ -114,9 +114,24 @@ p2sc_iofile_t *p2sc_open_iofile(const char *name, const char *mode) {
         f->io = g_io_channel_new_file(f->name, mode, &err);
     }
 
-    f->lineno = 0;
-
-    if (!f->io) {
+    if (f->io) {
+        GIOStatus status = g_io_channel_set_encoding(f->io, NULL, &err);
+        if (err && err->message) {
+            P2SC_Msg(LVL_FATAL_FILESYSTEM, "%s: failed to change encoding of IO channel: %s",
+                     f->name, err->message);
+            g_error_free(err);
+            /* not reached */
+            p2sc_free_iofile(f);
+            return NULL;
+        } else if (status != G_IO_STATUS_NORMAL) {
+            P2SC_Msg(LVL_FATAL_FILESYSTEM,
+                     "%s: failed to change encoding of IO channel with status %d", f->name,
+                     (int) status);
+            /* not reached */
+            p2sc_free_iofile(f);
+            return NULL;
+        }
+    } else {
         if (err && err->message) {
             P2SC_Msg(LVL_FATAL_FILESYSTEM, "%s: failed to open IO channel: %s",
                      f->name, err->message);
@@ -128,7 +143,9 @@ p2sc_iofile_t *p2sc_open_iofile(const char *name, const char *mode) {
         p2sc_free_iofile(f);
         return NULL;
     }
+
     g_io_channel_set_close_on_unref(f->io, TRUE);
+    f->lineno = 0;
 
     return f;
 }
@@ -176,21 +193,49 @@ size_t p2sc_get_lineno(p2sc_iofile_t * f) {
     return f->lineno;
 }
 
-void p2sc_write(p2sc_iofile_t * f, const char *buf, gssize len) {
-    gsize count;
-    /* deprecated, but g_io_channel_write_chars is not equivalent */
-    GIOError error = g_io_channel_write(f->io, buf, len, &count);
+void p2sc_read(p2sc_iofile_t * f, char *buf, gsize count) {
+    gsize bytes_read;
+    GError *err = NULL;
+    GIOStatus status = g_io_channel_read_chars(f->io, buf, count, &bytes_read, &err);
 
+    if (err && err->message) {
+        P2SC_Msg(LVL_FATAL_FILESYSTEM, "%s:%zd: error reading: %s", f->name,
+                 f->lineno, err->message);
+        g_error_free(err);
+    }
+
+    if (status != G_IO_STATUS_NORMAL)
+        P2SC_Msg(LVL_FATAL_FILESYSTEM,
+                 "%s:%zd: error reading with status %d", f->name, f->lineno, (int) status);
+
+    if (bytes_read != count)
+        P2SC_Msg(LVL_FATAL_FILESYSTEM,
+                 "%s:%zd: error reading: expected %zd, read %zd", f->name, f->lineno, count,
+                 bytes_read);
+}
+
+void p2sc_write(p2sc_iofile_t * f, const char *buf, gssize len) {
     if (len < 0)
         len = strlen(buf);
+
+    gsize count;
+    GError *err = NULL;
+    GIOStatus status = g_io_channel_write_chars(f->io, buf, len, &count, &err);
+
+    if (err && err->message) {
+        P2SC_Msg(LVL_FATAL_FILESYSTEM, "%s:%zd: error writing: %s", f->name,
+                 f->lineno, err->message);
+        g_error_free(err);
+    }
+
+    if (status != G_IO_STATUS_NORMAL)
+        P2SC_Msg(LVL_FATAL_FILESYSTEM,
+                 "%s:%zd: error writing with status %d", f->name, f->lineno, (int) status);
+
     if (count != (gsize) len)
         P2SC_Msg(LVL_FATAL_FILESYSTEM,
                  "%s:%zd: error writing %zd bytes: %zd written", f->name,
                  f->lineno, count, (gsize) len);
-    if (error != G_IO_ERROR_NONE)
-        P2SC_Msg(LVL_FATAL_FILESYSTEM,
-                 "%s:%zd: error writing %zd bytes: status %d", f->name,
-                 f->lineno, count, (int) error);
 }
 
 void p2sc_flush(p2sc_iofile_t * f) {
@@ -205,7 +250,7 @@ void p2sc_flush(p2sc_iofile_t * f) {
 
     if (status != G_IO_STATUS_NORMAL)
         P2SC_Msg(LVL_FATAL_FILESYSTEM,
-                 "%s:%zd: error flushing: status %d", f->name, f->lineno, (int) status);
+                 "%s:%zd: error flushing with status %d", f->name, f->lineno, (int) status);
 }
 
 char *p2sc_test_file_input(const char *dir, const char *file) {
