@@ -5,7 +5,7 @@ pkg_check_modules(P2SC_PKG REQUIRED gmodule-2.0)
 include_directories(${P2SC_PKG_INCLUDE_DIRS})
 link_directories(${P2SC_PKG_LIBRARY_DIRS})
 
-add_library(p2sc SHARED
+add_library(p2sc STATIC
     p2sc_buffer.c
     p2sc_file.c
     p2sc_fits.c

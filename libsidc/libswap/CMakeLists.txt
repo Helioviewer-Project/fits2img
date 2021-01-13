@@ -5,7 +5,7 @@ pkg_check_modules(SWAP_PKG REQUIRED freetype2 libpng>=1.2)
 include_directories(${SWAP_PKG_INCLUDE_DIRS})
 link_directories(${SWAP_PKG_LIBRARY_DIRS})
 
-add_library(swap SHARED
+add_library(swap STATIC
     fitsproc.c
     opj_index.c
     swap_color.c

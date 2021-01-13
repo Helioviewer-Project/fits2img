@@ -16,6 +16,6 @@ foreach(SRC ${CORE_SRCS})
     list(APPEND JPEG_SRCS ${JPEG}/${SRC})
 endforeach()
 
-add_library(p2scjpeg SHARED ${JPEG_SRCS})
+add_library(p2scjpeg STATIC ${JPEG_SRCS})
 target_link_libraries(p2scjpeg)
 sidc_install_lib(p2scjpeg)

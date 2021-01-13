@@ -4,7 +4,7 @@ set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -funroll-loops
 
 include_before(${OPENJPEG} ${CMAKE_CURRENT_SOURCE_DIR})
 aux_source_directory(${OPENJPEG} OPENJPEG_SRCS)
-add_library(openjpeg SHARED opj_extra.c ${OPENJPEG_SRCS})
+add_library(openjpeg STATIC opj_extra.c ${OPENJPEG_SRCS})
 
 target_link_libraries(openjpeg m)
 sidc_install_lib(openjpeg)
@@ -35,7 +35,7 @@ set(OPENJP15_SRCS
   ${OPENJP15}/thix_manager.c
   ${OPENJP15}/tpix_manager.c
 )
-add_library(openjp15 SHARED ${OPENJP15_SRCS})
+add_library(openjp15 STATIC ${OPENJP15_SRCS})
 #this removes all other include directories for target
 set_target_properties(openjp15 PROPERTIES INCLUDE_DIRECTORIES ${OPENJP15})
 sidc_install_lib(openjp15)
@@ -62,7 +62,7 @@ set(OPENJP2_SRCS
   ${OPENJP2}/tgt.c
   ${OPENJP2}/function_list.c
 )
-add_library(openjp2 SHARED ${OPENJP2_SRCS})
+add_library(openjp2 STATIC ${OPENJP2_SRCS})
 #this removes all other include directories for target
 set_target_properties(openjp2 PROPERTIES INCLUDE_DIRECTORIES ${OPENJP2})
 sidc_install_lib(openjp2)

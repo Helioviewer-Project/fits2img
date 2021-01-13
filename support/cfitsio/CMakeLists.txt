@@ -30,7 +30,7 @@ foreach(SRC ${SRC_FILES})
     list(APPEND FITS_SRCS ${CFITSIO}/${SRC})
 endforeach()
 
-add_library(cfitsio SHARED ${FITS_SRCS})
+add_library(cfitsio STATIC ${FITS_SRCS})
 target_link_libraries(cfitsio m)
 sidc_install_lib(cfitsio)
 
