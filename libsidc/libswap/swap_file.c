@@ -20,6 +20,7 @@ static const char _versionid_[] __attribute__((unused)) =
 #include "p2sc_msg.h"
 #include "p2sc_stdlib.h"
 
+#include "color/color_icc.h"
 #include "swap_color.h"
 #include "swap_file.h"
 
@@ -55,8 +56,8 @@ static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml) {
     png_set_text(png_ptr, info_ptr, txt, G_N_ELEMENTS(txt));
 }
 
-#define GRAY_ICC SIDC_INSTALL_LIB "/data/sidc_gray.icc"
-#define SRGB_ICC SIDC_INSTALL_LIB "/data/sRGB_IEC61966-2-1_black_scaled.icc"
+#define GRAY_ICC sidc_gray_icc
+#define SRGB_ICC sRGB_IEC61966_2_1_black_scaled_icc
 
 void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
                     swap_palette_t * pal, const char *xml, int strategy) {
@@ -87,10 +88,8 @@ void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
         }
         png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr, PNG_sRGB_INTENT_PERCEPTUAL);
     } else {
-        GMappedFile *map = p2sc_map_file(GRAY_ICC);
-        png_set_iCCP(png_ptr, info_ptr, "sidc_gray", PNG_COMPRESSION_TYPE_BASE,
-                     (gpointer) g_mapped_file_get_contents(map), g_mapped_file_get_length(map));
-        g_mapped_file_unref(map);
+        png_set_iCCP(png_ptr, info_ptr, "sidc_gray", PNG_COMPRESSION_TYPE_BASE, GRAY_ICC,
+                     sizeof GRAY_ICC);
     }
 
     png_set_write_fn(png_ptr, io, png_write_fn, png_flush_fn);
@@ -256,10 +255,8 @@ void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
     if (setjmp(jerr.setjmp_buffer))
         goto end;
 
-    const char *icc = GRAY_ICC;
     int ncomps = 1, cspace = JCS_GRAYSCALE, stride = w;
     if (pal) {
-        icc = SRGB_ICC;
         ncomps = 3;
         cspace = JCS_RGB;
 
@@ -284,11 +281,10 @@ void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
 
     jpeg_start_compress(&cinfo, TRUE);
 
-    GMappedFile *map = p2sc_map_file(icc);
-    jpeg_icc_write_profile(&cinfo,
-                           (const guchar *) g_mapped_file_get_contents(map),
-                           g_mapped_file_get_length(map));
-    g_mapped_file_unref(map);
+    if (pal)
+        jpeg_icc_write_profile(&cinfo, SRGB_ICC, sizeof SRGB_ICC);
+    else
+        jpeg_icc_write_profile(&cinfo, GRAY_ICC, sizeof GRAY_ICC);
 
     if (xml)
         jpeg_write_marker(&cinfo, JPEG_COM, (const guchar *) xml, strlen(xml));
