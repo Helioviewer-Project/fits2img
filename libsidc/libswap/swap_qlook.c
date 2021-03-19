@@ -153,6 +153,7 @@ guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi,
         return out;
     }
 
+    g = CLAMP(g, 1e-6, 1e6);
     double g1 = 1. / g, pr = 255. / pow(r, g1);
     for (i = 0; i < len; ++i) {
         double p = in[i] - lo;
@@ -178,7 +179,7 @@ guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi, d
         return out;
     }
 
-    a = fabs(a);
+    a = CLAMP(a, 1e-6, 1e6);
     double r1 = 1 / r;
     double loga1 = 255 / log1p(a);
     for (i = 0; i < len; ++i) {
