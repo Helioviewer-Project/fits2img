@@ -163,7 +163,7 @@ guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi,
     return out;
 }
 
-guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi) {
+guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi, double a) {
     size_t len = w * h, i;
     guint8 *out = (guint8 *) g_malloc(len * sizeof *out), *o = out;
 
@@ -178,10 +178,12 @@ guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi) {
         return out;
     }
 
-    double lr = 255 / log1p(r);
+    a = fabs(a);
+    double r1 = 1 / r;
+    double loga1 = 255 / log1p(a);
     for (i = 0; i < len; ++i) {
-        double p = in[i] - lo;
-        p = log1p(CLAMP(p, 0, r)) * lr + .5;
+        double p = CLAMP((in[i] - lo) * r1, 0, 1);  // pixel value p is now between 0 and 1
+        p = log1p(p * a) * loga1 + .5;
         *o++ = CLAMP(p, 0, 255);
     }
 

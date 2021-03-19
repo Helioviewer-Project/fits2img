@@ -21,7 +21,7 @@ extern "C" {
 
     void swap_clamp(float *, size_t, size_t, float, float);
     guint8 *swap_xfer_gamma(const float *, size_t, size_t, float, float, double);
-    guint8 *swap_xfer_log(const float *, size_t, size_t, float, float);
+    guint8 *swap_xfer_log(const float *, size_t, size_t, float, float, double);
 
 /* ---------------------------------------------------------------------- */
 

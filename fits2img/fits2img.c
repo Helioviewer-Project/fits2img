@@ -26,6 +26,7 @@ static const char _versionid_[] __attribute__((unused)) =
 #define DEF_CLIP_MIN     0
 #define DEF_CLIP_MAX     8191
 #define DEF_GAMMA        2.2
+#define DEF_LOG_EXPONENT 1000
 #define DEF_CRATIO       3.3
 #define DEF_NLAYERS      4
 #define DEF_NRESOLUTIONS 6
@@ -39,7 +40,8 @@ int main(int argc, char **argv) {
     char *yuv = NULL, *cm = NULL, *func = NULL;
 
     double clipmin = DEF_CLIP_MIN, clipmax = DEF_CLIP_MAX;
-    double gamma = DEF_GAMMA, cratio = DEF_CRATIO;
+    double gamma = DEF_GAMMA, log_exponent = DEF_LOG_EXPONENT;
+    double cratio = DEF_CRATIO;
     int nlayers = DEF_NLAYERS, nresolutions = DEF_NRESOLUTIONS;
     int precinctw = DEF_PRECINCTW, precincth = DEF_PRECINCTH;
     int strategy = DEF_STRATEGY;
@@ -57,6 +59,8 @@ int main(int argc, char **argv) {
          "Pixel transfer function: gamma, log", "gamma" },
         { "gamma", 'g', 0, G_OPTION_ARG_DOUBLE, &gamma,
          "Gamma correction exponent", G_STRINGIFY(DEF_GAMMA) },
+        { "log", 'l', 0, G_OPTION_ARG_DOUBLE, &log_exponent,
+         "Log correction exponent", G_STRINGIFY(DEF_LOG_EXPONENT) },
         { "min-clip", 'm', 0, G_OPTION_ARG_DOUBLE, &clipmin,
          "Clip lower pixel values", G_STRINGIFY(DEF_CLIP_MIN) },
         { "max-clip", 'M', 0, G_OPTION_ARG_DOUBLE, &clipmax,
@@ -105,7 +109,7 @@ int main(int argc, char **argv) {
     swap_clamp(p->im, p->w, p->h, clipmin, clipmax);
     swap_crispen(p->im, p->w, p->h);
     if (func && !strcmp(func, "log"))
-        g = swap_xfer_log(p->im, p->w, p->h, clipmin, clipmax);
+        g = swap_xfer_log(p->im, p->w, p->h, clipmin, clipmax, log_exponent);
     else
         g = swap_xfer_gamma(p->im, p->w, p->h, clipmin, clipmax, gamma);
     g_free(func);
