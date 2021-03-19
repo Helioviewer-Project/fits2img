@@ -32,7 +32,7 @@ include_before(${SIDC_SUPPORT_INC})
 link_directories(${SIDC_SUPPORT_LIB})
 
 include(FindPkgConfig)
-pkg_check_modules(PKG REQUIRED glib-2.0>=2.28 freetype2 libpng)
+pkg_check_modules(PKG REQUIRED glib-2.0>=2.22 freetype2 libpng)
 include_directories(${PKG_INCLUDE_DIRS})
 link_directories(${PKG_LIBRARY_DIRS})
 

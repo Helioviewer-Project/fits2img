@@ -8,6 +8,7 @@
 static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_time.c 5348 2018-04-25 13:55:17Z bogdan $";
 
+#include <sys/time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -118,7 +119,10 @@ char *p2sc_date2string(const double d[6]) {
 
 char *p2sc_timestamp(double t, int prec) {
     if (t < 0) {
-        t = g_get_real_time() / 1000000.;
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        t = tv.tv_sec + tv.tv_usec / 1000000.;
+        // t = g_get_real_time() / 1000000.; for glib-2.0>=2.28
     }
 
     double i, f = modf(t, &i);
