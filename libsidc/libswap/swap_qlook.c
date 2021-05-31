@@ -147,6 +147,11 @@ guint8 *swap_xfer_gamma(const float *in, size_t w, size_t h, float lo, float hi,
             if (in[i] > hi)
                 hi = in[i];
 
+    if (lo == -1000000)
+        for (i = 0; i < len; ++i)
+            if (in[i] < lo)
+                lo = in[i];
+
     double r = hi - lo;
     if (r <= 0) {
         memset(out, 0, len * sizeof *out);
@@ -172,6 +177,11 @@ guint8 *swap_xfer_log(const float *in, size_t w, size_t h, float lo, float hi, d
         for (i = 0; i < len; ++i)
             if (in[i] > hi)
                 hi = in[i];
+
+    if (lo == -1000000)
+        for (i = 0; i < len; ++i)
+            if (in[i] < lo)
+                lo = in[i];
 
     double r = hi - lo;
     if (r <= 0) {
