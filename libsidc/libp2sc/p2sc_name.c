@@ -85,13 +85,16 @@ char *p2sc_name_swap_jhv(const char *dateobs, const char *telescop,
         P2SC_Msg(LVL_FATAL, "p2sc_string2date(%s)", dateobs);
 
     /* avoid SDO/AIA */
-    char *tel = p2sc_strdup_replace(telescop, '/', '-');
+    char *tele = p2sc_strdup_replace(telescop, '/', '-');
+    /* avoid SUVI instrument name */
+    char *inst = p2sc_strdup_replace(instrume, ' ', '_');
     /* final . to protect fractional wavelengths */
     char *ret = g_strdup_printf("%04d_%02d_%02d__%02d_%02d_%02d__%s_%s_%s_%s.",
                                 (int) d[0], (int) d[1], (int) d[2], (int) d[3],
                                 (int) d[4], (int) d[5],
-                                tel, instrume, detector, wavelnth);
-    g_free(tel);
+                                tele, inst, detector, wavelnth);
+    g_free(inst);
+    g_free(tele);
 
     return ret;
 }
