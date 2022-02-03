@@ -10,28 +10,26 @@ add_definitions(
 )
 
 set(SRC_FILES
-    buffers.c cfileio.c checksum.c drvrfile.c drvrmem.c
-    drvrnet.c drvrsmem.c drvrgsiftp.c editcol.c edithdu.c eval_l.c
-    eval_y.c eval_f.c fitscore.c getcol.c getcolb.c getcold.c getcole.c
-    getcoli.c getcolj.c getcolk.c getcoll.c getcols.c getcolsb.c
-    getcoluk.c getcolui.c getcoluj.c getkey.c group.c grparser.c
-    histo.c iraffits.c
-    modkey.c putcol.c putcolb.c putcold.c putcole.c putcoli.c
-    putcolj.c putcolk.c putcoluk.c putcoll.c putcols.c putcolsb.c
-    putcolu.c putcolui.c putcoluj.c putkey.c region.c scalnull.c
-    swapproc.c wcssub.c wcsutil.c imcompress.c quantize.c ricecomp.c
-    pliocomp.c fits_hcompress.c fits_hdecompress.c zlib/zuncompress.c
-    zlib/zcompress.c zlib/adler32.c zlib/crc32.c zlib/inffast.c
-    zlib/inftrees.c zlib/trees.c zlib/zutil.c zlib/deflate.c
-    zlib/infback.c zlib/inflate.c zlib/uncompr.c simplerng.c
-    f77_wrap1.c f77_wrap2.c f77_wrap3.c f77_wrap4.c)
+    buffers.c cfileio.c checksum.c
+    drvrfile.c drvrmem.c drvrnet.c drvrsmem.c
+    editcol.c edithdu.c eval_f.c eval_l.c eval_y.c
+    f77_wrap1.c f77_wrap2.c f77_wrap3.c f77_wrap4.c
+    fits_hcompress.c fits_hdecompress.c fitscore.c
+    getcol.c getcolb.c getcold.c getcole.c getcoli.c getcolj.c getcolk.c
+    getcoll.c getcols.c getcolsb.c getcolui.c getcoluj.c getcoluk.c
+    getkey.c group.c grparser.c histo.c imcompress.c iraffits.c modkey.c
+    pliocomp.c
+    putcol.c putcolb.c putcold.c putcole.c putcoli.c putcolj.c putcolk.c
+    putcoll.c putcols.c putcolsb.c putcolu.c putcolui.c putcoluj.c putcoluk.c
+    putkey.c quantize.c region.c ricecomp.c scalnull.c simplerng.c swapproc.c
+    wcssub.c wcsutil.c zcompress.c zuncompress.c)
 
 foreach(SRC ${SRC_FILES})
     list(APPEND FITS_SRCS ${CFITSIO}/${SRC})
 endforeach()
 
 add_library(cfitsio STATIC ${FITS_SRCS})
-target_link_libraries(cfitsio m)
+target_link_libraries(cfitsio m z)
 sidc_install_lib(cfitsio)
 
 add_executable(speed ${CFITSIO}/speed.c)

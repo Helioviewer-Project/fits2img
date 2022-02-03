@@ -1,9 +1,9 @@
 
 project(SIDC_SWHV C)
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 2.8.12)
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -pedantic -Wall -W -pipe -std=gnu99 -O3 -mssse3")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -pedantic -Wall -W -pipe -std=gnu11 -O3 -mssse3")
 
 set(SIDC_PROJECT_NAME   ${CMAKE_PROJECT_NAME})
 set(SIDC_INSTALL_LIB    ${CMAKE_INSTALL_PREFIX}/lib)
@@ -38,7 +38,7 @@ link_directories(${PKG_LIBRARY_DIRS})
 
 set(SUPPORT  ${CMAKE_CURRENT_SOURCE_DIR}/support)
 
-set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio-3.49)
+set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio-4.0.0)
 set(GENX     ${SUPPORT}/genx)
 set(JPEG     ${SUPPORT}/jpeg/jpeg-8d)
 set(OPENJPEG ${SUPPORT}/openjpeg/libopenjpeg-2012-03-08)
