@@ -625,7 +625,9 @@ void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***c
         e = g_strdup(key);
         g_array_append_val(ak, e);
 
+        memset(card, 0, sizeof card);
         memcpy(card, h + i * 80, 80);
+
         fits_parse_value(card, val, com, s);
         e = clean_string(val);
         /* doublequote strings, keep numbers as they are */
