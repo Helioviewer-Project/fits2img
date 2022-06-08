@@ -600,10 +600,11 @@ char *sfts_read_history(sfts_t * f) {
     return ret;
 }
 
-void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***typs) {
+void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***coms,
+                   char ***typs) {
     int *s = &f->stat;
     int n, kl, ne = 0;
-    char k[SKEY_LEN], v[SKEY_LEN], *h, *c, *e;
+    char key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN], *h, *c, *e;
     const char *t;
 
     if (exc)
@@ -612,19 +613,20 @@ void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***t
 
     GArray *ak = g_array_sized_new(TRUE, FALSE, sizeof **keys, n);
     GArray *av = g_array_sized_new(TRUE, FALSE, sizeof **vals, n);
+    GArray *ac = g_array_sized_new(TRUE, FALSE, sizeof **coms, n);
     GArray *at = g_array_sized_new(TRUE, FALSE, sizeof **typs, n);
 
     for (int i = 0; i < n; ++i) {
-        fits_get_keyname(h + i * 80, k, &kl, s);
+        fits_get_keyname(h + i * 80, key, &kl, s);
         /* eliminate END since it cannot be excluded */
-        if (!strcmp(k, "END"))
+        if (!strcmp(key, "END"))
             continue;
 
-        c = g_strdup(k);
-        g_array_append_val(ak, c);
+        e = g_strdup(key);
+        g_array_append_val(ak, e);
 
-        fits_parse_value(h + i * 80, v, NULL, s);
-        e = clean_string(v);
+        fits_parse_value(h + i * 80, val, com, s);
+        e = clean_string(val);
         /* doublequote strings, keep numbers as they are */
         if (p2sc_string_isnumeric(e)) {
             double d = g_ascii_strtod(e, NULL);
@@ -642,6 +644,8 @@ void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***t
         g_free(e);
 
         g_array_append_val(av, c);
+        e = clean_string(com);
+        g_array_append_val(ac, e);
         g_array_append_val(at, t);
     }
     g_free(h);
@@ -649,6 +653,7 @@ void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***t
 
     *keys = (char **) g_array_free(ak, FALSE);
     *vals = (char **) g_array_free(av, FALSE);
+    *coms = (char **) g_array_free(ac, FALSE);
     *typs = (char **) g_array_free(at, FALSE);
 }
 

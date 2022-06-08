@@ -73,7 +73,7 @@ extern "C" {
 
     char *sfts_read_history(sfts_t *);
 
-    void sfts_head2str(sfts_t *, char **, char ***, char ***, char ***);
+    void sfts_head2str(sfts_t *, char **, char ***, char ***, char ***, char ***);
 
     char *sfts_timestamp(char *);
 
