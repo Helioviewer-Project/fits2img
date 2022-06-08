@@ -29,8 +29,9 @@ do { \
     void p2sc_xml_addtext(genxWriter, const char *, ...)
         __attribute__((format(printf, 2, 3)));
 
-    void p2sc_xml_element(genxWriter, const char *, const char *, ...)
-        __attribute__((format(printf, 3, 4)));
+    void p2sc_xml_element(genxWriter, const char *, const char *, const char *, const char *,
+                          ...)
+        __attribute__((format(printf, 5, 6)));
 
 /* ---------------------------------------------------------------------- */
 

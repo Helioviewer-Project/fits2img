@@ -604,12 +604,12 @@ void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***c
                    char ***typs) {
     int *s = &f->stat;
     int n, kl, ne = 0;
-    char key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN], *h, *c, *e;
+    char card[SKEY_LEN], key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN], *h, *c, *e;
     const char *t;
 
     if (exc)
         ne = g_strv_length(exc);
-    fits_hdr2str(f->fts, TRUE, exc, ne, &h, &n, s);
+    fits_hdr2str(f->fts, FALSE, exc, ne, &h, &n, s);
 
     GArray *ak = g_array_sized_new(TRUE, FALSE, sizeof **keys, n);
     GArray *av = g_array_sized_new(TRUE, FALSE, sizeof **vals, n);
@@ -625,7 +625,8 @@ void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***c
         e = g_strdup(key);
         g_array_append_val(ak, e);
 
-        fits_parse_value(h + i * 80, val, com, s);
+        memcpy(card, h + i * 80, 80);
+        fits_parse_value(card, val, com, s);
         e = clean_string(val);
         /* doublequote strings, keep numbers as they are */
         if (p2sc_string_isnumeric(e)) {

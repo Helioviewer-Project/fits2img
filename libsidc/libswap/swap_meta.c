@@ -32,7 +32,10 @@ static void head2xml(sfts_t * f, genxWriter w) {
             vals[i][strlen(vals[i]) - 1] = ' ';
             g_strstrip(vals[i]);
         }
-        p2sc_xml_element(w, keys[i], "%s", vals[i]);
+        if (coms[i] && coms[i][0])
+            p2sc_xml_element(w, keys[i], "comment", coms[i], "%s", vals[i]);
+        else
+            p2sc_xml_element(w, keys[i], NULL, NULL, "%s", vals[i]);
     }
 
     g_strfreev(keys), g_strfreev(vals), g_strfreev(coms), g_strfreev(typs);

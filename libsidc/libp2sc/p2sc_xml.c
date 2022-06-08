@@ -19,7 +19,7 @@ static const char _versionid_[] __attribute__((unused)) =
 #include "p2sc_msg.h"
 #include "p2sc_xml.h"
 
-static void genx_addtext(genxWriter w, const char *fmt, va_list args) {
+static void genx_addText(genxWriter w, const char *fmt, va_list args) {
     gint len;
     gchar *text;
     genxStatus status;
@@ -39,21 +39,36 @@ static void genx_addtext(genxWriter w, const char *fmt, va_list args) {
     GENX_Try(w, status);
 }
 
+static void genx_addAttribute(genxWriter w, const char *name, const char *value) {
+    genxStatus status = genxAddAttributeLiteral(w, NULL, (constUtf8) name, (constUtf8) value);
+    if (status == GENX_BAD_UTF8 || status == GENX_NON_XML_CHARACTER) {
+        utf8 nvalue = (utf8) g_malloc(strlen(value) + 1);
+
+        genxScrubText(w, (constUtf8) value, nvalue);
+        status = genxAddAttributeLiteral(w, NULL, (constUtf8) name, nvalue);
+        g_free(nvalue);
+    }
+    GENX_Try(w, status);
+}
+
 void p2sc_xml_addtext(genxWriter w, const char *fmt, ...) {
     va_list va;
 
     va_start(va, fmt);
-    genx_addtext(w, fmt, va);
+    genx_addText(w, fmt, va);
     va_end(va);
 }
 
-void p2sc_xml_element(genxWriter w, const char *name, const char *fmt, ...) {
+void p2sc_xml_element(genxWriter w, const char *name, const char *attr, const char *attr_value,
+                      const char *fmt, ...) {
     va_list va;
 
     GENX_Try(w, genxStartElementLiteral(w, NULL, (constUtf8) name));
+    if (attr)
+        genx_addAttribute(w, attr, attr_value);
 
     va_start(va, fmt);
-    genx_addtext(w, fmt, va);
+    genx_addText(w, fmt, va);
     va_end(va);
 
     GENX_Try(w, genxEndElement(w));
