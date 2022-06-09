@@ -560,11 +560,11 @@ void sfts_find_hdukey(sfts_t * f, const char *key) {
 static char *clean_string(char *s) {
     size_t i, l = strlen(s);
 
-    /* replace double quotes with simple quotes */
+    // replace double quotes with simple quotes
     for (i = 0; i < l; ++i)
         if (s[i] == '\"')
             s[i] = '\'';
-    /* remove start/end quotes */
+    // remove start/end quotes
     if (s[0] == '\'')
         s[0] = ' ';
     if (l > 0 && s[l - 1] == '\'')
@@ -608,17 +608,27 @@ void sfts_head2str(sfts_t * f, char ***keys, char ***vals, char ***coms) {
     GArray *av = g_array_sized_new(TRUE, FALSE, sizeof **vals, nkeys);
     GArray *ac = g_array_sized_new(TRUE, FALSE, sizeof **coms, nkeys);
 
-    char *str;
+    char *str, *longstr;
     char key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN];
     for (int i = 1; i <= nkeys; ++i) {
         fits_read_keyn(f->fts, i, key, val, com, s);
+        if (!strcmp(key, "CONTINUE"))
+            continue;
+
+        fits_read_key_longstr(f->fts, key, &longstr, com, s);
+        // long strings may end in &, e.g., EUI FILE_RAW
+        int len = strlen(longstr);
+        if (len > 68 && longstr[len - 1] == '&')
+            longstr[len - 1] = 0;
 
         str = g_strdup(key);
         g_array_append_val(ak, str);
-        str = clean_string(val);
+        str = g_strdup(longstr);
         g_array_append_val(av, str);
-        str = clean_string(com);
+        str = g_strdup(com);
         g_array_append_val(ac, str);
+
+        fits_free_memory(longstr, s);
     }
     CHK_FTS(f);
 
