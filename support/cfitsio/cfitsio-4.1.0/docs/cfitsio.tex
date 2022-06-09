@@ -31,7 +31,7 @@
 \medskip
 \medskip
 \begin{center}
-{\Large Version 4.0 \\}
+{\Large Version 4.1 \\}
 \end{center}
 \bigskip
 \vskip 2.5cm
@@ -46,7 +46,7 @@ USA}
 \vfill
 \bigskip
 \begin{center}
-{\Large May 2021\\}
+{\Large Feb 2022\\}
 \end{center}
 \vfill
 \end{titlepage}
@@ -433,12 +433,7 @@ The Fortran wrappers in CFITSIO may be tested with the testf77
 program on Unix systems with:
 
 \begin{verbatim}
-    % f77 -o testf77 testf77.f -L. -lcfitsio -lnsl -lsocket
-  or
-    % f77 -f -o testf77 testf77.f -L. -lcfitsio    (under SUN O/S)
-  or
-    % f77 -o testf77 testf77.f -Wl,-L. -lcfitsio -lm -lnsl -lsocket (HP/UX)
-
+    % gfortran -o testf77 testf77.f -L. -lcfitsio -lz -lcurl
     % testf77 > testf77.lis
     % diff testf77.lis testf77.out
     % cmp testf77.fit testf77.std
@@ -1672,7 +1667,7 @@ status value is also returned as the value of the function itself.
 int fits_open_file / ffopen
     (fitsfile **fptr, char *filename, int iomode, > int *status)
 
-int fits_open_diskfile / ffdkopen
+int fits_open_diskfile / ffdkopn
     (fitsfile **fptr, char *filename, int iomode, > int *status)
 
 int fits_open_data / ffdopn
@@ -2781,7 +2776,9 @@ quantization method is to be used.  The default algorithm is called
 ``SUBTRACTIVE\_DITHER\_1''.  A second variation called ``SUBTRACTIVE\_DITHER\_2''
 is also available, which does the same thing except that any pixels with a
 value of 0.0 are not dithered and instead the zero values are exactly
-preserved in the compressed image.  One may also turn off dithering
+preserved in the compressed image.  This is intended for the special case
+where ``bad pixels'' in the image have been artifically set to zero to indicate that they have no valid value.  It is not currently supported with HCOMPRESS, 
+and if requested while using HCOMPRESS, it will be replaced with ``SUBTRACTIVE\_DITHER\_1''.  One may also turn off dithering
 completely with the ``NO\_DITHER'' option, but this is not recommended
 because it can cause larger systematic errors in measurements of the
 position or brightness of objects in the compressed image.
@@ -3376,6 +3373,10 @@ For complex and double complex data types, \verb+nelements+ is the number
 of numerical pairs; the number of floats or doubles stored by
 \+array+ must be \verb+2*nelements+.
 
+For the logical data (TLOGICAL), the C storage type is a \verb+char+
+single-byte character.  A FITS value of `\verb+T+'rue reads as 1 and
+`\verb+F+' reads as 0; other non-FITS characters are preserved untranslated.
+
 Numerical data values are automatically scaled by the TSCALn and TZEROn
 keyword values (if they exist).
 
@@ -3960,7 +3961,8 @@ The following utility routines may be useful for certain applications.
 \begin{description}
 \item[1 ] Return the revision number of the CFITSIO library.
     The revision number will be incremented with each new
-   release of CFITSIO. \label{ffvers}
+   release of CFITSIO. The 3 fields of the version string M.xx.yy
+   are converted to a float as: M + .01*xx + .0001*yy. \label{ffvers}
 \end{description}
 
 \begin{verbatim}
@@ -7075,11 +7077,15 @@ parameters used in these routines.
 
 \subsection{Write Column Data Routines}
 
+This subsection describes specialized routines for writing data to
+FITS tables.  Please see section \ref{specialized-read-column-data}
+(``Read Column Data Routines'') for more information about how values
+are stored in C.
 
 \begin{description}
 \item[1 ] Write elements into an ASCII or binary table column (in the CDU).
     The data type of the array is implied by the suffix of the
-   routine name. \label{ffpcls}
+   routine name.  \label{ffpcls}
 \end{description}
 
 \begin{verbatim}
@@ -7163,7 +7169,7 @@ parameters used in these routines.
          LONGLONG offset, > int *status)
 \end{verbatim}
 
-\subsection{Read Column Data Routines}
+\subsection{Read Column Data Routines \label{specialized-read-column-data}}
 
 Two types of routines are provided to get the column data which differ
 in the way undefined pixels are handled.  The first set of routines
@@ -7209,6 +7215,11 @@ parameters used in these routines.
     (or = ' ' for ffgcvs) in which case no checking for undefined values will
     be performed. The anynul parameter is set to true if any of the returned
     elements are undefined. 
+
+    For the \verb+_log+ (logical) variant, the C storage type is a
+    \verb+char+ single-byte character.  A FITS value of `\verb+T+'rue
+    reads as 1 and `\verb+F+' reads as 0; other non-FITS characters 
+    are preserved untranslated.
 
     For the \verb+_str+ (string) variant the number
     of elements is the number of strings, and the caller must allocate storage
@@ -10553,7 +10564,7 @@ ffdelt    & \pageref{ffdelt} \\
 ffdhdu     & \pageref{ffdhdu} \\
 ffdkey     & \pageref{ffdkey} \\
 ffdkinit  & \pageref{ffinit} \\
-ffdkopen      & \pageref{ffopen} \\
+ffdkopn      & \pageref{ffopen} \\
 ffdopn      & \pageref{ffopen} \\
 ffdrec  & \pageref{ffdrec} \\
 ffdrow  & \pageref{ffdrow} \\
