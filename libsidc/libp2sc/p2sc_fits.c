@@ -600,64 +600,31 @@ char *sfts_read_history(sfts_t * f) {
     return ret;
 }
 
-void sfts_head2str(sfts_t * f, char **exc, char ***keys, char ***vals, char ***coms,
-                   char ***typs) {
-    int *s = &f->stat;
-    int n, kl, ne = 0;
-    char card[SKEY_LEN], key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN], *h, *c, *e;
-    const char *t;
+void sfts_head2str(sfts_t * f, char ***keys, char ***vals, char ***coms) {
+    int nkeys, *s = &f->stat;
+    fits_get_hdrspace(f->fts, &nkeys, NULL, s);
 
-    if (exc)
-        ne = g_strv_length(exc);
-    fits_hdr2str(f->fts, FALSE, exc, ne, &h, &n, s);
+    GArray *ak = g_array_sized_new(TRUE, FALSE, sizeof **keys, nkeys);
+    GArray *av = g_array_sized_new(TRUE, FALSE, sizeof **vals, nkeys);
+    GArray *ac = g_array_sized_new(TRUE, FALSE, sizeof **coms, nkeys);
 
-    GArray *ak = g_array_sized_new(TRUE, FALSE, sizeof **keys, n);
-    GArray *av = g_array_sized_new(TRUE, FALSE, sizeof **vals, n);
-    GArray *ac = g_array_sized_new(TRUE, FALSE, sizeof **coms, n);
-    GArray *at = g_array_sized_new(TRUE, FALSE, sizeof **typs, n);
+    char *str;
+    char key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN];
+    for (int i = 1; i <= nkeys; ++i) {
+        fits_read_keyn(f->fts, i, key, val, com, s);
 
-    for (int i = 0; i < n; ++i) {
-        fits_get_keyname(h + i * 80, key, &kl, s);
-        /* eliminate END since it cannot be excluded */
-        if (!strcmp(key, "END"))
-            continue;
-
-        e = g_strdup(key);
-        g_array_append_val(ak, e);
-
-        memset(card, 0, sizeof card);
-        memcpy(card, h + i * 80, 80);
-
-        fits_parse_value(card, val, com, s);
-        e = clean_string(val);
-        /* doublequote strings, keep numbers as they are */
-        if (p2sc_string_isnumeric(e)) {
-            double d = g_ascii_strtod(e, NULL);
-            if (d == (gint64) d) {
-                c = g_strdup_printf("%" G_GINT64_MODIFIER "d", (gint64) d);
-                t = g_strdup("BIGINT");
-            } else {
-                c = g_strdup(e);
-                t = g_strdup("DOUBLE");
-            }
-        } else {
-            c = g_strconcat("\"", e, "\"", NULL);
-            t = g_strdup("VARCHAR(72)");
-        }
-        g_free(e);
-
-        g_array_append_val(av, c);
-        e = clean_string(com);
-        g_array_append_val(ac, e);
-        g_array_append_val(at, t);
+        str = g_strdup(key);
+        g_array_append_val(ak, str);
+        str = clean_string(val);
+        g_array_append_val(av, str);
+        str = clean_string(com);
+        g_array_append_val(ac, str);
     }
-    g_free(h);
     CHK_FTS(f);
 
     *keys = (char **) g_array_free(ak, FALSE);
     *vals = (char **) g_array_free(av, FALSE);
     *coms = (char **) g_array_free(ac, FALSE);
-    *typs = (char **) g_array_free(at, FALSE);
 }
 
 char *sfts_timestamp(char *ts) {

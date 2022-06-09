@@ -22,23 +22,18 @@ static const char _versionid_[] __attribute__((unused)) =
 static void head2xml(sfts_t * f, genxWriter w) {
     GENX_Try(w, genxStartElementLiteral(w, NULL, (constUtf8) "fits"));
 
-    char **keys, **vals, **coms, **typs;
-    sfts_head2str(f, NULL, &keys, &vals, &coms, &typs);
+    char **keys, **vals, **coms;
+    sfts_head2str(f, &keys, &vals, &coms);
 
     int i, n = g_strv_length(keys);
     for (i = 0; i < n; ++i) {
-        if (!strcmp("VARCHAR(72)", typs[i])) {
-            vals[i][0] = ' ';
-            vals[i][strlen(vals[i]) - 1] = ' ';
-            g_strstrip(vals[i]);
-        }
         if (coms[i] && coms[i][0])
             p2sc_xml_element(w, keys[i], "comment", coms[i], "%s", vals[i]);
         else
             p2sc_xml_element(w, keys[i], NULL, NULL, "%s", vals[i]);
     }
 
-    g_strfreev(keys), g_strfreev(vals), g_strfreev(coms), g_strfreev(typs);
+    g_strfreev(keys), g_strfreev(vals), g_strfreev(coms);
 
     GENX_Try(w, genxEndElement(w)); /* fits */
 }
