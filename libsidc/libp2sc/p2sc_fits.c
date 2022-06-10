@@ -612,23 +612,27 @@ void sfts_head2str(sfts_t * f, char ***keys, char ***vals, char ***coms) {
     char key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN];
     for (int i = 1; i <= nkeys; ++i) {
         fits_read_keyn(f->fts, i, key, val, com, s);
-        if (!strcmp(key, "CONTINUE"))
+        if (!strcmp("CONTINUE", key))
             continue;
 
-        fits_read_key_longstr(f->fts, key, &longstr, com, s);
-        // long strings may end in &, e.g., EUI FILE_RAW
-        int len = strlen(longstr);
-        if (len > 68 && longstr[len - 1] == '&')
-            longstr[len - 1] = 0;
+        int regular = strcmp("HISTORY", key) && strcmp("COMMENT", key);
+        if (regular) {
+            fits_read_key_longstr(f->fts, key, &longstr, com, s);
+            // long strings may end in &, e.g., EUI FILE_RAW
+            int len = strlen(longstr);
+            if (len > 68 && longstr[len - 1] == '&')
+                longstr[len - 1] = 0;
+        }
 
         str = g_strdup(key);
         g_array_append_val(ak, str);
-        str = g_strdup(longstr);
+        str = g_strdup(regular ? longstr : val);
         g_array_append_val(av, str);
         str = g_strdup(com);
         g_array_append_val(ac, str);
 
-        fits_free_memory(longstr, s);
+        if (regular)
+            fits_free_memory(longstr, s);
     }
     CHK_FTS(f);
 
