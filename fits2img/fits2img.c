@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
     int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
     char *appname = NULL, *contact = NULL, *outdir = NULL;
     char *yuv = NULL, *cm = NULL, *func = NULL;
+    char *dateobs = NULL, *wavelnth = NULL;
 
     double clipmin = DEF_CLIP_MIN, clipmax = DEF_CLIP_MAX;
     double gamma = DEF_GAMMA, log_exponent = DEF_LOG_EXPONENT;
@@ -91,6 +92,10 @@ int main(int argc, char **argv) {
          "Use a colormap: aia171, citrus, hot, jet", "name" },
         { "no-verify", 'N', 0, G_OPTION_ARG_NONE, &noverify,
          "Do not verify FITS checksums", NULL },
+        { "date-obs", 0, 0, G_OPTION_ARG_STRING, &dateobs,
+         "DATE-OBS keyword override", NULL },
+        { "wavelnth", 0, 0, G_OPTION_ARG_STRING, &wavelnth,
+         "WAVELNTH keyword override", NULL },
         { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
     };
 
@@ -102,7 +107,7 @@ int main(int argc, char **argv) {
     }
 
     contact = contact == NULL ? g_strdup("swhv@oma.be") : contact;
-    procfits_t *p = fitsproc(argv[1], contact, noverify);
+    procfits_t *p = fitsproc(argv[1], contact, noverify, dateobs, wavelnth);
     g_free(contact);
 
     guint8 *g;
@@ -162,6 +167,7 @@ int main(int argc, char **argv) {
 
     g_free(cm);
     g_free(outdir);
+    g_free(dateobs), g_free(wavelnth);
 
     return 0;
 }

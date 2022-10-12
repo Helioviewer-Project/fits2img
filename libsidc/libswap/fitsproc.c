@@ -18,24 +18,26 @@ static const char _versionid_[] __attribute__((unused)) =
 
 static char *process_header(sfts_t *, const char *);
 
-procfits_t *fitsproc(const char *name, const char *contact, int noverify) {
+procfits_t *fitsproc(const char *name, const char *contact, int noverify,
+                     const char *dateobs, const char *wavelnth) {
     sfts_t *f = sfts_openro(name, noverify ? SFTS_SUM_NOVERIFY : 0);
 
     sfts_find_hdukey(f, "DATE-OBS");
 
     procfits_t *p = (procfits_t *) g_malloc0(sizeof *p);
     p->name = g_strdup(name);
-    p->dateobs = sfts_read_keystring(f, "DATE-OBS");
-    p->telescop = sfts_read_keystring(f, "TELESCOP");
+    p->dateobs = dateobs ? g_strdup(dateobs) : sfts_read_keystring(f, "DATE-OBS");
+
+    p->telescop = sfts_read_keystring0(f, "TELESCOP");
+    if (!p->telescop)
+        p->telescop = sfts_read_keystring(f, "OBSRVTRY");
+
     p->instrume = sfts_read_keystring(f, "INSTRUME");
-
     p->detector = sfts_read_keystring0(f, "DETECTOR");
-    if (!p->detector) {
-        g_free(p->detector);
+    if (!p->detector)
         p->detector = g_strdup(p->instrume);
-    }
 
-    p->wavelnth = sfts_read_keystring(f, "WAVELNTH");
+    p->wavelnth = wavelnth ? g_strdup(wavelnth) : sfts_read_keystring(f, "WAVELNTH");
 
     p->xml = process_header(f, contact);
     p->im = (float *) sfts_read_image(f, &(p->w), &(p->h), SFLOAT);

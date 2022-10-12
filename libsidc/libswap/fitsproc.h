@@ -30,7 +30,8 @@ extern "C" {
         char *xml;
     } procfits_t;
 
-    procfits_t *fitsproc(const char *, const char *, int);
+    procfits_t *fitsproc(const char *, const char *, int, const char *dateobs,
+                         const char *wavelnth);
     void procfits_free(procfits_t *);
 
 /* ---------------------------------------------------------------------- */
