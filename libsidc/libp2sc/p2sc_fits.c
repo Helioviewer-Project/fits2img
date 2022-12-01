@@ -609,11 +609,15 @@ void sfts_head2str(sfts_t * f, char ***keys, char ***vals, char ***coms) {
     GArray *ac = g_array_sized_new(TRUE, FALSE, sizeof **coms, nkeys);
 
     char *str, *longstr;
-    char key[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN];
+    char skey[SKEY_LEN], val[SKEY_LEN], com[SKEY_LEN];
     for (int i = 1; i <= nkeys; ++i) {
-        fits_read_keyn(f->fts, i, key, val, com, s);
+        fits_read_keyn(f->fts, i, skey, val, com, s);
+
+        char *key = g_strstrip(skey);
         if (!strcmp("CONTINUE", key))
             continue;
+        if (key[0] == 0)
+            key = "COMMENT";
 
         int regular = strcmp("HISTORY", key) && strcmp("COMMENT", key);
         if (regular) {
