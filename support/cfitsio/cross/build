@@ -1,0 +1,1 @@
+cmake ~/jhv/fits2img/support/cfitsio/cross/ -DCMAKE_TOOLCHAIN_FILE=tc.cmake && make

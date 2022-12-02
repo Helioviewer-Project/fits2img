@@ -2,7 +2,6 @@
 include_before(${CFITSIO})
 
 add_definitions(
-    -Dunix
     -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1
     -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1
     -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_MATH_H=1 -DHAVE_LIMITS_H=1
@@ -41,10 +40,6 @@ target_link_libraries(fpack cfitsio)
 add_executable(funpack ${CFITSIO}/fpackutil.c ${CFITSIO}/funpack.c)
 target_link_libraries(funpack cfitsio)
 
-add_executable(fits_listhead listhead.c)
-target_link_libraries(fits_listhead cfitsio)
-install(TARGETS fits_listhead DESTINATION support)
-
 add_executable(fits_imcopy ${CFITSIO}/imcopy.c)
 target_link_libraries(fits_imcopy cfitsio)
 install(TARGETS fits_imcopy DESTINATION support)
@@ -53,4 +48,10 @@ add_executable(fitscopy ${CFITSIO}/fitscopy.c)
 target_link_libraries(fitscopy cfitsio)
 install(TARGETS fitscopy DESTINATION support)
 
-add_subdirectory(fverify)
+if(NOT MINIMAL)
+    add_executable(fits_listhead listhead.c)
+    target_link_libraries(fits_listhead cfitsio)
+    install(TARGETS fits_listhead DESTINATION support)
+
+    add_subdirectory(fverify)
+endif()
