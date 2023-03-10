@@ -542,17 +542,16 @@ char *sfts_read_keystring(sfts_t * f, const char *key) {
 }
 
 void sfts_find_hdukey(sfts_t * f, const char *key) {
-    char c[SKEY_LEN];
-    int *s = &f->stat, i, num = sfts_get_nhdus(f);
-
-    for (i = 1; i <= num; ++i) {
+    int num = sfts_get_nhdus(f);
+    for (int i = 1; i <= num; ++i) {
         sfts_goto_hdu(f, i);
-        fits_find_nextkey(f->fts, /* warning cfits */ (void *) &key, 1, NULL, 0, c, s);
-        if (*s == KEY_NO_EXIST) {
-            *s = 0;
+        char *val = sfts_read_keystring0(f, key);
+        if (val == NULL)
             continue;
-        } else
+        else {
+            g_free(val);
             break;
+        }
     }
     CHK_FTS(f);
 }
