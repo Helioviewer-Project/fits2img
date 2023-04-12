@@ -108,8 +108,7 @@ void swap_crispen(float *out, size_t w, size_t h) {
     g_free(in);
 }
 
-void swap_diff(float *im2, size_t w2, size_t h2, const float *im1, size_t w1,
-               size_t h1, double th) {
+void swap_diff(float *im2, size_t w2, size_t h2, const float *im1, size_t w1, size_t h1, double th) {
     size_t W = MIN(w2, w1), H = MIN(h2, h1), i, j;
 
     for (j = 0; j < H; ++j)

@@ -27,8 +27,7 @@ extern "C" {
     float *swap_dog(const float *, size_t, size_t, double, double);
     float *swap_madmax(const float *, size_t, size_t);
 
-    double swap_mse(const float *, const float *, size_t, size_t,
-                    size_t, size_t, size_t, size_t);
+    double swap_mse(const float *, const float *, size_t, size_t, size_t, size_t, size_t, size_t);
 
     void swap_bary(const float *, size_t, size_t, float *, float *);
 

@@ -130,8 +130,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
         }
 
         fprintf(stream, "\nTILE %d DETAILS\n", tileno);
-        fprintf(stream,
-                "part_nb tileno  start_pack num_packs  start_pos end_tph_pos   end_pos\n");
+        fprintf(stream, "part_nb tileno  start_pack num_packs  start_pos end_tph_pos   end_pos\n");
         for (tilepartno = 0; tilepartno < cstr_info->tile[tileno].num_tps; tilepartno++)
             fprintf(stream, "%4d %9d   %9d %9d  %9d %11d %9d\n", tilepartno,
                     tileno,
@@ -155,8 +154,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                         if (resno > cstr_info->numdecompos[compno])
                             break;
                         prec_max =
-                            cstr_info->tile[tileno].pw[resno] *
-                            cstr_info->tile[tileno].ph[resno];
+                            cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                         for (precno = 0; precno < prec_max; precno++) {
                             start_pos = cstr_info->tile[tileno].packet[pack_nb].start_pos;
                             end_ph_pos = cstr_info->tile[tileno].packet[pack_nb].end_ph_pos;
@@ -191,8 +189,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                         if (resno > cstr_info->numdecompos[compno])
                             break;
                         prec_max =
-                            cstr_info->tile[tileno].pw[resno] *
-                            cstr_info->tile[tileno].ph[resno];
+                            cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                         for (precno = 0; precno < prec_max; precno++) {
                             start_pos = cstr_info->tile[tileno].packet[pack_nb].start_pos;
                             end_ph_pos = cstr_info->tile[tileno].packet[pack_nb].end_ph_pos;
@@ -222,8 +219,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
             fprintf(stream, "\n");
 
             for (resno = 0; resno < max_numdecompos + 1; resno++) {
-                int numprec =
-                    cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
+                int numprec = cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                 for (precno = 0; precno < numprec; precno++) {
                     /* I suppose components have same XRsiz, YRsiz */
                     int x0 =
@@ -243,8 +239,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                         int pcy = (int) pow(2,
                                             cstr_info->tile[tileno].pdy[resno] +
                                             cstr_info->numdecompos[compno] - resno);
-                        int precno_x =
-                            precno - (int) floor((float) precno / (float) pcnx) * pcnx;
+                        int precno_x = precno - (int) floor((float) precno / (float) pcnx) * pcnx;
                         int precno_y = (int) floor((float) precno / (float) pcnx);
                         if (resno > cstr_info->numdecompos[compno])
                             break;
@@ -254,15 +249,12 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                start_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                end_ph_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
-                                            disto =
-                                                cstr_info->tile[tileno].packet[pack_nb].disto;
+                                            disto = cstr_info->tile[tileno].packet[pack_nb].disto;
                                             fprintf(stream,
                                                     "%4d %6d %5d %6d %6d %7d %9d   %9d %7d %7d",
                                                     pack_nb, tileno, resno, precno, compno,
@@ -298,8 +290,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
             /* Count the maximum number of precincts */
             int max_numprec = 0;
             for (resno = 0; resno < max_numdecompos + 1; resno++) {
-                int numprec =
-                    cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
+                int numprec = cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                 if (numprec > max_numprec)
                     max_numprec = numprec;
             }
@@ -314,8 +305,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                 for (compno = 0; compno < cstr_info->numcomps; compno++) {
                     for (resno = 0; resno < cstr_info->numdecompos[compno] + 1; resno++) {
                         int numprec =
-                            cstr_info->tile[tileno].pw[resno] *
-                            cstr_info->tile[tileno].ph[resno];
+                            cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                         int pcnx = cstr_info->tile[tileno].pw[resno];
                         int pcx = (int) pow(2,
                                             cstr_info->tile[tileno].pdx[resno] +
@@ -323,8 +313,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                         int pcy = (int) pow(2,
                                             cstr_info->tile[tileno].pdy[resno] +
                                             cstr_info->numdecompos[compno] - resno);
-                        int precno_x =
-                            precno - (int) floor((float) precno / (float) pcnx) * pcnx;
+                        int precno_x = precno - (int) floor((float) precno / (float) pcnx) * pcnx;
                         int precno_y = (int) floor((float) precno / (float) pcnx);
                         if (precno >= numprec)
                             continue;
@@ -334,15 +323,12 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                start_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                end_ph_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
-                                            disto =
-                                                cstr_info->tile[tileno].packet[pack_nb].disto;
+                                            disto = cstr_info->tile[tileno].packet[pack_nb].disto;
                                             fprintf(stream,
                                                     "%4d %6d %6d %6d %5d %7d %9d   %9d %7d",
                                                     pack_nb, tileno, precno, compno, resno,
@@ -366,8 +352,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
             /* Count the maximum number of precincts */
             int max_numprec = 0;
             for (resno = 0; resno < max_numdecompos + 1; resno++) {
-                int numprec =
-                    cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
+                int numprec = cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                 if (numprec > max_numprec)
                     max_numprec = numprec;
             }
@@ -393,8 +378,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                 for (precno = 0; precno < max_numprec; precno++) {
                     for (resno = 0; resno < cstr_info->numdecompos[compno] + 1; resno++) {
                         int numprec =
-                            cstr_info->tile[tileno].pw[resno] *
-                            cstr_info->tile[tileno].ph[resno];
+                            cstr_info->tile[tileno].pw[resno] * cstr_info->tile[tileno].ph[resno];
                         int pcnx = cstr_info->tile[tileno].pw[resno];
                         int pcx = (int) pow(2,
                                             cstr_info->tile[tileno].pdx[resno] +
@@ -402,8 +386,7 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                         int pcy = (int) pow(2,
                                             cstr_info->tile[tileno].pdy[resno] +
                                             cstr_info->numdecompos[compno] - resno);
-                        int precno_x =
-                            precno - (int) floor((float) precno / (float) pcnx) * pcnx;
+                        int precno_x = precno - (int) floor((float) precno / (float) pcnx) * pcnx;
                         int precno_y = (int) floor((float) precno / (float) pcnx);
                         if (precno >= numprec)
                             continue;
@@ -414,15 +397,12 @@ int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                start_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].packet[pack_nb].
-                                                end_ph_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
-                                            disto =
-                                                cstr_info->tile[tileno].packet[pack_nb].disto;
+                                            disto = cstr_info->tile[tileno].packet[pack_nb].disto;
                                             fprintf(stream,
                                                     "%4d %6d %6d %6d %5d %7d %9d   %9d %7d",
                                                     pack_nb, tileno, compno, precno, resno,

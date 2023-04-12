@@ -32,7 +32,7 @@ extern "C" {
 
     procfits_t *fitsproc(const char *, const char *, int,
                          const char *dateobs, const char *telescop, const char *instrume,
-                         const char *wavelnth);
+                         const char *detector, const char *wavelnth);
     void procfits_free(procfits_t *);
 
 /* ---------------------------------------------------------------------- */

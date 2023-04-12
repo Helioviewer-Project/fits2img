@@ -348,8 +348,7 @@ void swap_write_pgm(const char *name, const guint16 *ptr, size_t w, size_t h, gu
     }
 
     if (over)
-        P2SC_Msg(LVL_WARNING_CORRUPT_INPUT_DATA,
-                 "Corrupted image: %zd pixels > %hu", over, max);
+        P2SC_Msg(LVL_WARNING_CORRUPT_INPUT_DATA, "Corrupted image: %zd pixels > %hu", over, max);
 
     p2sc_iofile_t *io = p2sc_open_iofile(name, "w");
     char *head = g_strdup_printf("P5\n%zd %zd\n%hu\n", w, h, max);

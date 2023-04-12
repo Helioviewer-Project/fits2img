@@ -20,7 +20,7 @@ static char *process_header(sfts_t *, const char *);
 
 procfits_t *fitsproc(const char *name, const char *contact, int noverify,
                      const char *dateobs, const char *telescop, const char *instrume,
-                     const char *wavelnth) {
+                     const char *detector, const char *wavelnth) {
     sfts_t *f = sfts_openro(name, noverify ? SFTS_SUM_NOVERIFY : 0);
 
     sfts_find_hdukey(f, "DATE-OBS");
@@ -29,18 +29,23 @@ procfits_t *fitsproc(const char *name, const char *contact, int noverify,
     p->name = g_strdup(name);
     p->dateobs = dateobs ? g_strdup(dateobs) : sfts_read_keystring(f, "DATE-OBS");
 
-    if (telescop)
+    if (telescop) {
         p->telescop = g_strdup(telescop);
-    else {
+    } else {
         p->telescop = sfts_read_keystring0(f, "TELESCOP");
         if (!p->telescop)
             p->telescop = sfts_read_keystring(f, "OBSRVTRY");
     }
 
     p->instrume = instrume ? g_strdup(instrume) : sfts_read_keystring(f, "INSTRUME");
-    p->detector = sfts_read_keystring0(f, "DETECTOR");
-    if (!p->detector)
-        p->detector = g_strdup(p->instrume);
+
+    if (detector) {
+        p->detector = g_strdup(detector);
+    } else {
+        p->detector = sfts_read_keystring0(f, "DETECTOR");
+        if (!p->detector)
+            p->detector = g_strdup(p->instrume);
+    }
 
     p->wavelnth = wavelnth ? g_strdup(wavelnth) : sfts_read_keystring(f, "WAVELNTH");
 
