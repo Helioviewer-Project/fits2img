@@ -51,7 +51,7 @@ swap_image_yuv_t *swap_image_yuv_alloc(size_t w, size_t h) {
     return i;
 }
 
-void swap_image_yuv_free(swap_image_yuv_t * i) {
+void swap_image_yuv_free(swap_image_yuv_t *i) {
     if (i) {
         g_free(i->v), g_free(i->u), g_free(i->y);
         memset(i, 0, sizeof *i);
@@ -59,7 +59,7 @@ void swap_image_yuv_free(swap_image_yuv_t * i) {
     }
 }
 
-static void rgb2yuv(const double (*cmrgb)[3], unsigned char (*cmyuv)[3]) {
+static void rgb2yuv(const double (*cmrgb)[3], unsigned char(*cmyuv)[3]) {
     const double wr = 0.299, wb = 0.114, umax = 0.436, vmax = 0.615;
     const double wg = 1 - wr - wb;
 
@@ -80,8 +80,8 @@ static void rgb2yuv(const double (*cmrgb)[3], unsigned char (*cmyuv)[3]) {
 }
 
 static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3]) {
-    if (cm) {
-        if (!strcmp(cm, "aia171")) {
+    if(cm) {
+        if(!strcmp(cm, "aia171")) {
             rgb2yuv(cm_aia171, cmyuv);
             return;
         } else if (!strcmp(cm, "citrus")) {
@@ -99,7 +99,7 @@ static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3]) {
     memcpy(cmyuv, cm_gray_yuv, 256 * 3);
 }
 
-swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 * in, size_t w, size_t h) {
+swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 *in, size_t w, size_t h) {
     size_t l = w * h;
     unsigned char lutyuv[256][3];
     cm_rgb2yuv(cm, lutyuv);
@@ -117,7 +117,7 @@ swap_image_yuv_t *swap_mono2yuv(const char *cm, const guint8 * in, size_t w, siz
     return im;
 }
 
-void swap_yuv2yuv420(swap_image_yuv_t * im) {
+void swap_yuv2yuv420(swap_image_yuv_t *im) {
     size_t w = im->w, h = im->h, i, j;
     unsigned char *u = im->u, *v = im->v;
 

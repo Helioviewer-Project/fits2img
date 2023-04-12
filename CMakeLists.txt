@@ -1,6 +1,5 @@
-
-project(SIDC_SWHV C)
 cmake_minimum_required(VERSION 2.8.12)
+project(SIDC_SWHV C)
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -pedantic -Wall -W -pipe -std=gnu11 -O3")

@@ -92,7 +92,7 @@ swap_pix2vec_lut_t *swap_pix2vec_lut_alloc(size_t ss) {
     return lut;
 }
 
-void swap_pix2vec_lut_free(swap_pix2vec_lut_t * lut) {
+void swap_pix2vec_lut_free(swap_pix2vec_lut_t *lut) {
     if (lut) {
         g_free(lut->l);
         memset(lut, 0, sizeof *lut);
@@ -121,7 +121,7 @@ void swap_pix2vec_lut_free(swap_pix2vec_lut_t * lut) {
 
 #endif
 
-double *swap_vbore(swap_pix2vec_lut_t * lut) {
+double *swap_vbore(swap_pix2vec_lut_t *lut) {
     size_t w = SWAP_NP * lut->s;
     double (*l)[2] = lut->l;
     double *vbore = (double *) g_malloc(3 * w * w * sizeof *vbore);

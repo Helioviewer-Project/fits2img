@@ -47,7 +47,7 @@ static void rota(double a, double mo[3][3]) {
     mxm(mo, m, mo);
 }
 
-float *swap_affine(swap_bicubic_t * f, const float *in, size_t w, size_t h,
+float *swap_affine(swap_bicubic_t *f, const float *in, size_t w, size_t h,
                    double sx, double sy, double roll, double tx, double ty,
                    double a, size_t ow, size_t oh) {
     size_t i, j;
@@ -99,7 +99,7 @@ float *swap_affine(swap_bicubic_t * f, const float *in, size_t w, size_t h,
 
 #define AA 2.
 
-static void polar_prep(guint32 * lut, size_t w, size_t h, guint16 * num,
+static void polar_prep(guint32 *lut, size_t w, size_t h, guint16 *num,
                        int nang, int nrad, double xc, double yc) {
     int ri, ai, k;
     size_t i, j, idx = 0;
@@ -140,8 +140,8 @@ static void polar_prep(guint32 * lut, size_t w, size_t h, guint16 * num,
     }
 }
 
-static void polar_intp(swap_bicubic_t * f, const float *in, size_t w, size_t h,
-                       guint32 * lut, guint16 * num, float *out) {
+static void polar_intp(swap_bicubic_t *f, const float *in, size_t w, size_t h,
+                       guint32 *lut, guint16 *num, float *out) {
     size_t i, j, k, idx = 0;
 
     for (j = 0; j <= AA * (h - 1); ++j)

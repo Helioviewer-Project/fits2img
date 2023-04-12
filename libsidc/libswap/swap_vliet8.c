@@ -14,7 +14,7 @@ static void TriggsM(double *filter, double *M);
 static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter);
 static void yline(DSTTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter);
 
-void swap_gauss8(SRCTYPE * c, DSTTYPE * b, int w, int h, double s) {
+void swap_gauss8(SRCTYPE *c, DSTTYPE *b, int w, int h, double s) {
     double filter[7];
 
     /* calculate filter coefficients of x-direction */
@@ -100,7 +100,7 @@ static void TriggsM(double *filter, double *M) {
    and SRCTYPE should be DSTTYPE
 */
 
-static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter) {
+static void xline(SRCTYPE *src, DSTTYPE *dest, int sx, int sy, double *filter) {
     int i, j;
     double b1, b2, b3;
     double pix, p1, p2, p3;
@@ -168,7 +168,7 @@ static void xline(SRCTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter)
     }
 }
 
-static void yline(DSTTYPE * src, DSTTYPE * dest, int sx, int sy, double *filter) {
+static void yline(DSTTYPE *src, DSTTYPE *dest, int sx, int sy, double *filter) {
     double *p0, *p1, *p2, *p3, *pswap;
     double *buf0, *buf1, *buf2, *buf3;
     double *uplusbuf;

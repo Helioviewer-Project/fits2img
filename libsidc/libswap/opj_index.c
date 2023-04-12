@@ -40,7 +40,7 @@ Write a structured index to a file
 @param index Index filename
 @return Returns 0 if successful, returns 1 otherwise
 */
-int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
+int write_index_file(opj_codestream_info_t *cstr_info, const char *index) {
     int tileno, compno, layno, resno, precno, pack_nb, x, y;
     FILE *stream = NULL;
     double total_disto = 0;
@@ -254,11 +254,11 @@ int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].
-                                                packet[pack_nb].start_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].
+                                                start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].
-                                                packet[pack_nb].end_ph_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].
+                                                end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
                                             disto =
@@ -334,11 +334,11 @@ int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].
-                                                packet[pack_nb].start_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].
+                                                start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].
-                                                packet[pack_nb].end_ph_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].
+                                                end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
                                             disto =
@@ -414,11 +414,11 @@ int write_index_file(opj_codestream_info_t * cstr_info, const char *index) {
                                     if (precno_x * pcx == x) {
                                         for (layno = 0; layno < cstr_info->numlayers; layno++) {
                                             start_pos =
-                                                cstr_info->tile[tileno].
-                                                packet[pack_nb].start_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].
+                                                start_pos;
                                             end_ph_pos =
-                                                cstr_info->tile[tileno].
-                                                packet[pack_nb].end_ph_pos;
+                                                cstr_info->tile[tileno].packet[pack_nb].
+                                                end_ph_pos;
                                             end_pos =
                                                 cstr_info->tile[tileno].packet[pack_nb].end_pos;
                                             disto =

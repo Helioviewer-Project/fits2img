@@ -111,8 +111,8 @@ guint8 *swap_read_j2k(const char *name, size_t *ww, size_t *hh, size_t *nc) {
     return ret;
 }
 
-void swap_write_j2k(const char *name, const guint8 * in, size_t w, size_t h,
-                    const swap_j2kparams_t * p) {
+void swap_write_j2k(const char *name, const guint8 *in, size_t w, size_t h,
+                    const swap_j2kparams_t *p) {
     int subsampling_dx = 1, subsampling_dy = 1;
 
     opj_event_mgr_t event_mgr;
@@ -202,7 +202,7 @@ void swap_write_j2k(const char *name, const guint8 * in, size_t w, size_t h,
     g_free(params.cp_comment);
 }
 
-static void write_data(const char *name, const guint8 * code, size_t code_len) {
+static void write_data(const char *name, const guint8 *code, size_t code_len) {
     FILE *f = fopen(name, "wb");
     if (!f) {
         fprintf(stderr, "failed to open %s for writing\n", name);

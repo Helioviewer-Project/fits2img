@@ -133,7 +133,7 @@ swap_bicubic_t *swap_bicubic_alloc(double B, double C) {
     return f;
 }
 
-void swap_bicubic_free(swap_bicubic_t * f) {
+void swap_bicubic_free(swap_bicubic_t *f) {
     if (f) {
         memset(f, 0, sizeof *f);
         g_free(f);
@@ -147,7 +147,7 @@ static inline int _floor(float f) {
         return floorf(f);
 }
 
-float swap_bicubic(swap_bicubic_t * f, const float *in, int w, int h, float x, float y) {
+float swap_bicubic(swap_bicubic_t *f, const float *in, int w, int h, float x, float y) {
     float *hf, *vf, a0, a1, a2, a3;
     int i = (int) _floor(x), j = (int) _floor(y), idx = (j << 16) + i;
     float *l = f->l, *n = f->n;
@@ -181,7 +181,7 @@ float swap_bicubic(swap_bicubic_t * f, const float *in, int w, int h, float x, f
 #define ELEM_SWAP(a,b) { register elem_type t=(a);(a)=(b);(b)=t; }
 #define PIX_SORT(a,b) { if ((a)>(b)) ELEM_SWAP((a),(b)); }
 
-elem_type swap_median(elem_type * arr, int n) {
+elem_type swap_median(elem_type *arr, int n) {
 
     /*
      * The following routines have been built from knowledge gathered

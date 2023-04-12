@@ -19,7 +19,7 @@ static const char _versionid_[] __attribute__((unused)) =
 static char *process_header(sfts_t *, const char *);
 
 procfits_t *fitsproc(const char *name, const char *contact, int noverify,
-                     const char *dateobs, const char *wavelnth) {
+                     const char *dateobs, const char *telescop, const char *wavelnth) {
     sfts_t *f = sfts_openro(name, noverify ? SFTS_SUM_NOVERIFY : 0);
 
     sfts_find_hdukey(f, "DATE-OBS");
@@ -28,9 +28,13 @@ procfits_t *fitsproc(const char *name, const char *contact, int noverify,
     p->name = g_strdup(name);
     p->dateobs = dateobs ? g_strdup(dateobs) : sfts_read_keystring(f, "DATE-OBS");
 
-    p->telescop = sfts_read_keystring0(f, "TELESCOP");
-    if (!p->telescop)
-        p->telescop = sfts_read_keystring(f, "OBSRVTRY");
+    if (telescop)
+        p->telescop = g_strdup(telescop);
+    else {
+        p->telescop = sfts_read_keystring0(f, "TELESCOP");
+        if (!p->telescop)
+            p->telescop = sfts_read_keystring(f, "OBSRVTRY");
+    }
 
     p->instrume = sfts_read_keystring(f, "INSTRUME");
     p->detector = sfts_read_keystring0(f, "DETECTOR");
@@ -47,7 +51,7 @@ procfits_t *fitsproc(const char *name, const char *contact, int noverify,
     return p;
 }
 
-void procfits_free(procfits_t * p) {
+void procfits_free(procfits_t *p) {
     if (p) {
         g_free(p->im);
         g_free(p->name);
@@ -63,7 +67,7 @@ void procfits_free(procfits_t * p) {
     }
 }
 
-static char *process_header(sfts_t * f, const char *contact) {
+static char *process_header(sfts_t *f, const char *contact) {
     int z1 = -1, z2 = -1;
     int naxis1, naxis2, znaxis1, znaxis2;
     sfkey_t k = {.c = NULL };

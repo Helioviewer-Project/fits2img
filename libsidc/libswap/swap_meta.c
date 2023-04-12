@@ -19,7 +19,7 @@ static const char _versionid_[] __attribute__((unused)) =
 #include "p2sc_xml.h"
 #include "swap_meta.h"
 
-static void head2xml(sfts_t * f, genxWriter w) {
+static void head2xml(sfts_t *f, genxWriter w) {
     GENX_Try(w, genxStartElementLiteral(w, NULL, (constUtf8) "fits"));
 
     char **keys, **vals, **coms;
@@ -38,7 +38,7 @@ static void head2xml(sfts_t * f, genxWriter w) {
     GENX_Try(w, genxEndElement(w)); /* fits */
 }
 
-char *swap_fits2xml(sfts_t * f) {
+char *swap_fits2xml(sfts_t *f) {
     p2sc_buffer_t *b = p2sc_buffer_new(NULL, 4096);
 
     genxWriter w = p2sc_xml_start(b);
@@ -51,7 +51,7 @@ char *swap_fits2xml(sfts_t * f) {
     return (char *) p2sc_buffer_del(b, TRUE);
 }
 
-char *swap_fits2hv(sfts_t * f, const char *contact) {
+char *swap_fits2hv(sfts_t *f, const char *contact) {
     p2sc_buffer_t *b = p2sc_buffer_new(NULL, 4096);
     genxWriter w = p2sc_xml_start(b);
 

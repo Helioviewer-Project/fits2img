@@ -42,7 +42,7 @@ static void png_flush_fn(png_structp png_ptr) {
     p2sc_flush((p2sc_iofile_t *) png_get_io_ptr(png_ptr));
 }
 
-static void set_text(png_text * txt, const char *key, const char *value) {
+static void set_text(png_text *txt, const char *key, const char *value) {
     memset(txt, 0, sizeof *txt);
 
     txt->compression = PNG_TEXT_COMPRESSION_zTXt;
@@ -59,8 +59,8 @@ static void set_meta(png_structp png_ptr, png_infop info_ptr, const char *xml) {
 #define GRAY_ICC sidc_gray_icc
 #define SRGB_ICC sRGB_IEC61966_2_1_black_scaled_icc
 
-void swap_write_png(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal, const char *xml, int strategy) {
+void swap_write_png(const char *name, const guint8 *in, size_t w, size_t h,
+                    swap_palette_t *pal, const char *xml, int strategy) {
     const guint8 **rows = NULL;
     p2sc_iofile_t *io = p2sc_open_iofile(name, "w");
 
@@ -241,8 +241,8 @@ jpeg_icc_write_profile(j_compress_ptr cinfo,
     }
 }
 
-void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
-                    swap_palette_t * pal, int scale, const char *xml) {
+void swap_write_jpg(const char *name, const guint8 *in, size_t w, size_t h,
+                    swap_palette_t *pal, int scale, const char *xml) {
     struct my_err_mgr jerr;
     struct jpeg_compress_struct cinfo;
     unsigned char *obuff = NULL, *line = NULL;
@@ -316,7 +316,7 @@ void swap_write_jpg(const char *name, const guint8 * in, size_t w, size_t h,
     g_free(obuff);
 }
 
-void swap_write_pgm(const char *name, const guint16 * ptr, size_t w, size_t h, guint16 max) {
+void swap_write_pgm(const char *name, const guint16 *ptr, size_t w, size_t h, guint16 max) {
     size_t i, len, over = 0;
     guint16 v;
     void *buf;
@@ -361,7 +361,7 @@ void swap_write_pgm(const char *name, const guint16 * ptr, size_t w, size_t h, g
     g_free(buf);
 }
 
-static int blank(FILE * f, const char *name) {
+static int blank(FILE *f, const char *name) {
     int c;
 
     do {
@@ -433,7 +433,7 @@ guint16 *swap_read_pgm(const char *name, size_t *w, size_t *h) {
     return ret;
 }
 
-void swap_y4m(const char *name, const char *cm, const guint8 * in, size_t w, size_t h) {
+void swap_y4m(const char *name, const char *cm, const guint8 *in, size_t w, size_t h) {
     FILE *f;
     size_t l = w * h;
 
