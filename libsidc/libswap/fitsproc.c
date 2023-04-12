@@ -19,7 +19,8 @@ static const char _versionid_[] __attribute__((unused)) =
 static char *process_header(sfts_t *, const char *);
 
 procfits_t *fitsproc(const char *name, const char *contact, int noverify,
-                     const char *dateobs, const char *telescop, const char *wavelnth) {
+                     const char *dateobs, const char *telescop, const char *instrume,
+                     const char *wavelnth) {
     sfts_t *f = sfts_openro(name, noverify ? SFTS_SUM_NOVERIFY : 0);
 
     sfts_find_hdukey(f, "DATE-OBS");
@@ -36,7 +37,7 @@ procfits_t *fitsproc(const char *name, const char *contact, int noverify,
             p->telescop = sfts_read_keystring(f, "OBSRVTRY");
     }
 
-    p->instrume = sfts_read_keystring(f, "INSTRUME");
+    p->instrume = instrume ? g_strdup(instrume) : sfts_read_keystring(f, "INSTRUME");
     p->detector = sfts_read_keystring0(f, "DETECTOR");
     if (!p->detector)
         p->detector = g_strdup(p->instrume);

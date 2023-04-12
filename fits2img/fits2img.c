@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
     char *appname = NULL, *contact = NULL, *outdir = NULL;
     char *yuv = NULL, *cm = NULL, *func = NULL;
-    char *dateobs = NULL, *telescop = NULL, *wavelnth = NULL;
+    char *dateobs = NULL, *telescop = NULL, *instrume = NULL, *wavelnth = NULL;
 
     double clipmin = DEF_CLIP_MIN, clipmax = DEF_CLIP_MAX;
     double gamma = DEF_GAMMA, log_exponent = DEF_LOG_EXPONENT;
@@ -96,6 +96,8 @@ int main(int argc, char **argv) {
          "DATE-OBS keyword override", NULL },
         { "telescop", 0, 0, G_OPTION_ARG_STRING, &telescop,
          "TELESCOP/OBSRVTRY keyword override", NULL },
+        { "instrume", 0, 0, G_OPTION_ARG_STRING, &instrume,
+         "INSTRUME keyword override", NULL },
         { "wavelnth", 0, 0, G_OPTION_ARG_STRING, &wavelnth,
          "WAVELNTH keyword override", NULL },
         { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
@@ -109,9 +111,9 @@ int main(int argc, char **argv) {
     }
 
     contact = contact == NULL ? g_strdup("swhv@oma.be") : contact;
-    procfits_t *p = fitsproc(argv[1], contact, noverify, dateobs, telescop, wavelnth);
+    procfits_t *p = fitsproc(argv[1], contact, noverify, dateobs, telescop, instrume, wavelnth);
     g_free(contact);
-    g_free(dateobs), g_free(telescop), g_free(wavelnth);
+    g_free(dateobs), g_free(telescop), g_free(instrume), g_free(wavelnth);
 
     guint8 *g;
     swap_clamp(p->im, p->w, p->h, clipmin, clipmax);
