@@ -93,7 +93,7 @@ static genxStatus _xflush(void *u G_GNUC_UNUSED) {
 
 static genxSender bufSender = { _xsend, _xsendbounded, _xflush };
 
-genxWriter p2sc_xml_start(p2sc_buffer_t * buf) {
+genxWriter p2sc_xml_start(p2sc_buffer_t *buf) {
     genxStatus status;
     genxWriter w = genxNew(NULL, NULL, buf);
 

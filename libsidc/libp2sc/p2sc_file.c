@@ -46,7 +46,7 @@ p2sc_keyfile_t *p2sc_open_keyfile(const char *file) {
     return k;
 }
 
-void p2sc_free_keyfile(p2sc_keyfile_t * k) {
+void p2sc_free_keyfile(p2sc_keyfile_t *k) {
     if (k) {
         if (k->key)
             g_key_file_free(k->key);
@@ -56,7 +56,7 @@ void p2sc_free_keyfile(p2sc_keyfile_t * k) {
     }
 }
 
-char *p2sc_get_keyvalue(p2sc_keyfile_t * k, const char *group, const char *key) {
+char *p2sc_get_keyvalue(p2sc_keyfile_t *k, const char *group, const char *key) {
     GError *err = NULL;
     char *ret = g_key_file_get_value(k->key, group, key, &err);
 
@@ -150,7 +150,7 @@ p2sc_iofile_t *p2sc_open_iofile(const char *name, const char *mode) {
     return f;
 }
 
-void p2sc_free_iofile(p2sc_iofile_t * f) {
+void p2sc_free_iofile(p2sc_iofile_t *f) {
     if (f) {
         if (f->io)
             g_io_channel_unref(f->io);
@@ -160,7 +160,7 @@ void p2sc_free_iofile(p2sc_iofile_t * f) {
     }
 }
 
-char *p2sc_read_line(p2sc_iofile_t * f) {
+char *p2sc_read_line(p2sc_iofile_t *f) {
     gsize term;
     char *line = NULL;
     GError *err = NULL;
@@ -189,11 +189,11 @@ char *p2sc_read_line(p2sc_iofile_t * f) {
     return line;
 }
 
-size_t p2sc_get_lineno(p2sc_iofile_t * f) {
+size_t p2sc_get_lineno(p2sc_iofile_t *f) {
     return f->lineno;
 }
 
-void p2sc_read(p2sc_iofile_t * f, char *buf, gsize count) {
+void p2sc_read(p2sc_iofile_t *f, char *buf, gsize count) {
     gsize bytes_read;
     GError *err = NULL;
     GIOStatus status = g_io_channel_read_chars(f->io, buf, count, &bytes_read, &err);
@@ -214,7 +214,7 @@ void p2sc_read(p2sc_iofile_t * f, char *buf, gsize count) {
                  bytes_read);
 }
 
-void p2sc_write(p2sc_iofile_t * f, const char *buf, gssize len) {
+void p2sc_write(p2sc_iofile_t *f, const char *buf, gssize len) {
     if (len < 0)
         len = strlen(buf);
 
@@ -238,7 +238,7 @@ void p2sc_write(p2sc_iofile_t * f, const char *buf, gssize len) {
                  f->lineno, count, (gsize) len);
 }
 
-void p2sc_flush(p2sc_iofile_t * f) {
+void p2sc_flush(p2sc_iofile_t *f) {
     GError *err = NULL;
     GIOStatus status = g_io_channel_flush(f->io, &err);
 

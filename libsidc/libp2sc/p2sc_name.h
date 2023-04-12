@@ -20,8 +20,7 @@ extern "C" {
     char *p2sc_name_swap_lv0(const char *, const char *);
 
     char *p2sc_name_swap_qlk(const char *, const char *, const char *);
-    char *p2sc_name_swap_jhv(const char *, const char *, const char *,
-                             const char *, const char *);
+    char *p2sc_name_swap_jhv(const char *, const char *, const char *, const char *, const char *);
 
 /* ---------------------------------------------------------------------- */
 

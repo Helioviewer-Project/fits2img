@@ -38,8 +38,7 @@ extern "C" {
 
     void p2sc_option_ext(int, int *, char ***, const char *, const char *,
                          const char *, const GOptionEntry *);
-    void p2sc_option(int, char **, const char *, const char *,
-                     const char *, const GOptionEntry *);
+    void p2sc_option(int, char **, const char *, const char *, const char *, const GOptionEntry *);
 
     int p2sc_spawn(const char *, char **, char **);
     void p2sc_spawn_many(const char **, int);

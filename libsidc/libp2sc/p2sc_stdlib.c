@@ -42,8 +42,8 @@ static void sig_handler(int sig) {
     P2SC_Msg(LVL_FATAL, "Signal %d caught: %s - terminating", sig, g_strsignal(sig));
 }
 
-static void glib_logger(const gchar * log_domain, GLogLevelFlags log_level,
-                        const gchar * message, gpointer user_data G_GNUC_UNUSED) {
+static void glib_logger(const gchar *log_domain, GLogLevelFlags log_level,
+                        const gchar *message, gpointer user_data G_GNUC_UNUSED) {
     int level;
 
     if (log_level & (G_LOG_LEVEL_DEBUG | G_LOG_LEVEL_INFO | G_LOG_LEVEL_MESSAGE))
@@ -74,8 +74,7 @@ static void _p2sc_fini_(void) {
 
 /* ---------------------------------------------------------------------- */
 
-void p2sc_init(const char *prgname, const char *appname, const char *filename,
-               const char *runid) {
+void p2sc_init(const char *prgname, const char *appname, const char *filename, const char *runid) {
     /* change of prg/appname/runid not allowed */
     if (prgname && !p2sc_get_string("prgname"))
         p2sc_set_string("prgname", prgname);
@@ -105,7 +104,7 @@ const char *p2sc_get_string(const char *key) {
 }
 
 void p2sc_option_ext(int marg, int *argc, char ***argv, const char *appname,
-                     const char *context, const char *summary, const GOptionEntry * entries) {
+                     const char *context, const char *summary, const GOptionEntry *entries) {
     gboolean ret;
     gchar *runid = NULL;
     gchar *base_prog, *base_file = NULL;
@@ -152,7 +151,7 @@ void p2sc_option_ext(int marg, int *argc, char ***argv, const char *appname,
 }
 
 void p2sc_option(int argc, char **argv, const char *appname,
-                 const char *context, const char *summary, const GOptionEntry * entries) {
+                 const char *context, const char *summary, const GOptionEntry *entries) {
     p2sc_option_ext(1, &argc, &argv, appname, context, summary, entries);
 }
 
@@ -198,8 +197,7 @@ void p2sc_spawn_many(const char **cmd, int num) {
                            (GSpawnFlags) (G_SPAWN_SEARCH_PATH |
                                           G_SPAWN_STDOUT_TO_DEV_NULL |
                                           G_SPAWN_STDERR_TO_DEV_NULL |
-                                          G_SPAWN_DO_NOT_REAP_CHILD),
-                           NULL, NULL, pid + i, &err)) {
+                                          G_SPAWN_DO_NOT_REAP_CHILD), NULL, NULL, pid + i, &err)) {
             if (err && err->message) {
                 P2SC_Msg(LVL_FATAL, "spawn_async(%s): %s", cmd[i], err->message);
                 g_error_free(err);
@@ -300,7 +298,7 @@ static inline guint8 h2b(char c) {
     return 0xff;
 }
 
-char *p2sc_bin2hex(const guint8 * bin, size_t len) {
+char *p2sc_bin2hex(const guint8 *bin, size_t len) {
     static const char hexdig[] = "0123456789ABCDEF";
 
     size_t alen = len * 2;

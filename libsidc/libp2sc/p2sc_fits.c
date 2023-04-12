@@ -40,7 +40,7 @@ struct sfts_t {
     int stat;
 };
 
-static int compare_fits(sfts_t * f) {
+static int compare_fits(sfts_t *f) {
     sfts_t *of = sfts_openro(f->name);
     sfkey_t k = { "DATASUM", 'S',.v.s = NULL, NULL };
     char sum[SKEY_LEN], osum[SKEY_LEN];
@@ -105,7 +105,7 @@ static char *new_name(const char *name) {
     return ret;
 }
 
-static int commit_fits(sfts_t * f, int nuke) {
+static int commit_fits(sfts_t *f, int nuke) {
     int *s = &f->stat;
 
     char *str;
@@ -131,7 +131,7 @@ static int commit_fits(sfts_t * f, int nuke) {
     return p2sc_create_file(nuke, f->name, f->ptr, f->size);
 }
 
-char *sfts_free(sfts_t * f) {
+char *sfts_free(sfts_t *f) {
     char *ret = NULL;
 
     if (f) {
@@ -200,8 +200,7 @@ sfts_t *sfts_create(const char *name, const char *tmpl) {
             if (st) {
                 fits_get_errstatus(st, msg);
                 msg[30] = 0;
-                P2SC_Msg(LVL_FATAL_INTERNAL_ERROR, "%s: error parsing: %s - %s",
-                         tmpl, line, msg);
+                P2SC_Msg(LVL_FATAL_INTERNAL_ERROR, "%s: error parsing: %s - %s", tmpl, line, msg);
             }
             g_free(line);
 
@@ -249,7 +248,7 @@ sfts_t *sfts_openro(const char *name, ...) {
     return f;
 }
 
-int sfts_get_nhdus(sfts_t * f) {
+int sfts_get_nhdus(sfts_t *f) {
     int num;
 
     fits_get_num_hdus(f->fts, &num, &f->stat);
@@ -257,24 +256,24 @@ int sfts_get_nhdus(sfts_t * f) {
     return num;
 }
 
-void sfts_goto_hdu(sfts_t * f, int h) {
+void sfts_goto_hdu(sfts_t *f, int h) {
     int t;
 
     fits_movabs_hdu(f->fts, h, &t, &f->stat);
     CHK_FTS(f);
 }
 
-void sfts_copy(sfts_t * in, sfts_t * out) {
+void sfts_copy(sfts_t *in, sfts_t *out) {
     fits_copy_file(in->fts, out->fts, 1, 1, 1, &out->stat);
     sfts_goto_hdu(out, 1);
 }
 
-void sfts_copy_header(sfts_t * in, sfts_t * out) {
+void sfts_copy_header(sfts_t *in, sfts_t *out) {
     fits_copy_header(in->fts, out->fts, &out->stat);
     CHK_FTS(out);
 }
 
-void *sfts_read_image(sfts_t * f, size_t *ww, size_t *hh, int t) {
+void *sfts_read_image(sfts_t *f, size_t *ww, size_t *hh, int t) {
     int *s = &f->stat, naxis = 0, ft, ls;
     long axes[] = { 1, 1 };
     long pels[] = { 1, 1 };
@@ -327,7 +326,7 @@ void *sfts_read_image(sfts_t * f, size_t *ww, size_t *hh, int t) {
     return pix;
 }
 
-void sfts_create_image(sfts_t * f, size_t w, size_t h, int t) {
+void sfts_create_image(sfts_t *f, size_t w, size_t h, int t) {
     long ft, naxes[] = { w, h };
 
     switch (t) {
@@ -358,7 +357,7 @@ void sfts_create_image(sfts_t * f, size_t w, size_t h, int t) {
     CHK_FTS(f);
 }
 
-void sfts_write_image(sfts_t * f, const void *pix, size_t w, size_t h, int t) {
+void sfts_write_image(sfts_t *f, const void *pix, size_t w, size_t h, int t) {
     int *s = &f->stat, ft, ls;
     long pels[] = { 1, 1 };
 
@@ -404,7 +403,7 @@ void sfts_write_image(sfts_t * f, const void *pix, size_t w, size_t h, int t) {
     CHK_FTS(f);
 }
 
-void sfts_write_key(sfts_t * f, const sfkey_t * k) {
+void sfts_write_key(sfts_t *f, const sfkey_t *k) {
     int *s = &f->stat;
 
     if (!k->k) {
@@ -450,7 +449,7 @@ void sfts_write_key(sfts_t * f, const sfkey_t * k) {
     CHK_FTS(f);
 }
 
-void sfts_delete_key(sfts_t * f, const char *key) {
+void sfts_delete_key(sfts_t *f, const char *key) {
     if (!key) {
         P2SC_Msg(LVL_FATAL_INTERNAL_ERROR, "NULL keyword");
         return;
@@ -459,7 +458,7 @@ void sfts_delete_key(sfts_t * f, const char *key) {
     CHK_FTS(f);
 }
 
-void sfts_write_comment(sfts_t * f, const char *cmnt) {
+void sfts_write_comment(sfts_t *f, const char *cmnt) {
     if (!cmnt) {
         P2SC_Msg(LVL_FATAL_INTERNAL_ERROR, "NULL comment");
         return;
@@ -468,7 +467,7 @@ void sfts_write_comment(sfts_t * f, const char *cmnt) {
     CHK_FTS(f);
 }
 
-static int sfts_read_key_internal(sfts_t * f, sfkey_t * k) {
+static int sfts_read_key_internal(sfts_t *f, sfkey_t *k) {
     int *s = &f->stat;
 
     if (!k->k) {
@@ -503,13 +502,13 @@ static int sfts_read_key_internal(sfts_t * f, sfkey_t * k) {
     return 1;
 }
 
-int sfts_read_key(sfts_t * f, sfkey_t * k) {
+int sfts_read_key(sfts_t *f, sfkey_t *k) {
     int r = sfts_read_key_internal(f, k);
     CHK_FTS(f);
     return r;
 }
 
-int sfts_read_keymaybe(sfts_t * f, sfkey_t * k) {
+int sfts_read_keymaybe(sfts_t *f, sfkey_t *k) {
     int r = sfts_read_key_internal(f, k);
     if (f->stat == KEY_NO_EXIST) {
         f->stat = 0;
@@ -520,7 +519,7 @@ int sfts_read_keymaybe(sfts_t * f, sfkey_t * k) {
     return r;
 }
 
-char *sfts_read_keystring0(sfts_t * f, const char *key) {
+char *sfts_read_keystring0(sfts_t *f, const char *key) {
     sfkey_t k = {.c = NULL };
     char *ret = (char *) g_malloc0(SKEY_LEN);
     k.k = key, k.t = 'S', k.v.s = ret;
@@ -532,7 +531,7 @@ char *sfts_read_keystring0(sfts_t * f, const char *key) {
     return ret;
 }
 
-char *sfts_read_keystring(sfts_t * f, const char *key) {
+char *sfts_read_keystring(sfts_t *f, const char *key) {
     char *ret = sfts_read_keystring0(f, key);
     if (!ret) {
         char *_base = f->name ? g_path_get_basename(f->name) : g_strdup("memory");
@@ -541,7 +540,7 @@ char *sfts_read_keystring(sfts_t * f, const char *key) {
     return ret;
 }
 
-void sfts_find_hdukey(sfts_t * f, const char *key) {
+void sfts_find_hdukey(sfts_t *f, const char *key) {
     int num = sfts_get_nhdus(f);
     for (int i = 1; i <= num; ++i) {
         sfts_goto_hdu(f, i);
@@ -572,7 +571,7 @@ static char *clean_string(char *s) {
     return g_strescape(g_strstrip(s), NULL);
 }
 
-char *sfts_read_history(sfts_t * f) {
+char *sfts_read_history(sfts_t *f) {
     char c[SKEY_LEN], k[SKEY_LEN], *ret;
     GString *str = g_string_sized_new(SKEY_LEN);
     int *s = &f->stat, n, i, l;
@@ -599,7 +598,7 @@ char *sfts_read_history(sfts_t * f) {
     return ret;
 }
 
-void sfts_head2str(sfts_t * f, char ***keys, char ***vals, char ***coms) {
+void sfts_head2str(sfts_t *f, char ***keys, char ***vals, char ***coms) {
     int nkeys, *s = &f->stat;
     fits_get_hdrspace(f->fts, &nkeys, NULL, s);
 

@@ -33,7 +33,7 @@ char *p2sc_name_dirtree(const char *dir, const char *dateobs) {
     return p2sc_dirtree(dir, dateobs, d);
 }
 
-char *p2sc_name_swap_tmr(const char *dir, const guint8 * data, size_t len, guint64 o) {
+char *p2sc_name_swap_tmr(const char *dir, const guint8 *data, size_t len, guint64 o) {
     guint32 crc = p2sc_crc32_finalise(p2sc_crc32(0, data, len), len);
     char acrc[2 * sizeof crc + 1];
 
