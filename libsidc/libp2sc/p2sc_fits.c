@@ -311,15 +311,20 @@ void *sfts_read_image(sfts_t *f, size_t *ww, size_t *hh, int t) {
         return NULL;
     }
 
-    void *line = g_malloc(ls), *pix = g_malloc(h * ls);
+    void *pix = g_malloc(h * ls);
+    fits_read_pix(f->fts, ft, pels, w * h, NULL, pix, NULL, s);
+    CHK_FTS(f);
 
-    for (size_t j = 0; j < h; ++j) {
-        pels[1] = j + 1;
-        fits_read_pix(f->fts, ft, pels, w, NULL, line, NULL, s);
-        memcpy((guint8 *) pix + (h - 1 - j) * ls, line, ls);
+    void *line = g_malloc(ls);
+    for (size_t j = 0; j < h / 2; ++j) {
+        void *first = (guint8 *) pix + j * ls;
+        void *last = (guint8 *) pix + (h - 1 - j) * ls;
+
+        memcpy(line, last, ls);
+        memcpy(last, first, ls);
+        memcpy(first, line, ls);
     }
     g_free(line);
-    CHK_FTS(f);
 
     *ww = w;
     *hh = h;
