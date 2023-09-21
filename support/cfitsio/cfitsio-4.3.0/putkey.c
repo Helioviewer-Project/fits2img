@@ -397,139 +397,257 @@ int ffpkls( fitsfile *fptr,     /* I - FITS file pointer        */
   This routine is a modified version of ffpkys which supports the
   HEASARC long string convention and can write arbitrarily long string
   keyword values.  The value is continued over multiple keywords that
-  have the name COMTINUE without an equal sign in column 9 of the card.
+  have the name CONTINUE without an equal sign in column 9 of the card.
   This routine also supports simple string keywords which are less than
-  69 characters in length.
+  75 characters in length.
 */
 {
-    char valstring[FLEN_CARD];
-    char card[FLEN_CARD], tmpkeyname[FLEN_CARD];
+    char valstring[FLEN_CARD], comstring[FLEN_CARD];
+    /* give tmpkeyname same size restriction as in ffmkky */
+    char card[FLEN_CARD], tmpkeyname[FLEN_KEYWORD];
     char tstring[FLEN_CARD], *cptr;
-    int next, remain, vlen, nquote, nchar, namelen, contin, tstatus = -1;
-    int commlen=0, nocomment = 0;
+    int next, remainval, remaincom, vlen, nquote, nchar; 
+    int namelen, finalnamelen, maxvalchars;
+    int contin, tstatus=-1, nocomment=0, ichar, addline=1;
+    int spaceForComments=0, processingComment=0, nblanks=0, allInOne=0;
+    /* This setting is arbitrary */
+    int fixedSpaceForComments = 50;
 
     if (*status > 0)           /* inherit input status value if > 0 */
         return(*status);
 
-    remain = maxvalue(strlen(value), 1); /* no. of chars to write (at least 1) */  
-    if (comm) { 
-       commlen = strlen(comm);
-       if (commlen > 47) commlen = 47;  /* only guarantee preserving the first 47 characters */
-    }
+    remainval = strlen(value);   
+    if (comm)
+       remaincom = strlen(comm);
+    else
+       remaincom = 0;
 
-    /* count the number of single quote characters are in the string */
-    tstring[0] = '\0';
-    strncat(tstring, value, 68); /* copy 1st part of string to temp buff */
-    nquote = 0;
-    cptr = strchr(tstring, '\'');   /* search for quote character */
-    while (cptr)  /* search for quote character */
-    {
-        nquote++;            /*  increment no. of quote characters  */
-        cptr++;              /*  increment pointer to next character */
-        cptr = strchr(cptr, '\'');  /* search for another quote char */
-    }
-
-    strncpy(tmpkeyname, keyname, 80);
-    tmpkeyname[80] = '\0';
-    
-    cptr = tmpkeyname;
+    tmpkeyname[0] = '\0';    
+    cptr = keyname;
     while(*cptr == ' ')   /* skip over leading spaces in name */
         cptr++;
-
-    /* determine the number of characters that will fit on the line */
-    /* Note: each quote character is expanded to 2 quotes */
-
-    namelen = strlen(cptr);
+        
+    strncpy(tmpkeyname, cptr, FLEN_KEYWORD-1);
+    tmpkeyname[FLEN_KEYWORD-1] = '\0';
+    
+    namelen = strlen(tmpkeyname);
+    if (namelen)         /* skip trailing spaces in name */
+    {
+       cptr = tmpkeyname + namelen - 1;
+       while (*cptr == ' ')
+       {
+          *cptr = '\0';
+          cptr--;
+       }
+       namelen = strlen(tmpkeyname);
+    }
+    
+    /* First determine final length of keyword.  ffmkky may prepend 
+       "HIERARCH " to it, and we need to determine that now using the
+       same criteria as ffmkky. */
+    
     if (namelen <= 8 && (fftkey(cptr, &tstatus) <= 0) )
     {
-        /* This a normal 8-character FITS keyword */
-        nchar = 68 - nquote; /*  max of 68 chars fit in a FITS string value */
+       /* This a normal 8-character FITS keyword. ffmkky
+          will pad it to 8 if necessary, and add "= ". */
+       finalnamelen = 10;
+       /* 2 additional chars are needed for opening/closing quotes. */
+       maxvalchars = (FLEN_CARD-1) - finalnamelen  - 2;
     }
     else
-    {
-	   nchar = 80 - nquote - namelen - 5;
+    { 
+       if (namelen && ((FSTRNCMP(tmpkeyname, "HIERARCH ", 9) == 0) ||
+                   (FSTRNCMP(tmpkeyname, "hierarch ", 9) == 0)) )
+       {
+          /* We have an explicitly marked long keyword, so HIERARCH
+             will not be prepended.  However it can then have
+             " = " or "= ", depending on size of value string. 
+             For now, assume "= ". 
+             
+             If we're here, must have 75 > namelen > 9. */
+          finalnamelen = namelen + 2;
+       }
+       else
+       {
+          /* ffmkky is going to prepend "HIERARCH " to the keyword,
+             and " = " or "= ". */
+          finalnamelen = namelen + 11;
+          if (finalnamelen > FLEN_CARD-1)
+          {
+             ffpmsg("The following keyword is too long to fit on a card in ffpkls:");
+             ffpmsg(keyname);
+             return(*status = BAD_KEYCHAR);
+          }
+       }
+       maxvalchars = (FLEN_CARD-1) - finalnamelen - 2;       
     }
-
+    
     contin = 0;
     next = 0;                  /* pointer to next character to write */
 
-    while (remain > 0)
+    while (addline)
     {
-        tstring[0] = '\0';
-        strncat(tstring, &value[next], nchar); /* copy string to temp buff */
-        /* expand quotes, and put quotes around the string */
-        if (contin)
-           ffs2c_nopad(tstring,valstring,status);
-        else
-           ffs2c(tstring, valstring, status);  
-
-        if (remain > nchar)   /* if string is continued, put & as last char */
+        if (processingComment)
         {
-            vlen = strlen(valstring);
-            nchar -= 1;        /* outputting one less character now */
-
-            if (valstring[vlen-2] != '\'')
-                valstring[vlen-2] = '&';  /*  over write last char with &  */
-            else
-            { /* last char was a pair of single quotes, so over write both */
-                valstring[vlen-3] = '&';
-                valstring[vlen-1] = '\0';
-            }
+           if (remaincom > (fixedSpaceForComments-3))
+           {
+              strcpy(valstring,"'&'");
+              nblanks = (FLEN_CARD-1) - fixedSpaceForComments - 13;
+              memset(&valstring[3], 32, nblanks);
+              valstring[nblanks+3] = '\0';
+           }
+           else
+           {
+              strcpy(valstring,"''");
+              nblanks = (FLEN_CARD-1) - fixedSpaceForComments - 12;
+              memset(&valstring[2], 32, nblanks);
+              valstring[nblanks+2] = '\0';
+           }
+           nchar = minvalue(remaincom, fixedSpaceForComments-3);
+           strncpy(comstring, &comm[next], nchar);
+           comstring[nchar] = '\0';
+           next += nchar;
+           remaincom -= nchar;
         }
+        else
+        {
+           vlen = strlen(&value[next]);
+           nquote = 0;
+           for (ichar=0; ichar<vlen && (ichar+nquote)<maxvalchars; ++ichar)
+           {
+              if (value[next+ichar] == '\'')
+                 ++nquote;
+           }
+           /* Note that (ichar+nquote) can be 1 greater than maxvalchars
+              if last processed char is a quote.  Therefore do this check: */
+           nchar = minvalue(ichar,(maxvalchars-nquote));
+    
+           tstring[0] = '\0';
+           strncat(tstring, &value[next], nchar); /* copy string to temp buff */
+           /* expand quotes, and put quotes around the string */
+           if (contin)
+           {
+              ffs2c_nopad(tstring,valstring,status);
+              vlen = strlen(valstring);
+              spaceForComments = (FLEN_CARD-1) - (10 + vlen);
+           }
+           else
+           {
+              ffs2c(tstring, valstring, status);
+              vlen = strlen(valstring);
+              spaceForComments = (FLEN_CARD-1) - (finalnamelen + vlen);
+           }
+           
+           /* Check for simplest case where everything fits on first line.*/
+           if (!contin && (remainval==nchar) && 
+                      (finalnamelen+vlen+remaincom+3 < FLEN_CARD))
+              allInOne=1;
+           
+           if (!allInOne)
+           {   
+              /* There are 2 situations which require overwriting the last char of
+                 valstring with a continue symbol '&' */
+              if (!spaceForComments && (remaincom || (remainval > nchar)))
+
+              {
+                  nchar -= 1;        /* outputting one less character now */
+
+                  if (valstring[vlen-2] != '\'')
+                      valstring[vlen-2] = '&';  /*  overwrite last char with &  */
+                  else
+                  { /* last char was a pair of single quotes, so over write both */
+                      valstring[vlen-3] = '&';
+                      valstring[vlen-1] = '\0';
+                  }
+              }
+              else if ( 
+               /* Cases where '&' should be appended to valstring rather than
+                   overwritten.  This would mostly be due to the inclusion
+                   of a comment string requiring additional lines.  But there's
+                   also the obscure case where the last character that can
+                   fit happened to be a single quote.  Since this was removed
+                   with the earlier 'nchar = minvlaue()' test, the valstring
+                   must be continued even though it's one space short of filling
+                   this line.  We then append it with a '&'. */
+
+
+              (spaceForComments && nchar < remainval) || 
+              (remaincom && (spaceForComments < fixedSpaceForComments ||
+                        spaceForComments < remaincom))) 
+              {
+                valstring[vlen-1] = '&';
+                 valstring[vlen] = '\'';
+                 valstring[vlen+1] = '\0';
+                 vlen+=1;
+              }
+           }
+           
+           if (allInOne)
+           {
+              nocomment=0;
+              /* The allInOne test ensures that comm length will
+                 fit within FLEN_CARD buffer size */
+              if (comm)
+                 strcpy(comstring, comm);
+              else
+                 comstring[0]='\0';
+              /* Ensure that loop exits after this iteration */
+              remainval=0;
+              remaincom=0;
+           }
+           else if (remainval > nchar)
+           {
+              nocomment = 1;
+              remainval -= nchar;
+              next  += nchar;
+              maxvalchars = (FLEN_CARD-1) - 12;
+           }
+           else
+           {
+              /* We've reached the end of val input.  Now switch to writing
+                 comment (if any).  This block can only be reached once. */
+              /* Do not write comments on this line if fewer than
+                 fixedSpaceForComments are available for the comment string 
+                 and " / ". */
+              nocomment = 1;
+              remainval = 0;
+              next = 0;
+              processingComment = 1;
+              if (remaincom && spaceForComments >= fixedSpaceForComments)
+              {
+                 nocomment = 0;
+                 nchar = minvalue(remaincom, fixedSpaceForComments-3);
+                 strncpy(comstring, comm, nchar);
+                 comstring[nchar] = '\0';
+                 next = nchar;
+                 remaincom -= nchar;
+              }
+           }
+
+        } /* end if processing valstring and not comment */
 
         if (contin)           /* This is a CONTINUEd keyword */
         {
            if (nocomment) {
                ffmkky("CONTINUE", valstring, NULL, card, status); /* make keyword w/o comment */
            } else {
-               ffmkky("CONTINUE", valstring, comm, card, status); /* make keyword */
+               ffmkky("CONTINUE", valstring, comstring, card, status); /* make keyword */
 	   }
            strncpy(&card[8], "   ",  2);  /* overwrite the '=' */
         }
         else
         {
-           ffmkky(keyname, valstring, comm, card, status);  /* make keyword */
+           if (nocomment)
+              ffmkky(keyname, valstring, NULL, card, status);  /* make keyword */
+           else
+              ffmkky(keyname, valstring, comstring, card, status);  /* make keyword */
         }
 
         ffprec(fptr, card, status);  /* write the keyword */
-
+        
         contin = 1;
-        remain -= nchar;
-        next  += nchar;
         nocomment = 0;
-
-        if (remain > 0) 
-        {
-           /* count the number of single quote characters in next section */
-           tstring[0] = '\0';
-           strncat(tstring, &value[next], 68); /* copy next part of string */
-           nquote = 0;
-           cptr = strchr(tstring, '\'');   /* search for quote character */
-           while (cptr)  /* search for quote character */
-           {
-               nquote++;            /*  increment no. of quote characters  */
-               cptr++;              /*  increment pointer to next character */
-               cptr = strchr(cptr, '\'');  /* search for another quote char */
-           }
-           nchar = 68 - nquote;  /* max number of chars to write this time */
-        }
-
-        /* make adjustment if necessary to allow reasonable room for a comment on last CONTINUE card 
-	   only need to do this if 
-	     a) there is a comment string, and
-	     b) the remaining value string characters could all fit on the next CONTINUE card, and
-	     c) there is not enough room on the next CONTINUE card for both the remaining value
-	        characters, and at least 47 characters of the comment string.
-	*/
-	
-        if (commlen > 0 && remain + nquote < 69 && remain + nquote + commlen > 65) 
-	{
-            if (nchar > 18) { /* only false if there are a rediculous number of quotes in the string */
-	        nchar = remain - 15;  /* force continuation onto another card, so that */
-		                      /* there is room for a comment up to 47 chara long */
-                nocomment = 1;  /* don't write the comment string this time */
-            }
-	}
+        addline = (int)(remainval > 0 || remaincom > 0);
     }
     return(*status);
 }
@@ -2425,12 +2543,12 @@ int ffphprll( fitsfile *fptr, /* I - FITS file pointer                        */
         }
 
       /* write standard block of self-documentating comments */
-      ffprec(fptr,
+/*    ffprec(fptr,
       "COMMENT   FITS (Flexible Image Transport System) format is defined in 'Astronomy",
       status);
       ffprec(fptr,
       "COMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H",
-      status);
+      status);*/
     }
 
     else  /* an IMAGE extension */
@@ -3182,7 +3300,8 @@ int ffr2e(float fval,  /* I - value to be converted to a string */
         else
         {
             /* test if E format was used, and there is no displayed decimal */
-            if ( !strchr(cval, '.') && strchr(cval,'E') )
+            /* If locale is French, decimal will be a comma. So look for that too. */
+            if ( !strchr(cval, '.') && !strchr(cval, ',') && strchr(cval,'E') )
             {
                 /* reformat value with a decimal point and single zero */
                 if ( snprintf(cval, FLEN_VALUE,"%.1E", fval) < 0)
@@ -3190,7 +3309,8 @@ int ffr2e(float fval,  /* I - value to be converted to a string */
                     ffpmsg("Error in ffr2e converting float to string");
                     *status = BAD_F2C;
                 }
-
+                /* convert French locale comma to a decimal point.*/
+                if ((cptr = strchr(cval, ','))) *cptr = '.';
                 return(*status);  
             }
         }
@@ -3290,7 +3410,8 @@ int ffd2e(double dval,  /* I - value to be converted to a string */
         else
         {
             /* test if E format was used, and there is no displayed decimal */
-            if ( !strchr(cval, '.') && strchr(cval,'E') )
+            /* If locale is French, decimal will be a comma. So look for that too. */
+            if ( !strchr(cval, '.') && !strchr(cval, ',') && strchr(cval,'E') )
             {
                 /* reformat value with a decimal point and single zero */
                 if ( snprintf(cval, FLEN_VALUE,"%.1E", dval) < 0)
@@ -3298,6 +3419,8 @@ int ffd2e(double dval,  /* I - value to be converted to a string */
                     ffpmsg("Error in ffd2e converting float to string");
                     *status = BAD_F2C;
                 }
+                /* convert French locale comma to a decimal point.*/
+                if ((cptr = strchr(cval, ','))) *cptr = '.';
 
                 return(*status);  
             }

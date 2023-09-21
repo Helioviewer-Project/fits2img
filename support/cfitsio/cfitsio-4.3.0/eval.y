@@ -1,80 +1,19 @@
-/* A Bison parser, made by GNU Bison 3.8.  */
+/************************************************************************/
+/*                                                                      */
+/*                       CFITSIO Lexical Parser                         */
+/*                                                                      */
 
-/* Bison implementation for Yacc-like parsers in C
+/* All functions preceeded by fits_parser_yy for uniqueness             */
+%define api.prefix {fits_parser_yy}
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
-   Inc.
+/* Pure reentrant parser                                                */
+%define api.pure full
+/* Lexer called with extra state variable                               */
+%param { yyscan_t scanner }
+/* Parser called with extra parse state variable                        */
+%parse-param { ParseData *lParse }
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
-
-/* As a special exception, you may create a larger work that contains
-   part or all of the Bison parser skeleton and distribute that work
-   under terms of your choice, so long as that work isn't itself a
-   parser generator using the skeleton or a modified version thereof
-   as a parser skeleton.  Alternatively, if you modify or redistribute
-   the parser skeleton itself, you may (at your option) remove this
-   special exception, which will cause the skeleton and the resulting
-   Bison output files to be licensed under the GNU General Public
-   License without this special exception.
-
-   This special exception was added by the Free Software Foundation in
-   version 2.2 of Bison.  */
-
-/* C LALR(1) parser skeleton written by Richard Stallman, by
-   simplifying the original so-called "semantic" parser.  */
-
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
-
-/* All symbols defined below should begin with yy or YY, to avoid
-   infringing on user name space.  This should be done even for local
-   variables, as they might otherwise be expanded by user macros.
-   There are some unavoidable exceptions within include files to
-   define necessary library symbols; they are noted "INFRINGES ON
-   USER NAME SPACE" below.  */
-
-/* Identify Bison output, and Bison version.  */
-#define YYBISON 30800
-
-/* Bison version string.  */
-#define YYBISON_VERSION "3.8"
-
-/* Skeleton name.  */
-#define YYSKELETON_NAME "yacc.c"
-
-/* Pure parsers.  */
-#define YYPURE 2
-
-/* Push parsers.  */
-#define YYPUSH 0
-
-/* Pull parsers.  */
-#define YYPULL 1
-
-/* Substitute the type names.  */
-#define YYSTYPE         FITS_PARSER_YYSTYPE
-/* Substitute the variable and function names.  */
-#define yyparse         fits_parser_yyparse
-#define yylex           fits_parser_yylex
-#define yyerror         fits_parser_yyerror
-#define yydebug         fits_parser_yydebug
-#define yynerrs         fits_parser_yynerrs
-
-/* First part of user prologue.  */
-#line 16 "eval.y"
-
+%{
 /* This file is one of 3 files containing code which parses an          */
 /* arithmetic expression and evaluates it in the context of an input    */
 /* FITS file table extension.  The CFITSIO lexical parser is divided    */
@@ -268,2403 +207,695 @@ static void yyerror(yyscan_t scanner, ParseData *lParse, char *s);
     }
 #endif
 
-
-#line 273 "eval_y.c"
-
-# ifndef YY_CAST
-#  ifdef __cplusplus
-#   define YY_CAST(Type, Val) static_cast<Type> (Val)
-#   define YY_REINTERPRET_CAST(Type, Val) reinterpret_cast<Type> (Val)
-#  else
-#   define YY_CAST(Type, Val) ((Type) (Val))
-#   define YY_REINTERPRET_CAST(Type, Val) ((Type) (Val))
-#  endif
-# endif
-# ifndef YY_NULLPTR
-#  if defined __cplusplus
-#   if 201103L <= __cplusplus
-#    define YY_NULLPTR nullptr
-#   else
-#    define YY_NULLPTR 0
-#   endif
-#  else
-#   define YY_NULLPTR ((void*)0)
-#  endif
-# endif
-
-#include "eval_tab.h"
-/* Symbol kind.  */
-enum yysymbol_kind_t
-{
-  YYSYMBOL_YYEMPTY = -2,
-  YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
-  YYSYMBOL_YYerror = 1,                    /* error  */
-  YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
-  YYSYMBOL_BOOLEAN = 3,                    /* BOOLEAN  */
-  YYSYMBOL_LONG = 4,                       /* LONG  */
-  YYSYMBOL_DOUBLE = 5,                     /* DOUBLE  */
-  YYSYMBOL_STRING = 6,                     /* STRING  */
-  YYSYMBOL_BITSTR = 7,                     /* BITSTR  */
-  YYSYMBOL_FUNCTION = 8,                   /* FUNCTION  */
-  YYSYMBOL_BFUNCTION = 9,                  /* BFUNCTION  */
-  YYSYMBOL_IFUNCTION = 10,                 /* IFUNCTION  */
-  YYSYMBOL_GTIFILTER = 11,                 /* GTIFILTER  */
-  YYSYMBOL_GTIOVERLAP = 12,                /* GTIOVERLAP  */
-  YYSYMBOL_GTIFIND = 13,                   /* GTIFIND  */
-  YYSYMBOL_REGFILTER = 14,                 /* REGFILTER  */
-  YYSYMBOL_COLUMN = 15,                    /* COLUMN  */
-  YYSYMBOL_BCOLUMN = 16,                   /* BCOLUMN  */
-  YYSYMBOL_SCOLUMN = 17,                   /* SCOLUMN  */
-  YYSYMBOL_BITCOL = 18,                    /* BITCOL  */
-  YYSYMBOL_ROWREF = 19,                    /* ROWREF  */
-  YYSYMBOL_NULLREF = 20,                   /* NULLREF  */
-  YYSYMBOL_SNULLREF = 21,                  /* SNULLREF  */
-  YYSYMBOL_22_ = 22,                       /* ','  */
-  YYSYMBOL_23_ = 23,                       /* '='  */
-  YYSYMBOL_24_ = 24,                       /* ':'  */
-  YYSYMBOL_25_ = 25,                       /* '{'  */
-  YYSYMBOL_26_ = 26,                       /* '}'  */
-  YYSYMBOL_27_ = 27,                       /* '?'  */
-  YYSYMBOL_OR = 28,                        /* OR  */
-  YYSYMBOL_AND = 29,                       /* AND  */
-  YYSYMBOL_EQ = 30,                        /* EQ  */
-  YYSYMBOL_NE = 31,                        /* NE  */
-  YYSYMBOL_32_ = 32,                       /* '~'  */
-  YYSYMBOL_GT = 33,                        /* GT  */
-  YYSYMBOL_LT = 34,                        /* LT  */
-  YYSYMBOL_LTE = 35,                       /* LTE  */
-  YYSYMBOL_GTE = 36,                       /* GTE  */
-  YYSYMBOL_37_ = 37,                       /* '+'  */
-  YYSYMBOL_38_ = 38,                       /* '-'  */
-  YYSYMBOL_39_ = 39,                       /* '%'  */
-  YYSYMBOL_40_ = 40,                       /* '*'  */
-  YYSYMBOL_41_ = 41,                       /* '/'  */
-  YYSYMBOL_42_ = 42,                       /* '|'  */
-  YYSYMBOL_43_ = 43,                       /* '&'  */
-  YYSYMBOL_XOR = 44,                       /* XOR  */
-  YYSYMBOL_POWER = 45,                     /* POWER  */
-  YYSYMBOL_NOT = 46,                       /* NOT  */
-  YYSYMBOL_INTCAST = 47,                   /* INTCAST  */
-  YYSYMBOL_FLTCAST = 48,                   /* FLTCAST  */
-  YYSYMBOL_UMINUS = 49,                    /* UMINUS  */
-  YYSYMBOL_50_ = 50,                       /* '['  */
-  YYSYMBOL_ACCUM = 51,                     /* ACCUM  */
-  YYSYMBOL_DIFF = 52,                      /* DIFF  */
-  YYSYMBOL_53_n_ = 53,                     /* '\n'  */
-  YYSYMBOL_54_ = 54,                       /* ']'  */
-  YYSYMBOL_55_ = 55,                       /* '('  */
-  YYSYMBOL_56_ = 56,                       /* ')'  */
-  YYSYMBOL_YYACCEPT = 57,                  /* $accept  */
-  YYSYMBOL_lines = 58,                     /* lines  */
-  YYSYMBOL_line = 59,                      /* line  */
-  YYSYMBOL_bvector = 60,                   /* bvector  */
-  YYSYMBOL_vector = 61,                    /* vector  */
-  YYSYMBOL_expr = 62,                      /* expr  */
-  YYSYMBOL_bexpr = 63,                     /* bexpr  */
-  YYSYMBOL_bits = 64,                      /* bits  */
-  YYSYMBOL_sexpr = 65                      /* sexpr  */
-};
-typedef enum yysymbol_kind_t yysymbol_kind_t;
-
-
-
-
-#ifdef short
-# undef short
-#endif
-
-/* On compilers that do not define __PTRDIFF_MAX__ etc., make sure
-   <limits.h> and (if available) <stdint.h> are included
-   so that the code can choose integer types of a good width.  */
-
-#ifndef __PTRDIFF_MAX__
-# include <limits.h> /* INFRINGES ON USER NAME SPACE */
-# if defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
-#  include <stdint.h> /* INFRINGES ON USER NAME SPACE */
-#  define YY_STDINT_H
-# endif
-#endif
-
-/* Narrow types that promote to a signed type and that can represent a
-   signed or unsigned integer of at least N bits.  In tables they can
-   save space and decrease cache pressure.  Promoting to a signed type
-   helps avoid bugs in integer arithmetic.  */
-
-#ifdef __INT_LEAST8_MAX__
-typedef __INT_LEAST8_TYPE__ yytype_int8;
-#elif defined YY_STDINT_H
-typedef int_least8_t yytype_int8;
-#else
-typedef signed char yytype_int8;
-#endif
-
-#ifdef __INT_LEAST16_MAX__
-typedef __INT_LEAST16_TYPE__ yytype_int16;
-#elif defined YY_STDINT_H
-typedef int_least16_t yytype_int16;
-#else
-typedef short yytype_int16;
-#endif
-
-/* Work around bug in HP-UX 11.23, which defines these macros
-   incorrectly for preprocessor constants.  This workaround can likely
-   be removed in 2023, as HPE has promised support for HP-UX 11.23
-   (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
-   <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
-#ifdef __hpux
-# undef UINT_LEAST8_MAX
-# undef UINT_LEAST16_MAX
-# define UINT_LEAST8_MAX 255
-# define UINT_LEAST16_MAX 65535
-#endif
-
-#if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
-typedef __UINT_LEAST8_TYPE__ yytype_uint8;
-#elif (!defined __UINT_LEAST8_MAX__ && defined YY_STDINT_H \
-       && UINT_LEAST8_MAX <= INT_MAX)
-typedef uint_least8_t yytype_uint8;
-#elif !defined __UINT_LEAST8_MAX__ && UCHAR_MAX <= INT_MAX
-typedef unsigned char yytype_uint8;
-#else
-typedef short yytype_uint8;
-#endif
-
-#if defined __UINT_LEAST16_MAX__ && __UINT_LEAST16_MAX__ <= __INT_MAX__
-typedef __UINT_LEAST16_TYPE__ yytype_uint16;
-#elif (!defined __UINT_LEAST16_MAX__ && defined YY_STDINT_H \
-       && UINT_LEAST16_MAX <= INT_MAX)
-typedef uint_least16_t yytype_uint16;
-#elif !defined __UINT_LEAST16_MAX__ && USHRT_MAX <= INT_MAX
-typedef unsigned short yytype_uint16;
-#else
-typedef int yytype_uint16;
-#endif
-
-#ifndef YYPTRDIFF_T
-# if defined __PTRDIFF_TYPE__ && defined __PTRDIFF_MAX__
-#  define YYPTRDIFF_T __PTRDIFF_TYPE__
-#  define YYPTRDIFF_MAXIMUM __PTRDIFF_MAX__
-# elif defined PTRDIFF_MAX
-#  ifndef ptrdiff_t
-#   include <stddef.h> /* INFRINGES ON USER NAME SPACE */
-#  endif
-#  define YYPTRDIFF_T ptrdiff_t
-#  define YYPTRDIFF_MAXIMUM PTRDIFF_MAX
-# else
-#  define YYPTRDIFF_T long
-#  define YYPTRDIFF_MAXIMUM LONG_MAX
-# endif
-#endif
-
-#ifndef YYSIZE_T
-# ifdef __SIZE_TYPE__
-#  define YYSIZE_T __SIZE_TYPE__
-# elif defined size_t
-#  define YYSIZE_T size_t
-# elif defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
-#  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
-#  define YYSIZE_T size_t
-# else
-#  define YYSIZE_T unsigned
-# endif
-#endif
-
-#define YYSIZE_MAXIMUM                                  \
-  YY_CAST (YYPTRDIFF_T,                                 \
-           (YYPTRDIFF_MAXIMUM < YY_CAST (YYSIZE_T, -1)  \
-            ? YYPTRDIFF_MAXIMUM                         \
-            : YY_CAST (YYSIZE_T, -1)))
-
-#define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
-
-
-/* Stored state numbers (used for stacks). */
-typedef yytype_int16 yy_state_t;
-
-/* State numbers in computations.  */
-typedef int yy_state_fast_t;
-
-#ifndef YY_
-# if defined YYENABLE_NLS && YYENABLE_NLS
-#  if ENABLE_NLS
-#   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
-#   define YY_(Msgid) dgettext ("bison-runtime", Msgid)
-#  endif
-# endif
-# ifndef YY_
-#  define YY_(Msgid) Msgid
-# endif
-#endif
-
-
-#ifndef YY_ATTRIBUTE_PURE
-# if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
-#  define YY_ATTRIBUTE_PURE __attribute__ ((__pure__))
-# else
-#  define YY_ATTRIBUTE_PURE
-# endif
-#endif
-
-#ifndef YY_ATTRIBUTE_UNUSED
-# if defined __GNUC__ && 2 < __GNUC__ + (7 <= __GNUC_MINOR__)
-#  define YY_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
-# else
-#  define YY_ATTRIBUTE_UNUSED
-# endif
-#endif
-
-/* Suppress unused-variable warnings by "using" E.  */
-#if ! defined lint || defined __GNUC__
-# define YY_USE(E) ((void) (E))
-#else
-# define YY_USE(E) /* empty */
-#endif
-
-/* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
-# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
-#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
-    _Pragma ("GCC diagnostic push")                                     \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
-# else
-#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
-    _Pragma ("GCC diagnostic push")                                     \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
-    _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
-# endif
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
-    _Pragma ("GCC diagnostic pop")
-#else
-# define YY_INITIAL_VALUE(Value) Value
-#endif
-#ifndef YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END
-#endif
-#ifndef YY_INITIAL_VALUE
-# define YY_INITIAL_VALUE(Value) /* Nothing. */
-#endif
-
-#if defined __cplusplus && defined __GNUC__ && ! defined __ICC && 6 <= __GNUC__
-# define YY_IGNORE_USELESS_CAST_BEGIN                          \
-    _Pragma ("GCC diagnostic push")                            \
-    _Pragma ("GCC diagnostic ignored \"-Wuseless-cast\"")
-# define YY_IGNORE_USELESS_CAST_END            \
-    _Pragma ("GCC diagnostic pop")
-#endif
-#ifndef YY_IGNORE_USELESS_CAST_BEGIN
-# define YY_IGNORE_USELESS_CAST_BEGIN
-# define YY_IGNORE_USELESS_CAST_END
-#endif
-
-
-#define YY_ASSERT(E) ((void) (0 && (E)))
-
-#if !defined yyoverflow
-
-/* The parser invokes alloca or malloc; define the necessary symbols.  */
-
-# ifdef YYSTACK_USE_ALLOCA
-#  if YYSTACK_USE_ALLOCA
-#   ifdef __GNUC__
-#    define YYSTACK_ALLOC __builtin_alloca
-#   elif defined __BUILTIN_VA_ARG_INCR
-#    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
-#   elif defined _AIX
-#    define YYSTACK_ALLOC __alloca
-#   elif defined _MSC_VER
-#    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
-#    define alloca _alloca
-#   else
-#    define YYSTACK_ALLOC alloca
-#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
-#     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-      /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
-#     ifndef EXIT_SUCCESS
-#      define EXIT_SUCCESS 0
-#     endif
-#    endif
-#   endif
-#  endif
-# endif
-
-# ifdef YYSTACK_ALLOC
-   /* Pacify GCC's 'empty if-body' warning.  */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
-#  ifndef YYSTACK_ALLOC_MAXIMUM
-    /* The OS might guarantee only one guard page at the bottom of the stack,
-       and a page size can be as small as 4096 bytes.  So we cannot safely
-       invoke alloca (N) if N exceeds 4096.  Use a slightly smaller number
-       to allow for a few compiler-allocated temporary stack slots.  */
-#   define YYSTACK_ALLOC_MAXIMUM 4032 /* reasonable circa 2006 */
-#  endif
-# else
-#  define YYSTACK_ALLOC YYMALLOC
-#  define YYSTACK_FREE YYFREE
-#  ifndef YYSTACK_ALLOC_MAXIMUM
-#   define YYSTACK_ALLOC_MAXIMUM YYSIZE_MAXIMUM
-#  endif
-#  if (defined __cplusplus && ! defined EXIT_SUCCESS \
-       && ! ((defined YYMALLOC || defined malloc) \
-             && (defined YYFREE || defined free)))
-#   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-#   ifndef EXIT_SUCCESS
-#    define EXIT_SUCCESS 0
-#   endif
-#  endif
-#  ifndef YYMALLOC
-#   define YYMALLOC malloc
-#   if ! defined malloc && ! defined EXIT_SUCCESS
-void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
-#   endif
-#  endif
-#  ifndef YYFREE
-#   define YYFREE free
-#   if ! defined free && ! defined EXIT_SUCCESS
-void free (void *); /* INFRINGES ON USER NAME SPACE */
-#   endif
-#  endif
-# endif
-#endif /* !defined yyoverflow */
-
-#if (! defined yyoverflow \
-     && (! defined __cplusplus \
-         || (defined FITS_PARSER_YYSTYPE_IS_TRIVIAL && FITS_PARSER_YYSTYPE_IS_TRIVIAL)))
-
-/* A type that is properly aligned for any stack member.  */
-union yyalloc
-{
-  yy_state_t yyss_alloc;
-  YYSTYPE yyvs_alloc;
-};
-
-/* The size of the maximum gap between one aligned stack and the next.  */
-# define YYSTACK_GAP_MAXIMUM (YYSIZEOF (union yyalloc) - 1)
-
-/* The size of an array large to enough to hold all stacks, each with
-   N elements.  */
-# define YYSTACK_BYTES(N) \
-     ((N) * (YYSIZEOF (yy_state_t) + YYSIZEOF (YYSTYPE)) \
-      + YYSTACK_GAP_MAXIMUM)
-
-# define YYCOPY_NEEDED 1
-
-/* Relocate STACK from its old location to the new one.  The
-   local variables YYSIZE and YYSTACKSIZE give the old and new number of
-   elements in the stack, and YYPTR gives the new location of the
-   stack.  Advance YYPTR to a properly aligned location for the next
-   stack.  */
-# define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
-    do                                                                  \
-      {                                                                 \
-        YYPTRDIFF_T yynewbytes;                                         \
-        YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
-        Stack = &yyptr->Stack_alloc;                                    \
-        yynewbytes = yystacksize * YYSIZEOF (*Stack) + YYSTACK_GAP_MAXIMUM; \
-        yyptr += yynewbytes / YYSIZEOF (*yyptr);                        \
-      }                                                                 \
-    while (0)
-
-#endif
-
-#if defined YYCOPY_NEEDED && YYCOPY_NEEDED
-/* Copy COUNT objects from SRC to DST.  The source and destination do
-   not overlap.  */
-# ifndef YYCOPY
-#  if defined __GNUC__ && 1 < __GNUC__
-#   define YYCOPY(Dst, Src, Count) \
-      __builtin_memcpy (Dst, Src, YY_CAST (YYSIZE_T, (Count)) * sizeof (*(Src)))
-#  else
-#   define YYCOPY(Dst, Src, Count)              \
-      do                                        \
-        {                                       \
-          YYPTRDIFF_T yyi;                      \
-          for (yyi = 0; yyi < (Count); yyi++)   \
-            (Dst)[yyi] = (Src)[yyi];            \
-        }                                       \
-      while (0)
-#  endif
-# endif
-#endif /* !YYCOPY_NEEDED */
-
-/* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  2
-/* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   1776
-
-/* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  57
-/* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  9
-/* YYNRULES -- Number of rules.  */
-#define YYNRULES  135
-/* YYNSTATES -- Number of states.  */
-#define YYNSTATES  322
-
-/* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   292
-
-
-/* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
-   as returned by yylex, with out-of-bounds checking.  */
-#define YYTRANSLATE(YYX)                                \
-  (0 <= (YYX) && (YYX) <= YYMAXUTOK                     \
-   ? YY_CAST (yysymbol_kind_t, yytranslate[YYX])        \
-   : YYSYMBOL_YYUNDEF)
-
-/* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
-   as returned by yylex.  */
-static const yytype_int8 yytranslate[] =
-{
-       0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      53,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,    39,    43,     2,
-      55,    56,    40,    37,    22,    38,     2,    41,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    24,     2,
-       2,    23,     2,    27,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,    50,     2,    54,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    25,    42,    26,    32,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    28,    29,    30,
-      31,    33,    34,    35,    36,    44,    45,    46,    47,    48,
-      49,    51,    52
-};
-
-#if FITS_PARSER_YYDEBUG
-/* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int16 yyrline[] =
-{
-       0,   266,   266,   267,   270,   271,   277,   283,   289,   295,
-     298,   300,   313,   315,   328,   339,   353,   357,   361,   365,
-     367,   376,   379,   382,   391,   393,   395,   397,   399,   401,
-     404,   408,   410,   412,   414,   423,   425,   427,   430,   433,
-     436,   439,   442,   451,   460,   469,   472,   474,   476,   478,
-     482,   486,   505,   524,   543,   554,   568,   617,   629,   660,
-     774,   782,   885,   909,   911,   913,   915,   917,   919,   921,
-     923,   925,   929,   931,   933,   942,   945,   948,   951,   954,
-     957,   960,   963,   966,   969,   972,   975,   978,   981,   984,
-     987,   990,   993,   996,   999,  1001,  1003,  1005,  1008,  1015,
-    1032,  1045,  1058,  1069,  1085,  1109,  1137,  1174,  1178,  1182,
-    1185,  1190,  1193,  1198,  1202,  1206,  1209,  1214,  1218,  1221,
-    1225,  1227,  1229,  1231,  1233,  1235,  1237,  1241,  1244,  1246,
-    1255,  1257,  1259,  1268,  1287,  1306
-};
-#endif
-
-/** Accessing symbol of state STATE.  */
-#define YY_ACCESSING_SYMBOL(State) YY_CAST (yysymbol_kind_t, yystos[State])
-
-#if FITS_PARSER_YYDEBUG || 0
-/* The user-facing name of the symbol whose (internal) number is
-   YYSYMBOL.  No bounds checking.  */
-static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
-
-/* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
-   First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
-static const char *const yytname[] =
-{
-  "\"end of file\"", "error", "\"invalid token\"", "BOOLEAN", "LONG",
-  "DOUBLE", "STRING", "BITSTR", "FUNCTION", "BFUNCTION", "IFUNCTION",
-  "GTIFILTER", "GTIOVERLAP", "GTIFIND", "REGFILTER", "COLUMN", "BCOLUMN",
-  "SCOLUMN", "BITCOL", "ROWREF", "NULLREF", "SNULLREF", "','", "'='",
-  "':'", "'{'", "'}'", "'?'", "OR", "AND", "EQ", "NE", "'~'", "GT", "LT",
-  "LTE", "GTE", "'+'", "'-'", "'%'", "'*'", "'/'", "'|'", "'&'", "XOR",
-  "POWER", "NOT", "INTCAST", "FLTCAST", "UMINUS", "'['", "ACCUM", "DIFF",
-  "'\\n'", "']'", "'('", "')'", "$accept", "lines", "line", "bvector",
-  "vector", "expr", "bexpr", "bits", "sexpr", YY_NULLPTR
-};
-
-static const char *
-yysymbol_name (yysymbol_kind_t yysymbol)
-{
-  return yytname[yysymbol];
-}
-#endif
-
-#define YYPACT_NINF (-41)
-
-#define yypact_value_is_default(Yyn) \
-  ((Yyn) == YYPACT_NINF)
-
-#define YYTABLE_NINF (-1)
-
-#define yytable_value_is_error(Yyn) \
-  0
-
-/* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-   STATE-NUM.  */
-static const yytype_int16 yypact[] =
-{
-     -41,   316,   -41,   -40,   -41,   -41,   -41,   -41,   -41,   369,
-     423,   423,    -5,    15,    -4,    27,    36,    38,    40,    41,
-     -41,   -41,   -41,   423,   423,   423,   423,   423,   423,   -41,
-     423,   -41,    -7,    10,  1226,    81,  1646,    83,   -41,   -41,
-     450,   116,   309,    12,   479,   185,   152,   222,  1593,  1673,
-    1675,   -19,   -41,    13,   -18,   -41,     6,   423,   423,   423,
-     423,  1593,  1673,  1684,    17,    17,    19,    24,    17,    19,
-      17,    19,   710,  1253,  1611,   365,   423,   -41,   423,   -41,
-     423,   423,   423,   423,   423,   423,   423,   423,   423,   423,
-     423,   423,   423,   423,   423,   423,   423,   423,   -41,   423,
-     423,   423,   423,   423,   423,   423,   -41,    -2,    -2,    -2,
-      -2,    -2,    -2,    -2,    -2,    -2,   423,   -41,   423,   423,
-     423,   423,   423,   423,   423,   -41,   423,   -41,   423,   -41,
-     -41,   423,   -41,   423,   -41,   -41,   -41,   423,   423,   -41,
-     423,   423,   -41,   423,   -41,  1455,  1478,  1501,  1524,   -41,
-     -41,   -41,   -41,  1593,  1673,  1593,  1673,  1547,  1712,  1712,
-    1712,  1726,  1726,  1726,  1726,   368,   368,   368,    28,    19,
-      28,     5,     5,     5,     5,   851,  1570,   425,   260,   128,
-     -20,    14,    14,    28,   876,    -2,    -2,   -25,   -25,   -25,
-     -25,   -25,   -25,   -36,    24,    24,   901,   140,   140,    39,
-      39,    39,    39,   -41,   508,   738,  1258,  1288,  1629,  1312,
-    1638,   537,  1336,   566,  1360,   -41,   -41,   -41,   -41,   423,
-     423,   -41,   423,   423,   423,   423,   -41,    24,   189,   423,
-     -41,   423,   -41,   -41,   -41,   423,   -41,   423,   -41,    93,
-     -41,   423,    94,   -41,   423,  1694,   926,  1694,  1673,  1694,
-    1673,  1684,   951,   976,  1384,   766,   595,    79,   624,    80,
-     653,   423,   -41,   423,   -41,   423,   -41,   423,   -41,   423,
-     -41,   100,   101,   -41,   117,   118,   -41,  1001,  1026,  1051,
-     794,  1408,    72,   111,    85,    99,   423,   -41,   423,   -41,
-     423,   -41,   -41,   423,   -41,   129,   -41,   -41,  1076,  1101,
-    1126,   682,   104,   423,   -41,   423,   -41,   423,   -41,   423,
-     -41,   -41,  1151,  1176,  1201,  1432,   -41,   -41,   -41,   423,
-     822,   -41
-};
-
-/* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
-   Performed when YYTABLE does not specify something else to do.  Zero
-   means the default is an error.  */
-static const yytype_uint8 yydefact[] =
-{
-       2,     0,     1,     0,    72,    31,    32,   127,    18,     0,
-       0,     0,     0,     0,     0,     0,    33,    73,   128,    19,
-      35,    36,   130,     0,     0,     0,     0,     0,     0,     4,
-       0,     3,     0,     0,     0,     0,     0,     0,     9,    54,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,   107,     0,     0,   113,     0,     0,     0,     0,
-       0,    12,    10,     0,    46,    47,   125,    29,    68,    69,
-      70,    71,     0,     0,     0,     0,     0,    17,     0,    16,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     5,     0,
-       0,     0,     0,     0,     0,     0,     6,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     8,     0,     0,
-       0,     0,     0,     0,     0,     7,     0,    59,     0,    55,
-      58,     0,    57,     0,   100,   101,   102,     0,     0,   108,
-       0,     0,   114,     0,   117,     0,     0,     0,     0,    48,
-     126,    30,   131,    15,    11,    13,    14,     0,    86,    87,
-      85,    81,    82,    84,    83,    38,    39,    37,    40,    49,
-      41,    43,    42,    44,    45,     0,     0,     0,     0,    95,
-      94,    96,    97,    50,     0,     0,     0,    75,    76,    79,
-      77,    78,    80,    23,    22,    21,     0,    88,    89,    90,
-      92,    93,    91,   132,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    34,    74,   129,    20,     0,
-       0,    63,     0,     0,     0,     0,   120,    29,     0,     0,
-      24,     0,    61,    56,   103,     0,   134,     0,    60,     0,
-     109,     0,     0,   115,     0,    98,     0,    51,    53,    52,
-      99,   133,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    64,     0,   121,     0,    25,     0,   135,     0,
-     104,     0,     0,   111,     0,     0,   118,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    65,     0,   122,
-       0,    26,    62,     0,   110,     0,   116,   119,     0,     0,
-       0,     0,     0,     0,    66,     0,   123,     0,    27,     0,
-     105,   112,     0,     0,     0,     0,    67,   124,    28,     0,
-       0,   106
-};
-
-/* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
-{
-     -41,   -41,   -41,   -41,   -41,    -1,   170,    96,    30
-};
-
-/* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_int8 yydefgoto[] =
-{
-       0,     1,    31,    32,    33,    48,    49,    46,    63
-};
-
-/* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
-   positive, shift that token.  If negative, reduce the rule whose
-   number is the opposite.  If YYTABLE_NINF, syntax error.  */
-static const yytype_int16 yytable[] =
-{
-      34,    51,    54,   138,   141,     8,   114,   115,    40,    44,
-     102,   103,   113,    38,   116,    76,    19,   114,   115,    77,
-     104,    53,    61,    64,    65,   116,    68,    70,   143,    72,
-     105,    37,    78,    56,   131,   140,    79,   139,   142,    43,
-      47,    50,   118,   119,   185,   120,   121,   122,   123,   124,
-      96,    52,    55,   186,   104,    97,   145,   146,   147,   148,
-      75,    57,   144,    58,   105,    59,    60,    97,   132,   105,
-      93,    94,    95,    96,   116,   153,   124,   155,    97,   157,
-     158,   159,   160,   161,   162,   163,   164,   165,   166,   167,
-     168,   170,   171,   172,   173,   174,   175,    36,   176,   257,
-     259,   271,   274,   183,   184,    42,   282,   283,    99,   100,
-     101,   102,   103,   118,   119,   196,   120,   121,   122,   123,
-     124,   104,    67,   284,   285,   204,    74,   205,   294,   178,
-     207,   105,   209,   295,   106,   302,   125,   211,   128,   212,
-     213,   296,   214,    99,   100,   101,   102,   103,   197,   198,
-     199,   200,   201,   202,   203,   297,   104,   101,   102,   103,
-     311,   208,     0,     0,     0,     0,   105,   210,   104,     0,
-       0,    35,   129,   120,   121,   122,   123,   124,   105,    41,
-      45,     0,   107,   108,     0,   109,   110,   111,   112,   113,
-       0,     0,     0,    62,   114,   115,    66,    69,    71,     0,
-      73,     0,   116,   187,   188,   189,   190,   191,   192,   193,
-     194,   195,    99,   100,   101,   102,   103,     0,   245,   246,
-       0,   247,   249,     0,   252,   104,   113,     0,   253,     0,
-     254,   114,   115,     0,   255,   105,   256,     0,     0,   116,
-     258,   135,     0,   260,     0,   151,   154,     0,   156,     0,
-       0,     0,   118,   119,   251,   120,   121,   122,   123,   124,
-     277,   169,   278,     0,   279,     0,   280,     0,   281,   177,
-     179,   180,   181,   182,     0,     0,     0,     0,   136,     0,
-       0,   227,   228,     0,   224,   298,     0,   299,     0,   300,
-     118,   119,   301,   120,   121,   122,   123,   124,   206,     0,
-       0,     0,   312,     0,   313,     0,   314,     0,   315,     0,
-       0,     0,     0,     0,     0,     0,     2,     3,   320,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,     0,   107,
-     108,    23,   109,   110,   111,   112,   113,     0,     0,     0,
-       0,   114,   115,    24,    25,     0,     0,     0,     0,   116,
-       0,     0,    26,    27,    28,   130,     0,     0,     0,    29,
-       0,    30,     4,     5,     6,     7,     8,     9,    10,    11,
-      12,    13,    14,    15,    16,    17,    18,    19,    20,    21,
-      22,     0,   248,   250,    23,   118,   119,     0,   120,   121,
-     122,   123,   124,     0,     0,     0,    24,    25,    91,    92,
-      93,    94,    95,    96,     0,    26,    27,    28,    97,     0,
-       0,   152,     0,     0,    30,    39,     4,     5,     6,     7,
-       8,     9,    10,    11,    12,    13,    14,    15,    16,    17,
-      18,    19,    20,    21,    22,     0,     0,     0,    23,   223,
-       0,     0,    99,   100,   101,   102,   103,     0,     0,     0,
-      24,    25,     0,     0,     0,   104,     0,     0,     0,    26,
-      27,    28,   126,    80,     0,   105,     0,     0,    30,     0,
-      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,     0,     0,     0,     0,
-      97,   133,    80,     0,     0,     0,   127,     0,     0,    81,
-      82,    83,    84,    85,    86,    87,    88,    89,    90,    91,
-      92,    93,    94,    95,    96,     0,     0,     0,     0,    97,
-     231,    80,     0,     0,     0,   134,     0,     0,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,     0,     0,     0,     0,    97,   239,
-      80,     0,     0,     0,   232,     0,     0,    81,    82,    83,
-      84,    85,    86,    87,    88,    89,    90,    91,    92,    93,
-      94,    95,    96,     0,     0,     0,     0,    97,   242,    80,
-       0,     0,     0,   240,     0,     0,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,     0,     0,    97,   269,    80,     0,
-       0,     0,   243,     0,     0,    81,    82,    83,    84,    85,
-      86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
-      96,     0,     0,     0,     0,    97,   272,    80,     0,     0,
-       0,   270,     0,     0,    81,    82,    83,    84,    85,    86,
-      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
-       0,     0,     0,     0,    97,   275,    80,     0,     0,     0,
-     273,     0,     0,    81,    82,    83,    84,    85,    86,    87,
-      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
-       0,     0,     0,    97,   309,    80,     0,     0,     0,   276,
-       0,     0,    81,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,     0,     0,
-       0,     0,    97,    80,     0,     0,     0,     0,   310,     0,
-      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,     0,     0,     0,     0,
-      97,    80,     0,     0,     0,     0,   149,     0,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,     0,     0,     0,     0,    97,    80,
-       0,     0,     0,     0,   233,     0,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,     0,     0,    97,    80,     0,     0,
-       0,     0,   268,     0,    81,    82,    83,    84,    85,    86,
-      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
-       0,     0,     0,     0,    97,    80,     0,     0,     0,     0,
-     292,     0,    81,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,     0,     0,
-       0,     0,    97,   220,    80,     0,     0,     0,   321,     0,
-       0,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,   225,    80,
-       0,    97,     0,     0,     0,   221,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,   229,    80,     0,    97,     0,     0,     0,
-     226,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,   261,    80,
-       0,    97,     0,     0,     0,   230,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,   263,    80,     0,    97,     0,     0,     0,
-     262,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,   265,    80,
-       0,    97,     0,     0,     0,   264,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,   286,    80,     0,    97,     0,     0,     0,
-     266,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,   288,    80,
-       0,    97,     0,     0,     0,   287,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,   290,    80,     0,    97,     0,     0,     0,
-     289,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,   303,    80,
-       0,    97,     0,     0,     0,   291,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,   305,    80,     0,    97,     0,     0,     0,
-     304,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,   307,    80,
-       0,    97,     0,     0,     0,   306,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,    80,     0,    97,     0,     0,     0,
-     308,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,     0,    80,
-       0,    97,     0,     0,     0,   316,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,    80,     0,    97,     0,     0,     0,
-     317,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,     0,     0,    80,
-       0,    97,     0,     0,     0,   318,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,     0,     0,    97,     0,     0,    98,
-      99,   100,   101,   102,   103,    99,   100,   101,   102,   103,
-       0,     0,     0,   104,     0,     0,     0,     0,   104,     0,
-       0,     0,     0,   105,     0,     0,     0,     0,   105,   150,
-     235,    80,     0,     0,   234,     0,     0,     0,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,   237,    80,     0,     0,    97,     0,
-       0,     0,    81,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,   241,    80,
-       0,     0,    97,     0,     0,     0,    81,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,   244,    80,     0,     0,    97,     0,     0,     0,
-      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,   267,    80,     0,     0,
-      97,     0,     0,     0,    81,    82,    83,    84,    85,    86,
-      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
-     293,    80,     0,     0,    97,     0,     0,     0,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,   319,    80,     0,     0,    97,     0,
-       0,     0,    81,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,    80,     0,
-       0,   215,    97,     0,     0,    81,    82,    83,    84,    85,
-      86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
-      96,    80,     0,     0,   216,    97,     0,     0,    81,    82,
-      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96,    80,     0,     0,   217,    97,     0,
-       0,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    93,    94,    95,    96,    80,     0,     0,
-     218,    97,     0,     0,    81,    82,    83,    84,    85,    86,
-      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
-      80,   219,     0,     0,    97,     0,     0,    81,    82,    83,
-      84,    85,    86,    87,    88,    89,    90,    91,    92,    93,
-      94,    95,    96,    80,   222,     0,     0,    97,     0,     0,
-      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,    80,     0,     0,     0,
-      97,     0,     0,    81,    82,    83,    84,    85,    86,    87,
-      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
-       0,   107,   108,    97,   109,   110,   111,   112,   113,     0,
-       0,     0,     0,   114,   115,     0,     0,     0,     0,   118,
-     119,   116,   120,   121,   122,   123,   124,   151,   118,   119,
-       0,   120,   121,   122,   123,   124,   107,   108,     0,   109,
-     110,   111,   112,   113,     0,   236,     0,     0,   114,   115,
-       0,     0,     0,     0,   238,     0,   116,   137,     0,   117,
-      99,   100,   101,   102,   103,   118,   119,     0,   120,   121,
-     122,   123,   124,   104,   118,   119,     0,   120,   121,   122,
-     123,   124,     0,   105,    81,    82,    83,    84,    85,    86,
-      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
-       0,     0,     0,     0,    97,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,     0,     0,
-       0,     0,    97,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,     0,     0,    97
-};
-
-static const yytype_int16 yycheck[] =
-{
-       1,     6,     6,    22,    22,     7,    42,    43,     9,    10,
-      30,    31,    37,    53,    50,    22,    18,    42,    43,    26,
-      40,     6,    23,    24,    25,    50,    27,    28,    22,    30,
-      50,     1,    22,     6,    22,    22,    26,    56,    56,     9,
-      10,    11,    30,    31,    46,    33,    34,    35,    36,    37,
-      45,    56,    56,    55,    40,    50,    57,    58,    59,    60,
-      30,    25,    56,    25,    50,    25,    25,    50,    56,    50,
-      42,    43,    44,    45,    50,    76,    37,    78,    50,    80,
-      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,    97,     1,    99,     6,
-       6,    22,    22,   104,   105,     9,     6,     6,    27,    28,
-      29,    30,    31,    30,    31,   116,    33,    34,    35,    36,
-      37,    40,    26,     6,     6,   126,    30,   128,    56,    99,
-     131,    50,   133,    22,    53,     6,    53,   138,    22,   140,
-     141,    56,   143,    27,    28,    29,    30,    31,   118,   119,
-     120,   121,   122,   123,   124,    56,    40,    29,    30,    31,
-      56,   131,    -1,    -1,    -1,    -1,    50,   137,    40,    -1,
-      -1,     1,    56,    33,    34,    35,    36,    37,    50,     9,
-      10,    -1,    30,    31,    -1,    33,    34,    35,    36,    37,
-      -1,    -1,    -1,    23,    42,    43,    26,    27,    28,    -1,
-      30,    -1,    50,   107,   108,   109,   110,   111,   112,   113,
-     114,   115,    27,    28,    29,    30,    31,    -1,   219,   220,
-      -1,   222,   223,    -1,   225,    40,    37,    -1,   229,    -1,
-     231,    42,    43,    -1,   235,    50,   237,    -1,    -1,    50,
-     241,    56,    -1,   244,    -1,    56,    76,    -1,    78,    -1,
-      -1,    -1,    30,    31,   224,    33,    34,    35,    36,    37,
-     261,    91,   263,    -1,   265,    -1,   267,    -1,   269,    99,
-     100,   101,   102,   103,    -1,    -1,    -1,    -1,    56,    -1,
-      -1,   185,   186,    -1,    24,   286,    -1,   288,    -1,   290,
-      30,    31,   293,    33,    34,    35,    36,    37,   128,    -1,
-      -1,    -1,   303,    -1,   305,    -1,   307,    -1,   309,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,     0,     1,   319,     3,
-       4,     5,     6,     7,     8,     9,    10,    11,    12,    13,
-      14,    15,    16,    17,    18,    19,    20,    21,    -1,    30,
-      31,    25,    33,    34,    35,    36,    37,    -1,    -1,    -1,
-      -1,    42,    43,    37,    38,    -1,    -1,    -1,    -1,    50,
-      -1,    -1,    46,    47,    48,    56,    -1,    -1,    -1,    53,
-      -1,    55,     3,     4,     5,     6,     7,     8,     9,    10,
-      11,    12,    13,    14,    15,    16,    17,    18,    19,    20,
-      21,    -1,   222,   223,    25,    30,    31,    -1,    33,    34,
-      35,    36,    37,    -1,    -1,    -1,    37,    38,    40,    41,
-      42,    43,    44,    45,    -1,    46,    47,    48,    50,    -1,
-      -1,    56,    -1,    -1,    55,    56,     3,     4,     5,     6,
-       7,     8,     9,    10,    11,    12,    13,    14,    15,    16,
-      17,    18,    19,    20,    21,    -1,    -1,    -1,    25,    24,
-      -1,    -1,    27,    28,    29,    30,    31,    -1,    -1,    -1,
-      37,    38,    -1,    -1,    -1,    40,    -1,    -1,    -1,    46,
-      47,    48,    22,    23,    -1,    50,    -1,    -1,    55,    -1,
-      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    -1,    -1,    -1,    -1,
-      50,    22,    23,    -1,    -1,    -1,    56,    -1,    -1,    30,
-      31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
-      41,    42,    43,    44,    45,    -1,    -1,    -1,    -1,    50,
-      22,    23,    -1,    -1,    -1,    56,    -1,    -1,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    -1,    -1,    -1,    -1,    50,    22,
-      23,    -1,    -1,    -1,    56,    -1,    -1,    30,    31,    32,
-      33,    34,    35,    36,    37,    38,    39,    40,    41,    42,
-      43,    44,    45,    -1,    -1,    -1,    -1,    50,    22,    23,
-      -1,    -1,    -1,    56,    -1,    -1,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    -1,    -1,    -1,    50,    22,    23,    -1,
-      -1,    -1,    56,    -1,    -1,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    -1,    -1,    -1,    -1,    50,    22,    23,    -1,    -1,
-      -1,    56,    -1,    -1,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    41,    42,    43,    44,    45,
-      -1,    -1,    -1,    -1,    50,    22,    23,    -1,    -1,    -1,
-      56,    -1,    -1,    30,    31,    32,    33,    34,    35,    36,
-      37,    38,    39,    40,    41,    42,    43,    44,    45,    -1,
-      -1,    -1,    -1,    50,    22,    23,    -1,    -1,    -1,    56,
-      -1,    -1,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    -1,    -1,
-      -1,    -1,    50,    23,    -1,    -1,    -1,    -1,    56,    -1,
-      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    -1,    -1,    -1,    -1,
-      50,    23,    -1,    -1,    -1,    -1,    56,    -1,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    -1,    -1,    -1,    -1,    50,    23,
-      -1,    -1,    -1,    -1,    56,    -1,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    -1,    -1,    -1,    50,    23,    -1,    -1,
-      -1,    -1,    56,    -1,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    41,    42,    43,    44,    45,
-      -1,    -1,    -1,    -1,    50,    23,    -1,    -1,    -1,    -1,
-      56,    -1,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    -1,    -1,
-      -1,    -1,    50,    22,    23,    -1,    -1,    -1,    56,    -1,
-      -1,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    22,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    22,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    22,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    22,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    22,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    22,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    22,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    22,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    22,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    22,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    22,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    -1,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    -1,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    -1,    23,    -1,    50,    -1,    -1,    -1,
-      54,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    -1,    -1,    23,
-      -1,    50,    -1,    -1,    -1,    54,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    -1,    -1,    -1,    50,    -1,    -1,    53,
-      27,    28,    29,    30,    31,    27,    28,    29,    30,    31,
-      -1,    -1,    -1,    40,    -1,    -1,    -1,    -1,    40,    -1,
-      -1,    -1,    -1,    50,    -1,    -1,    -1,    -1,    50,    56,
-      22,    23,    -1,    -1,    56,    -1,    -1,    -1,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    22,    23,    -1,    -1,    50,    -1,
-      -1,    -1,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    22,    23,
-      -1,    -1,    50,    -1,    -1,    -1,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    22,    23,    -1,    -1,    50,    -1,    -1,    -1,
-      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    22,    23,    -1,    -1,
-      50,    -1,    -1,    -1,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    41,    42,    43,    44,    45,
-      22,    23,    -1,    -1,    50,    -1,    -1,    -1,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    22,    23,    -1,    -1,    50,    -1,
-      -1,    -1,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    23,    -1,
-      -1,    26,    50,    -1,    -1,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    23,    -1,    -1,    26,    50,    -1,    -1,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    23,    -1,    -1,    26,    50,    -1,
-      -1,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    23,    -1,    -1,
-      26,    50,    -1,    -1,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    41,    42,    43,    44,    45,
-      23,    24,    -1,    -1,    50,    -1,    -1,    30,    31,    32,
-      33,    34,    35,    36,    37,    38,    39,    40,    41,    42,
-      43,    44,    45,    23,    24,    -1,    -1,    50,    -1,    -1,
-      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    23,    -1,    -1,    -1,
-      50,    -1,    -1,    30,    31,    32,    33,    34,    35,    36,
-      37,    38,    39,    40,    41,    42,    43,    44,    45,    -1,
-      -1,    30,    31,    50,    33,    34,    35,    36,    37,    -1,
-      -1,    -1,    -1,    42,    43,    -1,    -1,    -1,    -1,    30,
-      31,    50,    33,    34,    35,    36,    37,    56,    30,    31,
-      -1,    33,    34,    35,    36,    37,    30,    31,    -1,    33,
-      34,    35,    36,    37,    -1,    56,    -1,    -1,    42,    43,
-      -1,    -1,    -1,    -1,    56,    -1,    50,    22,    -1,    53,
-      27,    28,    29,    30,    31,    30,    31,    -1,    33,    34,
-      35,    36,    37,    40,    30,    31,    -1,    33,    34,    35,
-      36,    37,    -1,    50,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    41,    42,    43,    44,    45,
-      -1,    -1,    -1,    -1,    50,    33,    34,    35,    36,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    -1,    -1,
-      -1,    -1,    50,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    -1,    -1,    -1,    -1,    50
-};
-
-/* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
-   state STATE-NUM.  */
-static const yytype_int8 yystos[] =
-{
-       0,    58,     0,     1,     3,     4,     5,     6,     7,     8,
-       9,    10,    11,    12,    13,    14,    15,    16,    17,    18,
-      19,    20,    21,    25,    37,    38,    46,    47,    48,    53,
-      55,    59,    60,    61,    62,    63,    64,    65,    53,    56,
-      62,    63,    64,    65,    62,    63,    64,    65,    62,    63,
-      65,     6,    56,     6,     6,    56,     6,    25,    25,    25,
-      25,    62,    63,    65,    62,    62,    63,    64,    62,    63,
-      62,    63,    62,    63,    64,    65,    22,    26,    22,    26,
-      23,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44,    45,    50,    53,    27,
-      28,    29,    30,    31,    40,    50,    53,    30,    31,    33,
-      34,    35,    36,    37,    42,    43,    50,    53,    30,    31,
-      33,    34,    35,    36,    37,    53,    22,    56,    22,    56,
-      56,    22,    56,    22,    56,    56,    56,    22,    22,    56,
-      22,    22,    56,    22,    56,    62,    62,    62,    62,    56,
-      56,    56,    56,    62,    63,    62,    63,    62,    62,    62,
-      62,    62,    62,    62,    62,    62,    62,    62,    62,    63,
-      62,    62,    62,    62,    62,    62,    62,    63,    65,    63,
-      63,    63,    63,    62,    62,    46,    55,    64,    64,    64,
-      64,    64,    64,    64,    64,    64,    62,    65,    65,    65,
-      65,    65,    65,    65,    62,    62,    63,    62,    65,    62,
-      65,    62,    62,    62,    62,    26,    26,    26,    26,    24,
-      22,    54,    24,    24,    24,    22,    54,    64,    64,    22,
-      54,    22,    56,    56,    56,    22,    56,    22,    56,    22,
-      56,    22,    22,    56,    22,    62,    62,    62,    63,    62,
-      63,    65,    62,    62,    62,    62,    62,     6,    62,     6,
-      62,    22,    54,    22,    54,    22,    54,    22,    56,    22,
-      56,    22,    22,    56,    22,    22,    56,    62,    62,    62,
-      62,    62,     6,     6,     6,     6,    22,    54,    22,    54,
-      22,    54,    56,    22,    56,    22,    56,    56,    62,    62,
-      62,    62,     6,    22,    54,    22,    54,    22,    54,    22,
-      56,    56,    62,    62,    62,    62,    54,    54,    54,    22,
-      62,    56
-};
-
-/* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
-static const yytype_int8 yyr1[] =
-{
-       0,    57,    58,    58,    59,    59,    59,    59,    59,    59,
-      60,    60,    61,    61,    61,    61,    62,    63,    64,    64,
-      64,    64,    64,    64,    64,    64,    64,    64,    64,    64,
-      64,    62,    62,    62,    62,    62,    62,    62,    62,    62,
-      62,    62,    62,    62,    62,    62,    62,    62,    62,    62,
-      62,    62,    62,    62,    62,    62,    62,    62,    62,    62,
-      62,    62,    62,    62,    62,    62,    62,    62,    62,    62,
-      62,    62,    63,    63,    63,    63,    63,    63,    63,    63,
-      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
-      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
-      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
-      63,    63,    63,    63,    63,    63,    63,    63,    63,    63,
-      63,    63,    63,    63,    63,    63,    63,    65,    65,    65,
-      65,    65,    65,    65,    65,    65
-};
-
-/* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
-static const yytype_int8 yyr2[] =
-{
-       0,     2,     0,     2,     1,     2,     2,     2,     2,     2,
-       2,     3,     2,     3,     3,     3,     2,     2,     1,     1,
-       4,     3,     3,     3,     4,     6,     8,    10,    12,     2,
-       3,     1,     1,     1,     4,     1,     1,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     2,     2,     3,     3,
-       3,     5,     5,     5,     2,     3,     5,     3,     3,     3,
-       5,     5,     9,     4,     6,     8,    10,    12,     2,     2,
-       2,     2,     1,     1,     4,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     3,     3,     5,     5,
-       3,     3,     3,     5,     7,    11,    15,     2,     3,     5,
-       9,     7,    11,     2,     3,     5,     9,     3,     7,     9,
-       4,     6,     8,    10,    12,     2,     3,     1,     1,     4,
-       1,     3,     3,     5,     5,     7
-};
-
-
-enum { YYENOMEM = -2 };
-
-#define yyerrok         (yyerrstatus = 0)
-#define yyclearin       (yychar = FITS_PARSER_YYEMPTY)
-
-#define YYACCEPT        goto yyacceptlab
-#define YYABORT         goto yyabortlab
-#define YYERROR         goto yyerrorlab
-#define YYNOMEM         goto yyexhaustedlab
-
-
-#define YYRECOVERING()  (!!yyerrstatus)
-
-#define YYBACKUP(Token, Value)                                    \
-  do                                                              \
-    if (yychar == FITS_PARSER_YYEMPTY)                                        \
-      {                                                           \
-        yychar = (Token);                                         \
-        yylval = (Value);                                         \
-        YYPOPSTACK (yylen);                                       \
-        yystate = *yyssp;                                         \
-        goto yybackup;                                            \
-      }                                                           \
-    else                                                          \
-      {                                                           \
-        yyerror (scanner, lParse, YY_("syntax error: cannot back up")); \
-        YYERROR;                                                  \
-      }                                                           \
-  while (0)
-
-/* Backward compatibility with an undocumented macro.
-   Use FITS_PARSER_YYerror or FITS_PARSER_YYUNDEF. */
-#define YYERRCODE FITS_PARSER_YYUNDEF
-
-
-/* Enable debugging if requested.  */
-#if FITS_PARSER_YYDEBUG
-
-# ifndef YYFPRINTF
-#  include <stdio.h> /* INFRINGES ON USER NAME SPACE */
-#  define YYFPRINTF fprintf
-# endif
-
-# define YYDPRINTF(Args)                        \
-do {                                            \
-  if (yydebug)                                  \
-    YYFPRINTF Args;                             \
-} while (0)
-
-
-
-
-# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)                    \
-do {                                                                      \
-  if (yydebug)                                                            \
-    {                                                                     \
-      YYFPRINTF (stderr, "%s ", Title);                                   \
-      yy_symbol_print (stderr,                                            \
-                  Kind, Value, scanner, lParse); \
-      YYFPRINTF (stderr, "\n");                                           \
-    }                                                                     \
-} while (0)
-
-
-/*-----------------------------------.
-| Print this symbol's value on YYO.  |
-`-----------------------------------*/
-
-static void
-yy_symbol_value_print (FILE *yyo,
-                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, yyscan_t scanner, ParseData *lParse)
-{
-  FILE *yyoutput = yyo;
-  YY_USE (yyoutput);
-  YY_USE (scanner);
-  YY_USE (lParse);
-  if (!yyvaluep)
-    return;
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YY_USE (yykind);
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
+%}
+
+%union {
+    int    Node;        /* Index of Node */
+    double dbl;         /* real value    */
+    long   lng;         /* integer value */
+    char   log;         /* logical value */
+    char   str[MAX_STRLEN];    /* string value  */
 }
 
-
-/*---------------------------.
-| Print this symbol on YYO.  |
-`---------------------------*/
-
-static void
-yy_symbol_print (FILE *yyo,
-                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, yyscan_t scanner, ParseData *lParse)
-{
-  YYFPRINTF (yyo, "%s %s (",
-             yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
-
-  yy_symbol_value_print (yyo, yykind, yyvaluep, scanner, lParse);
-  YYFPRINTF (yyo, ")");
-}
-
-/*------------------------------------------------------------------.
-| yy_stack_print -- Print the state stack from its BOTTOM up to its |
-| TOP (included).                                                   |
-`------------------------------------------------------------------*/
-
-static void
-yy_stack_print (yy_state_t *yybottom, yy_state_t *yytop)
-{
-  YYFPRINTF (stderr, "Stack now");
-  for (; yybottom <= yytop; yybottom++)
-    {
-      int yybot = *yybottom;
-      YYFPRINTF (stderr, " %d", yybot);
-    }
-  YYFPRINTF (stderr, "\n");
-}
-
-# define YY_STACK_PRINT(Bottom, Top)                            \
-do {                                                            \
-  if (yydebug)                                                  \
-    yy_stack_print ((Bottom), (Top));                           \
-} while (0)
-
-
-/*------------------------------------------------.
-| Report that the YYRULE is going to be reduced.  |
-`------------------------------------------------*/
-
-static void
-yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
-                 int yyrule, yyscan_t scanner, ParseData *lParse)
-{
-  int yylno = yyrline[yyrule];
-  int yynrhs = yyr2[yyrule];
-  int yyi;
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %d):\n",
-             yyrule - 1, yylno);
-  /* The symbols being reduced.  */
-  for (yyi = 0; yyi < yynrhs; yyi++)
-    {
-      YYFPRINTF (stderr, "   $%d = ", yyi + 1);
-      yy_symbol_print (stderr,
-                       YY_ACCESSING_SYMBOL (+yyssp[yyi + 1 - yynrhs]),
-                       &yyvsp[(yyi + 1) - (yynrhs)], scanner, lParse);
-      YYFPRINTF (stderr, "\n");
-    }
-}
-
-# define YY_REDUCE_PRINT(Rule)          \
-do {                                    \
-  if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, Rule, scanner, lParse); \
-} while (0)
-
-/* Nonzero means print parse trace.  It is left uninitialized so that
-   multiple parsers can coexist.  */
-int yydebug;
-#else /* !FITS_PARSER_YYDEBUG */
-# define YYDPRINTF(Args) ((void) 0)
-# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)
-# define YY_STACK_PRINT(Bottom, Top)
-# define YY_REDUCE_PRINT(Rule)
-#endif /* !FITS_PARSER_YYDEBUG */
-
-
-/* YYINITDEPTH -- initial size of the parser's stacks.  */
-#ifndef YYINITDEPTH
-# define YYINITDEPTH 200
-#endif
-
-/* YYMAXDEPTH -- maximum size the stacks can grow to (effective only
-   if the built-in stack extension method is used).
-
-   Do not make this value too large; the results are undefined if
-   YYSTACK_ALLOC_MAXIMUM < YYSTACK_BYTES (YYMAXDEPTH)
-   evaluated with infinite-precision integer arithmetic.  */
-
-#ifndef YYMAXDEPTH
-# define YYMAXDEPTH 10000
-#endif
-
-
-
-
-
-
-/*-----------------------------------------------.
-| Release the memory associated to this symbol.  |
-`-----------------------------------------------*/
-
-static void
-yydestruct (const char *yymsg,
-            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, yyscan_t scanner, ParseData *lParse)
-{
-  YY_USE (yyvaluep);
-  YY_USE (scanner);
-  YY_USE (lParse);
-  if (!yymsg)
-    yymsg = "Deleting";
-  YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
-
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YY_USE (yykind);
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
-}
-
-
-
-
-
-
-/*----------.
-| yyparse.  |
-`----------*/
-
-int
-yyparse (yyscan_t scanner, ParseData *lParse)
-{
-/* Lookahead token kind.  */
-int yychar;
-
-
-/* The semantic value of the lookahead symbol.  */
-/* Default value used for initialization, for pacifying older GCCs
-   or non-GCC compilers.  */
-YY_INITIAL_VALUE (static YYSTYPE yyval_default;)
-YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
-
-    /* Number of syntax errors so far.  */
-    int yynerrs = 0;
-
-    yy_state_fast_t yystate = 0;
-    /* Number of tokens to shift before error messages enabled.  */
-    int yyerrstatus = 0;
-
-    /* Refer to the stacks through separate pointers, to allow yyoverflow
-       to reallocate them elsewhere.  */
-
-    /* Their size.  */
-    YYPTRDIFF_T yystacksize = YYINITDEPTH;
-
-    /* The state stack: array, bottom, top.  */
-    yy_state_t yyssa[YYINITDEPTH];
-    yy_state_t *yyss = yyssa;
-    yy_state_t *yyssp = yyss;
-
-    /* The semantic value stack: array, bottom, top.  */
-    YYSTYPE yyvsa[YYINITDEPTH];
-    YYSTYPE *yyvs = yyvsa;
-    YYSTYPE *yyvsp = yyvs;
-
-  int yyn;
-  /* The return value of yyparse.  */
-  int yyresult;
-  /* Lookahead symbol kind.  */
-  yysymbol_kind_t yytoken = YYSYMBOL_YYEMPTY;
-  /* The variables used to return semantic value and location from the
-     action routines.  */
-  YYSTYPE yyval;
-
-
-
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
-
-  /* The number of symbols on the RHS of the reduced rule.
-     Keep to zero when no symbol should be popped.  */
-  int yylen = 0;
-
-  YYDPRINTF ((stderr, "Starting parse\n"));
-
-  yychar = FITS_PARSER_YYEMPTY; /* Cause a token to be read.  */
-
-  goto yysetstate;
-
-
-/*------------------------------------------------------------.
-| yynewstate -- push a new state, which is found in yystate.  |
-`------------------------------------------------------------*/
-yynewstate:
-  /* In all cases, when you get here, the value and location stacks
-     have just been pushed.  So pushing a state here evens the stacks.  */
-  yyssp++;
-
-
-/*--------------------------------------------------------------------.
-| yysetstate -- set current state (the top of the stack) to yystate.  |
-`--------------------------------------------------------------------*/
-yysetstate:
-  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
-  YY_ASSERT (0 <= yystate && yystate < YYNSTATES);
-  YY_IGNORE_USELESS_CAST_BEGIN
-  *yyssp = YY_CAST (yy_state_t, yystate);
-  YY_IGNORE_USELESS_CAST_END
-  YY_STACK_PRINT (yyss, yyssp);
-
-  if (yyss + yystacksize - 1 <= yyssp)
-#if !defined yyoverflow && !defined YYSTACK_RELOCATE
-    YYNOMEM;
-#else
-    {
-      /* Get the current used size of the three stacks, in elements.  */
-      YYPTRDIFF_T yysize = yyssp - yyss + 1;
-
-# if defined yyoverflow
-      {
-        /* Give user a chance to reallocate the stack.  Use copies of
-           these so that the &'s don't force the real ones into
-           memory.  */
-        yy_state_t *yyss1 = yyss;
-        YYSTYPE *yyvs1 = yyvs;
-
-        /* Each stack pointer address is followed by the size of the
-           data in use in that stack, in bytes.  This used to be a
-           conditional around just the two extra args, but that might
-           be undefined if yyoverflow is a macro.  */
-        yyoverflow (YY_("memory exhausted"),
-                    &yyss1, yysize * YYSIZEOF (*yyssp),
-                    &yyvs1, yysize * YYSIZEOF (*yyvsp),
-                    &yystacksize);
-        yyss = yyss1;
-        yyvs = yyvs1;
-      }
-# else /* defined YYSTACK_RELOCATE */
-      /* Extend the stack our own way.  */
-      if (YYMAXDEPTH <= yystacksize)
-        YYNOMEM;
-      yystacksize *= 2;
-      if (YYMAXDEPTH < yystacksize)
-        yystacksize = YYMAXDEPTH;
-
-      {
-        yy_state_t *yyss1 = yyss;
-        union yyalloc *yyptr =
-          YY_CAST (union yyalloc *,
-                   YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
-        if (! yyptr)
-          YYNOMEM;
-        YYSTACK_RELOCATE (yyss_alloc, yyss);
-        YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-#  undef YYSTACK_RELOCATE
-        if (yyss1 != yyssa)
-          YYSTACK_FREE (yyss1);
-      }
-# endif
-
-      yyssp = yyss + yysize - 1;
-      yyvsp = yyvs + yysize - 1;
-
-      YY_IGNORE_USELESS_CAST_BEGIN
-      YYDPRINTF ((stderr, "Stack size increased to %ld\n",
-                  YY_CAST (long, yystacksize)));
-      YY_IGNORE_USELESS_CAST_END
-
-      if (yyss + yystacksize - 1 <= yyssp)
-        YYABORT;
-    }
-#endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
-
-
-  if (yystate == YYFINAL)
-    YYACCEPT;
-
-  goto yybackup;
-
-
-/*-----------.
-| yybackup.  |
-`-----------*/
-yybackup:
-  /* Do appropriate processing given the current state.  Read a
-     lookahead token if we need one and don't already have one.  */
-
-  /* First try to decide what to do without reference to lookahead token.  */
-  yyn = yypact[yystate];
-  if (yypact_value_is_default (yyn))
-    goto yydefault;
-
-  /* Not known => get a lookahead token if don't already have one.  */
-
-  /* YYCHAR is either empty, or end-of-input, or a valid lookahead.  */
-  if (yychar == FITS_PARSER_YYEMPTY)
-    {
-      YYDPRINTF ((stderr, "Reading a token\n"));
-      yychar = yylex (&yylval, scanner);
-    }
-
-  if (yychar <= FITS_PARSER_YYEOF)
-    {
-      yychar = FITS_PARSER_YYEOF;
-      yytoken = YYSYMBOL_YYEOF;
-      YYDPRINTF ((stderr, "Now at end of input.\n"));
-    }
-  else if (yychar == FITS_PARSER_YYerror)
-    {
-      /* The scanner already issued an error message, process directly
-         to error recovery.  But do not keep the error token as
-         lookahead, it is too special and may lead us to an endless
-         loop in error recovery. */
-      yychar = FITS_PARSER_YYUNDEF;
-      yytoken = YYSYMBOL_YYerror;
-      goto yyerrlab1;
-    }
-  else
-    {
-      yytoken = YYTRANSLATE (yychar);
-      YY_SYMBOL_PRINT ("Next token is", yytoken, &yylval, &yylloc);
-    }
-
-  /* If the proper action on seeing token YYTOKEN is to reduce or to
-     detect an error, take that action.  */
-  yyn += yytoken;
-  if (yyn < 0 || YYLAST < yyn || yycheck[yyn] != yytoken)
-    goto yydefault;
-  yyn = yytable[yyn];
-  if (yyn <= 0)
-    {
-      if (yytable_value_is_error (yyn))
-        goto yyerrlab;
-      yyn = -yyn;
-      goto yyreduce;
-    }
-
-  /* Count tokens shifted since error; after three, turn off error
-     status.  */
-  if (yyerrstatus)
-    yyerrstatus--;
-
-  /* Shift the lookahead token.  */
-  YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
-  yystate = yyn;
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  *++yyvsp = yylval;
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
-
-  /* Discard the shifted token.  */
-  yychar = FITS_PARSER_YYEMPTY;
-  goto yynewstate;
-
-
-/*-----------------------------------------------------------.
-| yydefault -- do the default action for the current state.  |
-`-----------------------------------------------------------*/
-yydefault:
-  yyn = yydefact[yystate];
-  if (yyn == 0)
-    goto yyerrlab;
-  goto yyreduce;
-
-
-/*-----------------------------.
-| yyreduce -- do a reduction.  |
-`-----------------------------*/
-yyreduce:
-  /* yyn is the number of a rule to reduce with.  */
-  yylen = yyr2[yyn];
-
-  /* If YYLEN is nonzero, implement the default value of the action:
-     '$$ = $1'.
-
-     Otherwise, the following line sets YYVAL to garbage.
-     This behavior is undocumented and Bison
-     users should not rely upon it.  Assigning to YYVAL
-     unconditionally makes the parser a bit smaller, and it avoids a
-     GCC warning that YYVAL may be used uninitialized.  */
-  yyval = yyvsp[1-yylen];
-
-
-  YY_REDUCE_PRINT (yyn);
-  switch (yyn)
-    {
-  case 4: /* line: '\n'  */
-#line 270 "eval.y"
-                     {}
-#line 1821 "eval_y.c"
-    break;
-
-  case 5: /* line: expr '\n'  */
-#line 272 "eval.y"
-                { if( (yyvsp[-1].Node)<0 ) {
+%token <log>   BOOLEAN        /* First 3 must be in order of        */
+%token <lng>   LONG           /* increasing promotion for later use */
+%token <dbl>   DOUBLE
+%token <str>   STRING
+%token <str>   BITSTR
+%token <str>   FUNCTION
+%token <str>   BFUNCTION      /* Bit function */
+%token <str>   IFUNCTION      /* Integer function */
+%token <str>   GTIFILTER
+%token <str>   GTIOVERLAP
+%token <str>   GTIFIND
+%token <str>   REGFILTER
+%token <lng>   COLUMN
+%token <lng>   BCOLUMN
+%token <lng>   SCOLUMN
+%token <lng>   BITCOL
+%token <lng>   ROWREF
+%token <lng>   NULLREF
+%token <lng>   SNULLREF
+
+%type <Node>  expr
+%type <Node>  bexpr
+%type <Node>  sexpr
+%type <Node>  bits
+%type <Node>  vector
+%type <Node>  bvector
+
+%left     ',' '=' ':' '{' '}'
+%right    '?'
+%left     OR
+%left     AND
+%left     EQ NE '~'
+%left     GT LT LTE GTE
+%left     '+' '-' '%'
+%left     '*' '/'
+%left     '|' '&' XOR
+%right    POWER
+%left     NOT
+%left     INTCAST FLTCAST
+%left     UMINUS
+%left     '['
+
+%right    ACCUM DIFF
+
+%%
+
+lines:   /* nothing ; was | lines line */
+       | lines line
+       ;
+
+line:           '\n' {}
+       | expr   '\n'
+                { if( $1<0 ) {
 		     yyerror(scanner, lParse, "Couldn't build node structure: out of memory?");
 		     YYERROR;  }
-                  lParse->resultNode = (yyvsp[-1].Node);
+                  lParse->resultNode = $1;
 		}
-#line 1831 "eval_y.c"
-    break;
-
-  case 6: /* line: bexpr '\n'  */
-#line 278 "eval.y"
-                { if( (yyvsp[-1].Node)<0 ) {
+       | bexpr  '\n'
+                { if( $1<0 ) {
 		     yyerror(scanner, lParse, "Couldn't build node structure: out of memory?");
 		     YYERROR;  }
-                  lParse->resultNode = (yyvsp[-1].Node);
+                  lParse->resultNode = $1;
 		}
-#line 1841 "eval_y.c"
-    break;
-
-  case 7: /* line: sexpr '\n'  */
-#line 284 "eval.y"
-                { if( (yyvsp[-1].Node)<0 ) {
+       | sexpr  '\n'
+                { if( $1<0 ) {
 		     yyerror(scanner, lParse, "Couldn't build node structure: out of memory?");
 		     YYERROR;  } 
-                  lParse->resultNode = (yyvsp[-1].Node);
+                  lParse->resultNode = $1;
 		}
-#line 1851 "eval_y.c"
-    break;
-
-  case 8: /* line: bits '\n'  */
-#line 290 "eval.y"
-                { if( (yyvsp[-1].Node)<0 ) {
+       | bits   '\n'
+                { if( $1<0 ) {
 		     yyerror(scanner, lParse, "Couldn't build node structure: out of memory?");
 		     YYERROR;  }
-                  lParse->resultNode = (yyvsp[-1].Node);
+                  lParse->resultNode = $1;
 		}
-#line 1861 "eval_y.c"
-    break;
+       | error  '\n' {  yyerrok;  }
+       ;
 
-  case 9: /* line: error '\n'  */
-#line 295 "eval.y"
-                     {  yyerrok;  }
-#line 1867 "eval_y.c"
-    break;
-
-  case 10: /* bvector: '{' bexpr  */
-#line 299 "eval.y"
-                { (yyval.Node) = New_Vector(lParse,  (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 1873 "eval_y.c"
-    break;
-
-  case 11: /* bvector: bvector ',' bexpr  */
-#line 301 "eval.y"
+bvector: '{' bexpr
+                { $$ = New_Vector(lParse,  $2 ); TEST($$); }
+       | bvector ',' bexpr
                 {
-                  if( lParse->Nodes[(yyvsp[-2].Node)].nSubNodes >= MAXSUBS ) {
-		     (yyvsp[-2].Node) = Close_Vec(lParse,  (yyvsp[-2].Node) ); TEST((yyvsp[-2].Node));
-		     (yyval.Node) = New_Vector(lParse,  (yyvsp[-2].Node) ); TEST((yyval.Node));
+                  if( lParse->Nodes[$1].nSubNodes >= MAXSUBS ) {
+		     $1 = Close_Vec(lParse,  $1 ); TEST($1);
+		     $$ = New_Vector(lParse,  $1 ); TEST($$);
                   } else {
-                     (yyval.Node) = (yyvsp[-2].Node);
+                     $$ = $1;
                   }
-		  lParse->Nodes[(yyval.Node)].SubNodes[ lParse->Nodes[(yyval.Node)].nSubNodes++ ]
-		     = (yyvsp[0].Node);
+		  lParse->Nodes[$$].SubNodes[ lParse->Nodes[$$].nSubNodes++ ]
+		     = $3;
                 }
-#line 1888 "eval_y.c"
-    break;
+       ;
 
-  case 12: /* vector: '{' expr  */
-#line 314 "eval.y"
-                { (yyval.Node) = New_Vector(lParse,  (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 1894 "eval_y.c"
-    break;
-
-  case 13: /* vector: vector ',' expr  */
-#line 316 "eval.y"
+vector:  '{' expr
+                { $$ = New_Vector(lParse,  $2 ); TEST($$); }
+       | vector ',' expr
                 {
-                  if( TYPE((yyvsp[-2].Node)) < TYPE((yyvsp[0].Node)) )
-                     TYPE((yyvsp[-2].Node)) = TYPE((yyvsp[0].Node));
-                  if( lParse->Nodes[(yyvsp[-2].Node)].nSubNodes >= MAXSUBS ) {
-		     (yyvsp[-2].Node) = Close_Vec(lParse,  (yyvsp[-2].Node) ); TEST((yyvsp[-2].Node));
-		     (yyval.Node) = New_Vector(lParse,  (yyvsp[-2].Node) ); TEST((yyval.Node));
+                  if( TYPE($1) < TYPE($3) )
+                     TYPE($1) = TYPE($3);
+                  if( lParse->Nodes[$1].nSubNodes >= MAXSUBS ) {
+		     $1 = Close_Vec(lParse,  $1 ); TEST($1);
+		     $$ = New_Vector(lParse,  $1 ); TEST($$);
                   } else {
-                     (yyval.Node) = (yyvsp[-2].Node);
+                     $$ = $1;
                   }
-		  lParse->Nodes[(yyval.Node)].SubNodes[ lParse->Nodes[(yyval.Node)].nSubNodes++ ]
-		     = (yyvsp[0].Node);
+		  lParse->Nodes[$$].SubNodes[ lParse->Nodes[$$].nSubNodes++ ]
+		     = $3;
                 }
-#line 1911 "eval_y.c"
-    break;
-
-  case 14: /* vector: vector ',' bexpr  */
-#line 329 "eval.y"
+       | vector ',' bexpr
                 {
-                  if( lParse->Nodes[(yyvsp[-2].Node)].nSubNodes >= MAXSUBS ) {
-		     (yyvsp[-2].Node) = Close_Vec(lParse,  (yyvsp[-2].Node) ); TEST((yyvsp[-2].Node));
-		     (yyval.Node) = New_Vector(lParse,  (yyvsp[-2].Node) ); TEST((yyval.Node));
+                  if( lParse->Nodes[$1].nSubNodes >= MAXSUBS ) {
+		     $1 = Close_Vec(lParse,  $1 ); TEST($1);
+		     $$ = New_Vector(lParse,  $1 ); TEST($$);
                   } else {
-                     (yyval.Node) = (yyvsp[-2].Node);
+                     $$ = $1;
                   }
-		  lParse->Nodes[(yyval.Node)].SubNodes[ lParse->Nodes[(yyval.Node)].nSubNodes++ ]
-		     = (yyvsp[0].Node);
+		  lParse->Nodes[$$].SubNodes[ lParse->Nodes[$$].nSubNodes++ ]
+		     = $3;
                 }
-#line 1926 "eval_y.c"
-    break;
-
-  case 15: /* vector: bvector ',' expr  */
-#line 340 "eval.y"
+       | bvector ',' expr
                 {
-                  TYPE((yyvsp[-2].Node)) = TYPE((yyvsp[0].Node));
-                  if( lParse->Nodes[(yyvsp[-2].Node)].nSubNodes >= MAXSUBS ) {
-		     (yyvsp[-2].Node) = Close_Vec(lParse,  (yyvsp[-2].Node) ); TEST((yyvsp[-2].Node));
-		     (yyval.Node) = New_Vector(lParse,  (yyvsp[-2].Node) ); TEST((yyval.Node));
+                  TYPE($1) = TYPE($3);
+                  if( lParse->Nodes[$1].nSubNodes >= MAXSUBS ) {
+		     $1 = Close_Vec(lParse,  $1 ); TEST($1);
+		     $$ = New_Vector(lParse,  $1 ); TEST($$);
                   } else {
-                     (yyval.Node) = (yyvsp[-2].Node);
+                     $$ = $1;
                   }
-		  lParse->Nodes[(yyval.Node)].SubNodes[ lParse->Nodes[(yyval.Node)].nSubNodes++ ]
-		     = (yyvsp[0].Node);
+		  lParse->Nodes[$$].SubNodes[ lParse->Nodes[$$].nSubNodes++ ]
+		     = $3;
                 }
-#line 1942 "eval_y.c"
-    break;
+       ;
 
-  case 16: /* expr: vector '}'  */
-#line 354 "eval.y"
-                { (yyval.Node) = Close_Vec(lParse,  (yyvsp[-1].Node) ); TEST((yyval.Node)); }
-#line 1948 "eval_y.c"
-    break;
+expr:    vector '}'
+                { $$ = Close_Vec(lParse,  $1 ); TEST($$); }
+       ;
 
-  case 17: /* bexpr: bvector '}'  */
-#line 358 "eval.y"
-                { (yyval.Node) = Close_Vec(lParse,  (yyvsp[-1].Node) ); TEST((yyval.Node)); }
-#line 1954 "eval_y.c"
-    break;
+bexpr:   bvector '}'
+                { $$ = Close_Vec(lParse,  $1 ); TEST($$); }
+       ;
 
-  case 18: /* bits: BITSTR  */
-#line 362 "eval.y"
+bits:	 BITSTR
                 {
-                  (yyval.Node) = New_Const(lParse,  BITSTR, (yyvsp[0].str), strlen((yyvsp[0].str))+1 ); TEST((yyval.Node));
-		  SIZE((yyval.Node)) = strlen((yyvsp[0].str)); }
-#line 1962 "eval_y.c"
-    break;
-
-  case 19: /* bits: BITCOL  */
-#line 366 "eval.y"
-                { (yyval.Node) = New_Column(lParse,  (yyvsp[0].lng) ); TEST((yyval.Node)); }
-#line 1968 "eval_y.c"
-    break;
-
-  case 20: /* bits: BITCOL '{' expr '}'  */
-#line 368 "eval.y"
+                  $$ = New_Const(lParse,  BITSTR, $1, strlen($1)+1 ); TEST($$);
+		  SIZE($$) = strlen($1); }
+       | BITCOL
+                { $$ = New_Column(lParse,  $1 ); TEST($$); }
+       | BITCOL '{' expr '}'
                 {
-                  if( TYPE((yyvsp[-1].Node)) != LONG
-		      || OPER((yyvsp[-1].Node)) != CONST_OP ) {
+                  if( TYPE($3) != LONG
+		      || OPER($3) != CONST_OP ) {
 		     yyerror(scanner, lParse, "Offset argument must be a constant integer");
 		     YYERROR;
 		  }
-                  (yyval.Node) = New_Offset(lParse,  (yyvsp[-3].lng), (yyvsp[-1].Node) ); TEST((yyval.Node));
+                  $$ = New_Offset(lParse,  $1, $3 ); TEST($$);
                 }
-#line 1981 "eval_y.c"
-    break;
-
-  case 21: /* bits: bits '&' bits  */
-#line 377 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BITSTR, (yyvsp[-2].Node), '&', (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = ( SIZE((yyvsp[-2].Node))>SIZE((yyvsp[0].Node)) ? SIZE((yyvsp[-2].Node)) : SIZE((yyvsp[0].Node)) );  }
-#line 1988 "eval_y.c"
-    break;
-
-  case 22: /* bits: bits '|' bits  */
-#line 380 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BITSTR, (yyvsp[-2].Node), '|', (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = ( SIZE((yyvsp[-2].Node))>SIZE((yyvsp[0].Node)) ? SIZE((yyvsp[-2].Node)) : SIZE((yyvsp[0].Node)) );  }
-#line 1995 "eval_y.c"
-    break;
-
-  case 23: /* bits: bits '+' bits  */
-#line 383 "eval.y"
+       | bits '&' bits
+                { $$ = New_BinOp(lParse,  BITSTR, $1, '&', $3 ); TEST($$);
+                  SIZE($$) = ( SIZE($1)>SIZE($3) ? SIZE($1) : SIZE($3) );  }
+       | bits '|' bits
+                { $$ = New_BinOp(lParse,  BITSTR, $1, '|', $3 ); TEST($$);
+                  SIZE($$) = ( SIZE($1)>SIZE($3) ? SIZE($1) : SIZE($3) );  }
+       | bits '+' bits
                 { 
-		  if (SIZE((yyvsp[-2].Node))+SIZE((yyvsp[0].Node)) >= MAX_STRLEN) {
+		  if (SIZE($1)+SIZE($3) >= MAX_STRLEN) {
 		    yyerror(scanner, lParse, "Combined bit string size exceeds " MAX_STRLEN_S " bits");
 		    YYERROR;
 		  }
-		  (yyval.Node) = New_BinOp(lParse,  BITSTR, (yyvsp[-2].Node), '+', (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = SIZE((yyvsp[-2].Node)) + SIZE((yyvsp[0].Node)); 
+		  $$ = New_BinOp(lParse,  BITSTR, $1, '+', $3 ); TEST($$);
+                  SIZE($$) = SIZE($1) + SIZE($3); 
 		}
-#line 2008 "eval_y.c"
-    break;
+       | bits '[' expr ']'
+                { $$ = New_Deref(lParse,  $1, 1, $3,  0,  0,  0,   0 ); TEST($$); }
+       | bits '[' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 2, $3, $5,  0,  0,   0 ); TEST($$); }
+       | bits '[' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 3, $3, $5, $7,  0,   0 ); TEST($$); }
+       | bits '[' expr ',' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 4, $3, $5, $7, $9,   0 ); TEST($$); }
+       | bits '[' expr ',' expr ',' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 5, $3, $5, $7, $9, $11 ); TEST($$); }
+       | NOT bits
+                { $$ = New_Unary(lParse,  BITSTR, NOT, $2 ); TEST($$);     }
 
-  case 24: /* bits: bits '[' expr ']'  */
-#line 392 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-3].Node), 1, (yyvsp[-1].Node),  0,  0,  0,   0 ); TEST((yyval.Node)); }
-#line 2014 "eval_y.c"
-    break;
+       | '(' bits ')'
+                { $$ = $2; }
+       ;
 
-  case 25: /* bits: bits '[' expr ',' expr ']'  */
-#line 394 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-5].Node), 2, (yyvsp[-3].Node), (yyvsp[-1].Node),  0,  0,   0 ); TEST((yyval.Node)); }
-#line 2020 "eval_y.c"
-    break;
-
-  case 26: /* bits: bits '[' expr ',' expr ',' expr ']'  */
-#line 396 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-7].Node), 3, (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),  0,   0 ); TEST((yyval.Node)); }
-#line 2026 "eval_y.c"
-    break;
-
-  case 27: /* bits: bits '[' expr ',' expr ',' expr ',' expr ']'  */
-#line 398 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-9].Node), 4, (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),   0 ); TEST((yyval.Node)); }
-#line 2032 "eval_y.c"
-    break;
-
-  case 28: /* bits: bits '[' expr ',' expr ',' expr ',' expr ',' expr ']'  */
-#line 400 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-11].Node), 5, (yyvsp[-9].Node), (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node) ); TEST((yyval.Node)); }
-#line 2038 "eval_y.c"
-    break;
-
-  case 29: /* bits: NOT bits  */
-#line 402 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  BITSTR, NOT, (yyvsp[0].Node) ); TEST((yyval.Node));     }
-#line 2044 "eval_y.c"
-    break;
-
-  case 30: /* bits: '(' bits ')'  */
-#line 405 "eval.y"
-                { (yyval.Node) = (yyvsp[-1].Node); }
-#line 2050 "eval_y.c"
-    break;
-
-  case 31: /* expr: LONG  */
-#line 409 "eval.y"
-                { (yyval.Node) = New_Const(lParse,  LONG,   &((yyvsp[0].lng)), sizeof(long)   ); TEST((yyval.Node)); }
-#line 2056 "eval_y.c"
-    break;
-
-  case 32: /* expr: DOUBLE  */
-#line 411 "eval.y"
-                { (yyval.Node) = New_Const(lParse,  DOUBLE, &((yyvsp[0].dbl)), sizeof(double) ); TEST((yyval.Node)); }
-#line 2062 "eval_y.c"
-    break;
-
-  case 33: /* expr: COLUMN  */
-#line 413 "eval.y"
-                { (yyval.Node) = New_Column(lParse,  (yyvsp[0].lng) ); TEST((yyval.Node)); }
-#line 2068 "eval_y.c"
-    break;
-
-  case 34: /* expr: COLUMN '{' expr '}'  */
-#line 415 "eval.y"
+expr:    LONG
+                { $$ = New_Const(lParse,  LONG,   &($1), sizeof(long)   ); TEST($$); }
+       | DOUBLE
+                { $$ = New_Const(lParse,  DOUBLE, &($1), sizeof(double) ); TEST($$); }
+       | COLUMN
+                { $$ = New_Column(lParse,  $1 ); TEST($$); }
+       | COLUMN '{' expr '}'
                 {
-                  if( TYPE((yyvsp[-1].Node)) != LONG
-		      || OPER((yyvsp[-1].Node)) != CONST_OP ) {
+                  if( TYPE($3) != LONG
+		      || OPER($3) != CONST_OP ) {
 		     yyerror(scanner, lParse, "Offset argument must be a constant integer");
 		     YYERROR;
 		  }
-                  (yyval.Node) = New_Offset(lParse,  (yyvsp[-3].lng), (yyvsp[-1].Node) ); TEST((yyval.Node));
+                  $$ = New_Offset(lParse,  $1, $3 ); TEST($$);
                 }
-#line 2081 "eval_y.c"
-    break;
-
-  case 35: /* expr: ROWREF  */
-#line 424 "eval.y"
-                { (yyval.Node) = New_Func(lParse,  LONG, row_fct,  0, 0, 0, 0, 0, 0, 0, 0 ); }
-#line 2087 "eval_y.c"
-    break;
-
-  case 36: /* expr: NULLREF  */
-#line 426 "eval.y"
-                { (yyval.Node) = New_Func(lParse,  LONG, null_fct, 0, 0, 0, 0, 0, 0, 0, 0 ); }
-#line 2093 "eval_y.c"
-    break;
-
-  case 37: /* expr: expr '%' expr  */
-#line 428 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '%', (yyvsp[0].Node) );
-		  TEST((yyval.Node));                                                }
-#line 2100 "eval_y.c"
-    break;
-
-  case 38: /* expr: expr '+' expr  */
-#line 431 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '+', (yyvsp[0].Node) );
-		  TEST((yyval.Node));                                                }
-#line 2107 "eval_y.c"
-    break;
-
-  case 39: /* expr: expr '-' expr  */
-#line 434 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '-', (yyvsp[0].Node) ); 
-		  TEST((yyval.Node));                                                }
-#line 2114 "eval_y.c"
-    break;
-
-  case 40: /* expr: expr '*' expr  */
-#line 437 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) ); 
-		  TEST((yyval.Node));                                                }
-#line 2121 "eval_y.c"
-    break;
-
-  case 41: /* expr: expr '/' expr  */
-#line 440 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '/', (yyvsp[0].Node) ); 
-		  TEST((yyval.Node));                                                }
-#line 2128 "eval_y.c"
-    break;
-
-  case 42: /* expr: expr '&' expr  */
-#line 443 "eval.y"
+       | ROWREF
+                { $$ = New_Func(lParse,  LONG, row_fct,  0, 0, 0, 0, 0, 0, 0, 0 ); }
+       | NULLREF
+                { $$ = New_Func(lParse,  LONG, null_fct, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+       | expr '%' expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  TYPE($1), $1, '%', $3 );
+		  TEST($$);                                                }
+       | expr '+' expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  TYPE($1), $1, '+', $3 );
+		  TEST($$);                                                }
+       | expr '-' expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  TYPE($1), $1, '-', $3 ); 
+		  TEST($$);                                                }
+       | expr '*' expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  TYPE($1), $1, '*', $3 ); 
+		  TEST($$);                                                }
+       | expr '/' expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  TYPE($1), $1, '/', $3 ); 
+		  TEST($$);                                                }
+       | expr '&' expr
                 { 
-                   if (TYPE((yyvsp[-2].Node)) != LONG ||
-		       TYPE((yyvsp[0].Node)) != LONG) {
+                   if (TYPE($1) != LONG ||
+		       TYPE($3) != LONG) {
                      yyerror(scanner, lParse, "Bitwise operations with incompatible types; only (bit OP bit) and (int OP int) are allowed");
                       YYERROR;
                    }
-                   (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '&', (yyvsp[0].Node) );
+                   $$ = New_BinOp(lParse,  TYPE($1), $1, '&', $3 );
                 }
-#line 2141 "eval_y.c"
-    break;
-
-  case 43: /* expr: expr '|' expr  */
-#line 452 "eval.y"
+       | expr '|' expr
                 { 
-                   if (TYPE((yyvsp[-2].Node)) != LONG ||
-		       TYPE((yyvsp[0].Node)) != LONG) {
+                   if (TYPE($1) != LONG ||
+		       TYPE($3) != LONG) {
                      yyerror(scanner, lParse, "Bitwise operations with incompatible types; only (bit OP bit) and (int OP int) are allowed");
                       YYERROR;
                    }
-                   (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '|', (yyvsp[0].Node) );
+                   $$ = New_BinOp(lParse,  TYPE($1), $1, '|', $3 );
                 }
-#line 2154 "eval_y.c"
-    break;
-
-  case 44: /* expr: expr XOR expr  */
-#line 461 "eval.y"
+       | expr XOR expr
                 { 
-                   if (TYPE((yyvsp[-2].Node)) != LONG ||
-		       TYPE((yyvsp[0].Node)) != LONG) {
+                   if (TYPE($1) != LONG ||
+		       TYPE($3) != LONG) {
                      yyerror(scanner, lParse, "Bitwise operations with incompatible types; only (bit OP bit) and (int OP int) are allowed");
                       YYERROR;
                    }
-                   (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '^', (yyvsp[0].Node) );
+                   $$ = New_BinOp(lParse,  TYPE($1), $1, '^', $3 );
                 }
-#line 2167 "eval_y.c"
-    break;
-
-  case 45: /* expr: expr POWER expr  */
-#line 470 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), POWER, (yyvsp[0].Node) );
-		  TEST((yyval.Node));                                                }
-#line 2174 "eval_y.c"
-    break;
-
-  case 46: /* expr: '+' expr  */
-#line 473 "eval.y"
-                { (yyval.Node) = (yyvsp[0].Node); }
-#line 2180 "eval_y.c"
-    break;
-
-  case 47: /* expr: '-' expr  */
-#line 475 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  TYPE((yyvsp[0].Node)), UMINUS, (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 2186 "eval_y.c"
-    break;
-
-  case 48: /* expr: '(' expr ')'  */
-#line 477 "eval.y"
-                { (yyval.Node) = (yyvsp[-1].Node); }
-#line 2192 "eval_y.c"
-    break;
-
-  case 49: /* expr: expr '*' bexpr  */
-#line 479 "eval.y"
-                { (yyvsp[0].Node) = New_Unary(lParse,  TYPE((yyvsp[-2].Node)), 0, (yyvsp[0].Node) );
-                  (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[-2].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) ); 
-		  TEST((yyval.Node));                                }
-#line 2200 "eval_y.c"
-    break;
-
-  case 50: /* expr: bexpr '*' expr  */
-#line 483 "eval.y"
-                { (yyvsp[-2].Node) = New_Unary(lParse,  TYPE((yyvsp[0].Node)), 0, (yyvsp[-2].Node) );
-                  (yyval.Node) = New_BinOp(lParse,  TYPE((yyvsp[0].Node)), (yyvsp[-2].Node), '*', (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                }
-#line 2208 "eval_y.c"
-    break;
-
-  case 51: /* expr: bexpr '?' expr ':' expr  */
-#line 487 "eval.y"
+       | expr POWER expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  TYPE($1), $1, POWER, $3 );
+		  TEST($$);                                                }
+       | '+' expr %prec UMINUS
+                { $$ = $2; }
+       | '-' expr %prec UMINUS
+                { $$ = New_Unary(lParse,  TYPE($2), UMINUS, $2 ); TEST($$); }
+       |  '(' expr ')'
+                { $$ = $2; }
+       | expr '*' bexpr
+                { $3 = New_Unary(lParse,  TYPE($1), 0, $3 );
+                  $$ = New_BinOp(lParse,  TYPE($1), $1, '*', $3 ); 
+		  TEST($$);                                }
+       | bexpr '*' expr
+                { $1 = New_Unary(lParse,  TYPE($3), 0, $1 );
+                  $$ = New_BinOp(lParse,  TYPE($3), $1, '*', $3 );
+                  TEST($$);                                }
+       | bexpr '?' expr ':' expr
                 {
-                  PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-2].Node),(yyvsp[0].Node)) ) {
+                  PROMOTE($3,$5);
+                  if( ! Test_Dims( lParse, $3,$5) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' arguments");
 		     YYERROR;
                   }
-                  (yyval.Node) = New_Func(lParse,  0, ifthenelse_fct, 3, (yyvsp[-2].Node), (yyvsp[0].Node), (yyvsp[-4].Node),
+                  $$ = New_Func(lParse,  0, ifthenelse_fct, 3, $3, $5, $1,
                                  0, 0, 0, 0 );
-                  TEST((yyval.Node));
-                  if( SIZE((yyvsp[-2].Node))<SIZE((yyvsp[0].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[0].Node));
-                  TYPE((yyvsp[-4].Node)) = TYPE((yyvsp[-2].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-4].Node),(yyval.Node)) ) {
+                  TEST($$);
+                  if( SIZE($3)<SIZE($5) )  Copy_Dims( lParse,$$, $5);
+                  TYPE($1) = TYPE($3);
+                  if( ! Test_Dims( lParse, $1,$$) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' condition");
 		     YYERROR;
                   }
-                  TYPE((yyvsp[-4].Node)) = BOOLEAN;
-                  if( SIZE((yyval.Node))<SIZE((yyvsp[-4].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-4].Node));
+                  TYPE($1) = BOOLEAN;
+                  if( SIZE($$)<SIZE($1) )  Copy_Dims( lParse,$$, $1);
                 }
-#line 2231 "eval_y.c"
-    break;
-
-  case 52: /* expr: bexpr '?' bexpr ':' expr  */
-#line 506 "eval.y"
+       | bexpr '?' bexpr ':' expr
                 {
-                  PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-2].Node),(yyvsp[0].Node)) ) {
+                  PROMOTE($3,$5);
+                  if( ! Test_Dims( lParse, $3,$5) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' arguments");
 		     YYERROR;
                   }
-                  (yyval.Node) = New_Func(lParse,  0, ifthenelse_fct, 3, (yyvsp[-2].Node), (yyvsp[0].Node), (yyvsp[-4].Node),
+                  $$ = New_Func(lParse,  0, ifthenelse_fct, 3, $3, $5, $1,
                                  0, 0, 0, 0 );
-                  TEST((yyval.Node));
-                  if( SIZE((yyvsp[-2].Node))<SIZE((yyvsp[0].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[0].Node));
-                  TYPE((yyvsp[-4].Node)) = TYPE((yyvsp[-2].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-4].Node),(yyval.Node)) ) {
+                  TEST($$);
+                  if( SIZE($3)<SIZE($5) )  Copy_Dims( lParse,$$, $5);
+                  TYPE($1) = TYPE($3);
+                  if( ! Test_Dims( lParse, $1,$$) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' condition");
 		     YYERROR;
                   }
-                  TYPE((yyvsp[-4].Node)) = BOOLEAN;
-                  if( SIZE((yyval.Node))<SIZE((yyvsp[-4].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-4].Node));
+                  TYPE($1) = BOOLEAN;
+                  if( SIZE($$)<SIZE($1) )  Copy_Dims( lParse,$$, $1);
                 }
-#line 2254 "eval_y.c"
-    break;
-
-  case 53: /* expr: bexpr '?' expr ':' bexpr  */
-#line 525 "eval.y"
+       | bexpr '?' expr ':' bexpr
                 {
-                  PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-2].Node),(yyvsp[0].Node)) ) {
+                  PROMOTE($3,$5);
+                  if( ! Test_Dims( lParse, $3,$5) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' arguments");
 		     YYERROR;
                   }
-                  (yyval.Node) = New_Func(lParse,  0, ifthenelse_fct, 3, (yyvsp[-2].Node), (yyvsp[0].Node), (yyvsp[-4].Node),
+                  $$ = New_Func(lParse,  0, ifthenelse_fct, 3, $3, $5, $1,
                                  0, 0, 0, 0 );
-                  TEST((yyval.Node));
-                  if( SIZE((yyvsp[-2].Node))<SIZE((yyvsp[0].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[0].Node));
-                  TYPE((yyvsp[-4].Node)) = TYPE((yyvsp[-2].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-4].Node),(yyval.Node)) ) {
+                  TEST($$);
+                  if( SIZE($3)<SIZE($5) )  Copy_Dims( lParse,$$, $5);
+                  TYPE($1) = TYPE($3);
+                  if( ! Test_Dims( lParse, $1,$$) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' condition");
 		     YYERROR;
                   }
-                  TYPE((yyvsp[-4].Node)) = BOOLEAN;
-                  if( SIZE((yyval.Node))<SIZE((yyvsp[-4].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-4].Node));
+                  TYPE($1) = BOOLEAN;
+                  if( SIZE($$)<SIZE($1) )  Copy_Dims( lParse,$$, $1);
                 }
-#line 2277 "eval_y.c"
-    break;
-
-  case 54: /* expr: FUNCTION ')'  */
-#line 544 "eval.y"
-                { if (FSTRCMP((yyvsp[-1].str),"RANDOM(") == 0) {  /* Scalar RANDOM() */
-                     (yyval.Node) = New_Func(lParse,  DOUBLE, rnd_fct, 0, 0, 0, 0, 0, 0, 0, 0 );
-		  } else if (FSTRCMP((yyvsp[-1].str),"RANDOMN(") == 0) {/*Scalar RANDOMN()*/
-		     (yyval.Node) = New_Func(lParse,  DOUBLE, gasrnd_fct, 0, 0, 0, 0, 0, 0, 0, 0 );
+       | FUNCTION ')'
+                { if (FSTRCMP($1,"RANDOM(") == 0) {  /* Scalar RANDOM() */
+                     $$ = New_Func(lParse,  DOUBLE, rnd_fct, 0, 0, 0, 0, 0, 0, 0, 0 );
+		  } else if (FSTRCMP($1,"RANDOMN(") == 0) {/*Scalar RANDOMN()*/
+		     $$ = New_Func(lParse,  DOUBLE, gasrnd_fct, 0, 0, 0, 0, 0, 0, 0, 0 );
                   } else {
                      yyerror(scanner, lParse, "Function() not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST($$); 
                 }
-#line 2292 "eval_y.c"
-    break;
-
-  case 55: /* expr: FUNCTION bexpr ')'  */
-#line 555 "eval.y"
-                { if (FSTRCMP((yyvsp[-2].str),"SUM(") == 0) {
-		     (yyval.Node) = New_Func(lParse,  LONG, sum_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-                  } else if (FSTRCMP((yyvsp[-2].str),"NELEM(") == 0) {
-                     (yyval.Node) = New_Const(lParse,  LONG, &( SIZE((yyvsp[-1].Node)) ), sizeof(long) );
-                  } else if (FSTRCMP((yyvsp[-2].str),"ACCUM(") == 0) {
+       | FUNCTION bexpr ')'
+                { if (FSTRCMP($1,"SUM(") == 0) {
+		     $$ = New_Func(lParse,  LONG, sum_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+                  } else if (FSTRCMP($1,"NELEM(") == 0) {
+                     $$ = New_Const(lParse,  LONG, &( SIZE($2) ), sizeof(long) );
+                  } else if (FSTRCMP($1,"ACCUM(") == 0) {
 		    long zero = 0;
-		    (yyval.Node) = New_BinOp(lParse,  LONG , (yyvsp[-1].Node), ACCUM, New_Const(lParse,  LONG, &zero, sizeof(zero) ));
+		    $$ = New_BinOp(lParse,  LONG , $2, ACCUM, New_Const(lParse,  LONG, &zero, sizeof(zero) ));
 		  } else {
                      yyerror(scanner, lParse, "Function(bool) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST($$); 
 		}
-#line 2310 "eval_y.c"
-    break;
-
-  case 56: /* expr: FUNCTION bexpr ',' expr ')'  */
-#line 569 "eval.y"
-                { if (FSTRCMP((yyvsp[-4].str),"AXISELEM(") == 0) {  /* AXISELEM(V,n) */
-		     if (OPER((yyvsp[-1].Node)) != CONST_OP
-			 || SIZE((yyvsp[-1].Node)) != 1) {
+       | FUNCTION bexpr ',' expr ')'
+                { if (FSTRCMP($1,"AXISELEM(") == 0) {  /* AXISELEM(V,n) */
+		     if (OPER($4) != CONST_OP
+			 || SIZE($4) != 1) {
 		       yyerror(scanner, lParse, "AXISELEM second argument must be a scalar constant");
 		       YYERROR;
 		     }
-		     if (OPER((yyvsp[-3].Node)) == CONST_OP) {
+		     if (OPER($2) == CONST_OP) {
 		       long one = 1;
-		       (yyval.Node) = New_Const(lParse,  LONG, &one, sizeof(one) );
+		       $$ = New_Const(lParse,  LONG, &one, sizeof(one) );
 		     } else {
-		       if ( TYPE((yyvsp[-1].Node)) != LONG ) (yyvsp[-1].Node) = New_Unary(lParse, LONG, 0, (yyvsp[-1].Node));
-		       (yyval.Node) = New_Func(lParse, 0, axiselem_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 0, 0, 0, 0 );
-		       TEST((yyval.Node));
-		       TYPE((yyval.Node)) = LONG;
+		       if ( TYPE($4) != LONG ) $4 = New_Unary(lParse, LONG, 0, $4);
+		       $$ = New_Func(lParse, 0, axiselem_fct, 2, $2, $4, 0, 0, 0, 0, 0 );
+		       TEST($$);
+		       TYPE($$) = LONG;
 		     }
-		   } else if (FSTRCMP((yyvsp[-4].str),"NAXES(") == 0) {  /* NAXES(V,n) */
-		     if (OPER((yyvsp[-1].Node)) != CONST_OP
-			 || SIZE((yyvsp[-1].Node)) != 1) {
+		   } else if (FSTRCMP($1,"NAXES(") == 0) {  /* NAXES(V,n) */
+		     if (OPER($4) != CONST_OP
+			 || SIZE($4) != 1) {
 		       yyerror(scanner, lParse, "NAXES second argument must be a scalar constant");
 		       YYERROR;
 		     }
-		     if (OPER((yyvsp[-3].Node)) == CONST_OP) { /* if V is constant, return 1 in every case */
+		     if (OPER($2) == CONST_OP) { /* if V is constant, return 1 in every case */
 		       long one = 1;
-		       (yyval.Node) = New_Const(lParse,  LONG, &one, sizeof(one) );
+		       $$ = New_Const(lParse,  LONG, &one, sizeof(one) );
 		     } else {                    /* determine now the dimension of the expression */
 		       long iaxis;
 		       int naxis;
-		       if ( TYPE((yyvsp[-1].Node)) != LONG ) (yyvsp[-1].Node) = New_Unary(lParse, LONG, 0, (yyvsp[-1].Node));
+		       if ( TYPE($4) != LONG ) $4 = New_Unary(lParse, LONG, 0, $4);
 		       /* Since it is already constant, we can extract long value directly */
-		       iaxis = (lParse->Nodes[(yyvsp[-1].Node)].value.data.lng);
-		       naxis = lParse->Nodes[(yyvsp[-3].Node)].value.naxis;
+		       iaxis = (lParse->Nodes[$4].value.data.lng);
+		       naxis = lParse->Nodes[$2].value.naxis;
 
 		       if (iaxis == 0)          iaxis = naxis;   /* NAXIS(V,0) = NAXIS */
-		       else if (iaxis <= naxis) iaxis = lParse->Nodes[(yyvsp[-3].Node)].value.naxes[iaxis-1]; /* NAXIS(V,n) = NAXISn */
+		       else if (iaxis <= naxis) iaxis = lParse->Nodes[$2].value.naxes[iaxis-1]; /* NAXIS(V,n) = NAXISn */
 		       else                     iaxis = 1;       /* Out of bounds use 1 */
 
-		       (yyval.Node) = New_Const(lParse,  LONG, &iaxis, sizeof(iaxis) );
-		       TEST((yyval.Node));
+		       $$ = New_Const(lParse,  LONG, &iaxis, sizeof(iaxis) );
+		       TEST($$);
 		     }
-		   } else if (FSTRCMP((yyvsp[-4].str),"ARRAY(") == 0) {  /* NAXES(bexpr,n) */
-		     (yyval.Node) = New_Array(lParse, (yyvsp[-3].Node), (yyvsp[-1].Node));
-		     TEST((yyval.Node));
+		   } else if (FSTRCMP($1,"ARRAY(") == 0) {  /* NAXES(bexpr,n) */
+		     $$ = New_Array(lParse, $2, $4);
+		     TEST($$);
 		  } else {
                      yyerror(scanner, lParse, "Function(bool,expr) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST($$); 
 		}
-#line 2363 "eval_y.c"
-    break;
-
-  case 57: /* expr: FUNCTION sexpr ')'  */
-#line 618 "eval.y"
-                { if (FSTRCMP((yyvsp[-2].str),"NELEM(") == 0) {
-                     (yyval.Node) = New_Const(lParse,  LONG, &( SIZE((yyvsp[-1].Node)) ), sizeof(long) );
-		  } else if (FSTRCMP((yyvsp[-2].str),"NVALID(") == 0) {
-		     (yyval.Node) = New_Func(lParse,  LONG, nonnull_fct, 1, (yyvsp[-1].Node),
+       | FUNCTION sexpr ')'
+                { if (FSTRCMP($1,"NELEM(") == 0) {
+                     $$ = New_Const(lParse,  LONG, &( SIZE($2) ), sizeof(long) );
+		  } else if (FSTRCMP($1,"NVALID(") == 0) {
+		     $$ = New_Func(lParse,  LONG, nonnull_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
 		  } else {
                      yyerror(scanner, lParse, "Function(str) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST($$); 
 		}
-#line 2379 "eval_y.c"
-    break;
-
-  case 58: /* expr: FUNCTION bits ')'  */
-#line 630 "eval.y"
-                { if (FSTRCMP((yyvsp[-2].str),"NELEM(") == 0) {
-                     (yyval.Node) = New_Const(lParse,  LONG, &( SIZE((yyvsp[-1].Node)) ), sizeof(long) );
-		} else if (FSTRCMP((yyvsp[-2].str),"NVALID(") == 0) { /* Bit arrays do not have NULL */
-                     (yyval.Node) = New_Const(lParse,  LONG, &( SIZE((yyvsp[-1].Node)) ), sizeof(long) );
-		} else if (FSTRCMP((yyvsp[-2].str),"SUM(") == 0) {
-		     (yyval.Node) = New_Func(lParse,  LONG, sum_fct, 1, (yyvsp[-1].Node),
+       | FUNCTION bits ')'
+                { if (FSTRCMP($1,"NELEM(") == 0) {
+                     $$ = New_Const(lParse,  LONG, &( SIZE($2) ), sizeof(long) );
+		} else if (FSTRCMP($1,"NVALID(") == 0) { /* Bit arrays do not have NULL */
+                     $$ = New_Const(lParse,  LONG, &( SIZE($2) ), sizeof(long) );
+		} else if (FSTRCMP($1,"SUM(") == 0) {
+		     $$ = New_Func(lParse,  LONG, sum_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
-		} else if (FSTRCMP((yyvsp[-2].str),"MIN(") == 0) {
-		     (yyval.Node) = New_Func(lParse,  TYPE((yyvsp[-1].Node)),  /* Force 1D result */
-				    min1_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
+		} else if (FSTRCMP($1,"MIN(") == 0) {
+		     $$ = New_Func(lParse,  TYPE($2),  /* Force 1D result */
+				    min1_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
 		     /* Note: $2 is a vector so the result can never
 		        be a constant.  Therefore it will never be set
 		        inside New_Func(), and it is safe to set SIZE() */
-		     SIZE((yyval.Node)) = 1;
-		} else if (FSTRCMP((yyvsp[-2].str),"ACCUM(") == 0) {
+		     SIZE($$) = 1;
+		} else if (FSTRCMP($1,"ACCUM(") == 0) {
 		    long zero = 0;
-		    (yyval.Node) = New_BinOp(lParse,  LONG , (yyvsp[-1].Node), ACCUM, New_Const(lParse,  LONG, &zero, sizeof(zero) ));
-		} else if (FSTRCMP((yyvsp[-2].str),"MAX(") == 0) {
-		     (yyval.Node) = New_Func(lParse,  TYPE((yyvsp[-1].Node)),  /* Force 1D result */
-				    max1_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
+		    $$ = New_BinOp(lParse,  LONG , $2, ACCUM, New_Const(lParse,  LONG, &zero, sizeof(zero) ));
+		} else if (FSTRCMP($1,"MAX(") == 0) {
+		     $$ = New_Func(lParse,  TYPE($2),  /* Force 1D result */
+				    max1_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
 		     /* Note: $2 is a vector so the result can never
 		        be a constant.  Therefore it will never be set
 		        inside New_Func(), and it is safe to set SIZE() */
-		     SIZE((yyval.Node)) = 1;
+		     SIZE($$) = 1;
 		} else {
                      yyerror(scanner, lParse, "Function(bits) not supported");
 		     YYERROR;
 		  }
-                  TEST((yyval.Node)); 
+                  TEST($$); 
 		}
-#line 2414 "eval_y.c"
-    break;
-
-  case 59: /* expr: FUNCTION expr ')'  */
-#line 661 "eval.y"
-                { if (FSTRCMP((yyvsp[-2].str),"SUM(") == 0)
-		     (yyval.Node) = New_Func(lParse,  TYPE((yyvsp[-1].Node)), sum_fct, 1, (yyvsp[-1].Node),
+       | FUNCTION expr ')'
+                { if (FSTRCMP($1,"SUM(") == 0)
+		     $$ = New_Func(lParse,  TYPE($2), sum_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
-		  else if (FSTRCMP((yyvsp[-2].str),"AVERAGE(") == 0)
-		     (yyval.Node) = New_Func(lParse,  DOUBLE, average_fct, 1, (yyvsp[-1].Node),
+		  else if (FSTRCMP($1,"AVERAGE(") == 0)
+		     $$ = New_Func(lParse,  DOUBLE, average_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
-		  else if (FSTRCMP((yyvsp[-2].str),"STDDEV(") == 0)
-		     (yyval.Node) = New_Func(lParse,  DOUBLE, stddev_fct, 1, (yyvsp[-1].Node),
+		  else if (FSTRCMP($1,"STDDEV(") == 0)
+		     $$ = New_Func(lParse,  DOUBLE, stddev_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
-		  else if (FSTRCMP((yyvsp[-2].str),"MEDIAN(") == 0)
-		     (yyval.Node) = New_Func(lParse,  TYPE((yyvsp[-1].Node)), median_fct, 1, (yyvsp[-1].Node),
+		  else if (FSTRCMP($1,"MEDIAN(") == 0)
+		     $$ = New_Func(lParse,  TYPE($2), median_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
-		  else if (FSTRCMP((yyvsp[-2].str),"NELEM(") == 0)
-                     (yyval.Node) = New_Const(lParse,  LONG, &( SIZE((yyvsp[-1].Node)) ), sizeof(long) );
-		  else if (FSTRCMP((yyvsp[-2].str),"NVALID(") == 0)
-		     (yyval.Node) = New_Func(lParse,  LONG, nonnull_fct, 1, (yyvsp[-1].Node),
+		  else if (FSTRCMP($1,"NELEM(") == 0)
+                     $$ = New_Const(lParse,  LONG, &( SIZE($2) ), sizeof(long) );
+		  else if (FSTRCMP($1,"NVALID(") == 0)
+		     $$ = New_Func(lParse,  LONG, nonnull_fct, 1, $2,
 				    0, 0, 0, 0, 0, 0 );
-		  else if   ((FSTRCMP((yyvsp[-2].str),"ACCUM(") == 0) && (TYPE((yyvsp[-1].Node)) == LONG)) {
+		  else if   ((FSTRCMP($1,"ACCUM(") == 0) && (TYPE($2) == LONG)) {
 		    long zero = 0;
-		    (yyval.Node) = New_BinOp(lParse,  LONG ,   (yyvsp[-1].Node), ACCUM, New_Const(lParse,  LONG,   &zero, sizeof(zero) ));
-		  } else if ((FSTRCMP((yyvsp[-2].str),"ACCUM(") == 0) && (TYPE((yyvsp[-1].Node)) == DOUBLE)) {
+		    $$ = New_BinOp(lParse,  LONG ,   $2, ACCUM, New_Const(lParse,  LONG,   &zero, sizeof(zero) ));
+		  } else if ((FSTRCMP($1,"ACCUM(") == 0) && (TYPE($2) == DOUBLE)) {
 		    double zero = 0;
-		    (yyval.Node) = New_BinOp(lParse,  DOUBLE , (yyvsp[-1].Node), ACCUM, New_Const(lParse,  DOUBLE, &zero, sizeof(zero) ));
-		  } else if ((FSTRCMP((yyvsp[-2].str),"SEQDIFF(") == 0) && (TYPE((yyvsp[-1].Node)) == LONG)) {
+		    $$ = New_BinOp(lParse,  DOUBLE , $2, ACCUM, New_Const(lParse,  DOUBLE, &zero, sizeof(zero) ));
+		  } else if ((FSTRCMP($1,"SEQDIFF(") == 0) && (TYPE($2) == LONG)) {
 		    long zero = 0;
-		    (yyval.Node) = New_BinOp(lParse,  LONG ,   (yyvsp[-1].Node), DIFF, New_Const(lParse,  LONG,   &zero, sizeof(zero) ));
-		  } else if ((FSTRCMP((yyvsp[-2].str),"SEQDIFF(") == 0) && (TYPE((yyvsp[-1].Node)) == DOUBLE)) {
+		    $$ = New_BinOp(lParse,  LONG ,   $2, DIFF, New_Const(lParse,  LONG,   &zero, sizeof(zero) ));
+		  } else if ((FSTRCMP($1,"SEQDIFF(") == 0) && (TYPE($2) == DOUBLE)) {
 		    double zero = 0;
-		    (yyval.Node) = New_BinOp(lParse,  DOUBLE , (yyvsp[-1].Node), DIFF, New_Const(lParse,  DOUBLE, &zero, sizeof(zero) ));
-		  } else if (FSTRCMP((yyvsp[-2].str),"ABS(") == 0)
-		     (yyval.Node) = New_Func(lParse,  0, abs_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
- 		  else if (FSTRCMP((yyvsp[-2].str),"MIN(") == 0)
-		     (yyval.Node) = New_Func(lParse,  TYPE((yyvsp[-1].Node)),  /* Force 1D result */
-				    min1_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		  else if (FSTRCMP((yyvsp[-2].str),"MAX(") == 0)
-		     (yyval.Node) = New_Func(lParse,  TYPE((yyvsp[-1].Node)),  /* Force 1D result */
-				    max1_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		  else if (FSTRCMP((yyvsp[-2].str),"RANDOM(") == 0) { /* Vector RANDOM() */
-                     (yyval.Node) = New_Func(lParse,  0, rnd_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     TEST((yyval.Node));
-		     TYPE((yyval.Node)) = DOUBLE;
-		  } else if (FSTRCMP((yyvsp[-2].str),"RANDOMN(") == 0) {
-		     (yyval.Node) = New_Func(lParse,  0, gasrnd_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     TEST((yyval.Node));
-		     TYPE((yyval.Node)) = DOUBLE;
-		  } else if (FSTRCMP((yyvsp[-2].str),"ELEMENTNUM(") == 0) {
-		     if (OPER((yyvsp[-1].Node)) == CONST_OP) {
+		    $$ = New_BinOp(lParse,  DOUBLE , $2, DIFF, New_Const(lParse,  DOUBLE, &zero, sizeof(zero) ));
+		  } else if (FSTRCMP($1,"ABS(") == 0)
+		     $$ = New_Func(lParse,  0, abs_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+ 		  else if (FSTRCMP($1,"MIN(") == 0)
+		     $$ = New_Func(lParse,  TYPE($2),  /* Force 1D result */
+				    min1_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		  else if (FSTRCMP($1,"MAX(") == 0)
+		     $$ = New_Func(lParse,  TYPE($2),  /* Force 1D result */
+				    max1_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		  else if (FSTRCMP($1,"RANDOM(") == 0) { /* Vector RANDOM() */
+                     $$ = New_Func(lParse,  0, rnd_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     TEST($$);
+		     TYPE($$) = DOUBLE;
+		  } else if (FSTRCMP($1,"RANDOMN(") == 0) {
+		     $$ = New_Func(lParse,  0, gasrnd_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     TEST($$);
+		     TYPE($$) = DOUBLE;
+		  } else if (FSTRCMP($1,"ELEMENTNUM(") == 0) {
+		     if (OPER($2) == CONST_OP) {
 		       long one = 1;
-		       (yyval.Node) = New_Const(lParse,  LONG, &one, sizeof(one) );
+		       $$ = New_Const(lParse,  LONG, &one, sizeof(one) );
 		     } else {
-		       (yyval.Node) = New_Func(lParse,  0, elemnum_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		       TEST((yyval.Node));
-		       TYPE((yyval.Node)) = LONG;
+		       $$ = New_Func(lParse,  0, elemnum_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		       TEST($$);
+		       TYPE($$) = LONG;
 		     }
-		  } else if (FSTRCMP((yyvsp[-2].str),"NAXIS(") == 0) {  /* NAXIS(V) */
-		     if (OPER((yyvsp[-1].Node)) == CONST_OP) { /* if V is constant, return 1 in every case */
+		  } else if (FSTRCMP($1,"NAXIS(") == 0) {  /* NAXIS(V) */
+		     if (OPER($2) == CONST_OP) { /* if V is constant, return 1 in every case */
 		       long one = 1;
-		       (yyval.Node) = New_Const(lParse,  LONG, &one, sizeof(one) );
+		       $$ = New_Const(lParse,  LONG, &one, sizeof(one) );
 		     } else {                    /* determine now the dimension of the expression */
-		       long naxis = lParse->Nodes[(yyvsp[-1].Node)].value.naxis;
+		       long naxis = lParse->Nodes[$2].value.naxis;
 
-		       (yyval.Node) = New_Const(lParse,  LONG, &naxis, sizeof(naxis) );
-		       TEST((yyval.Node));
+		       $$ = New_Const(lParse,  LONG, &naxis, sizeof(naxis) );
+		       TEST($$);
 		     }
                   } 
   		  else {  /*  These all take DOUBLE arguments  */
-		     if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
-                     if (FSTRCMP((yyvsp[-2].str),"SIN(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, sin_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"COS(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, cos_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"TAN(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, tan_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"ARCSIN(") == 0
-			      || FSTRCMP((yyvsp[-2].str),"ASIN(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, asin_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"ARCCOS(") == 0
-			      || FSTRCMP((yyvsp[-2].str),"ACOS(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, acos_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"ARCTAN(") == 0
-			      || FSTRCMP((yyvsp[-2].str),"ATAN(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, atan_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"SINH(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, sinh_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"COSH(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, cosh_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"TANH(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, tanh_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"EXP(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, exp_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"LOG(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, log_fct,  1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"LOG10(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, log10_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"SQRT(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, sqrt_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"ROUND(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, round_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"FLOOR(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, floor_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"CEIL(") == 0)
-			(yyval.Node) = New_Func(lParse,  0, ceil_fct, 1, (yyvsp[-1].Node), 0, 0, 0, 0, 0, 0 );
-		     else if (FSTRCMP((yyvsp[-2].str),"RANDOMP(") == 0) {
-		       (yyval.Node) = New_Func(lParse,  0, poirnd_fct, 1, (yyvsp[-1].Node), 
+		     if( TYPE($2) != DOUBLE ) $2 = New_Unary(lParse,  DOUBLE, 0, $2 );
+                     if (FSTRCMP($1,"SIN(") == 0)
+			$$ = New_Func(lParse,  0, sin_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"COS(") == 0)
+			$$ = New_Func(lParse,  0, cos_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"TAN(") == 0)
+			$$ = New_Func(lParse,  0, tan_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"ARCSIN(") == 0
+			      || FSTRCMP($1,"ASIN(") == 0)
+			$$ = New_Func(lParse,  0, asin_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"ARCCOS(") == 0
+			      || FSTRCMP($1,"ACOS(") == 0)
+			$$ = New_Func(lParse,  0, acos_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"ARCTAN(") == 0
+			      || FSTRCMP($1,"ATAN(") == 0)
+			$$ = New_Func(lParse,  0, atan_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"SINH(") == 0)
+			$$ = New_Func(lParse,  0, sinh_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"COSH(") == 0)
+			$$ = New_Func(lParse,  0, cosh_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"TANH(") == 0)
+			$$ = New_Func(lParse,  0, tanh_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"EXP(") == 0)
+			$$ = New_Func(lParse,  0, exp_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"LOG(") == 0)
+			$$ = New_Func(lParse,  0, log_fct,  1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"LOG10(") == 0)
+			$$ = New_Func(lParse,  0, log10_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"SQRT(") == 0)
+			$$ = New_Func(lParse,  0, sqrt_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"ROUND(") == 0)
+			$$ = New_Func(lParse,  0, round_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"FLOOR(") == 0)
+			$$ = New_Func(lParse,  0, floor_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"CEIL(") == 0)
+			$$ = New_Func(lParse,  0, ceil_fct, 1, $2, 0, 0, 0, 0, 0, 0 );
+		     else if (FSTRCMP($1,"RANDOMP(") == 0) {
+		       $$ = New_Func(lParse,  0, poirnd_fct, 1, $2, 
 				      0, 0, 0, 0, 0, 0 );
-		       TYPE((yyval.Node)) = LONG;
+		       TYPE($$) = LONG;
 		     } else {
 			yyerror(scanner, lParse, "Function(expr) not supported");
 			YYERROR;
 		     }
 		  }
-                  TEST((yyval.Node)); 
+                  TEST($$); 
                 }
-#line 2532 "eval_y.c"
-    break;
-
-  case 60: /* expr: IFUNCTION sexpr ',' sexpr ')'  */
-#line 775 "eval.y"
+       | IFUNCTION sexpr ',' sexpr ')'
                 { 
-		  if (FSTRCMP((yyvsp[-4].str),"STRSTR(") == 0) {
-		    (yyval.Node) = New_Func(lParse,  LONG, strpos_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 
+		  if (FSTRCMP($1,"STRSTR(") == 0) {
+		    $$ = New_Func(lParse,  LONG, strpos_fct, 2, $2, $4, 0, 
 				   0, 0, 0, 0 );
-		    TEST((yyval.Node));
+		    TEST($$);
 		  }
                 }
-#line 2544 "eval_y.c"
-    break;
-
-  case 61: /* expr: FUNCTION expr ',' expr ')'  */
-#line 783 "eval.y"
+       | FUNCTION expr ',' expr ')'
                 { 
-		   if (FSTRCMP((yyvsp[-4].str),"DEFNULL(") == 0) {
-		      if( SIZE((yyvsp[-3].Node))>=SIZE((yyvsp[-1].Node)) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
-			 PROMOTE((yyvsp[-3].Node),(yyvsp[-1].Node));
-			 (yyval.Node) = New_Func(lParse,  0, defnull_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
+		   if (FSTRCMP($1,"DEFNULL(") == 0) {
+		      if( SIZE($2)>=SIZE($4) && Test_Dims( lParse,  $2, $4 ) ) {
+			 PROMOTE($2,$4);
+			 $$ = New_Func(lParse,  0, defnull_fct, 2, $2, $4, 0,
 					0, 0, 0, 0 );
-			 TEST((yyval.Node)); 
+			 TEST($$); 
 		      } else {
 			 yyerror(scanner, lParse, "Dimensions of DEFNULL arguments "
 				 "are not compatible");
 			 YYERROR;
 		      }
-		   } else if (FSTRCMP((yyvsp[-4].str),"ARCTAN2(") == 0) {
-		     if( TYPE((yyvsp[-3].Node)) != DOUBLE ) (yyvsp[-3].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node) );
-		     if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
-		     if( Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
-			(yyval.Node) = New_Func(lParse,  0, atan2_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 0, 0, 0, 0 );
-			TEST((yyval.Node)); 
-			if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		   } else if (FSTRCMP($1,"ARCTAN2(") == 0) {
+		     if( TYPE($2) != DOUBLE ) $2 = New_Unary(lParse,  DOUBLE, 0, $2 );
+		     if( TYPE($4) != DOUBLE ) $4 = New_Unary(lParse,  DOUBLE, 0, $4 );
+		     if( Test_Dims( lParse,  $2, $4 ) ) {
+			$$ = New_Func(lParse,  0, atan2_fct, 2, $2, $4, 0, 0, 0, 0, 0 );
+			TEST($$); 
+			if( SIZE($2)<SIZE($4) ) Copy_Dims( lParse,$$, $4);
 		     } else {
 			yyerror(scanner, lParse, "Dimensions of arctan2 arguments "
 				"are not compatible");
 			YYERROR;
 		     }
-		   } else if (FSTRCMP((yyvsp[-4].str),"MIN(") == 0) {
-		      PROMOTE( (yyvsp[-3].Node), (yyvsp[-1].Node) );
-		      if( Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
-			(yyval.Node) = New_Func(lParse,  0, min2_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 0, 0, 0, 0 );
-			TEST((yyval.Node));
-			if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		   } else if (FSTRCMP($1,"MIN(") == 0) {
+		      PROMOTE( $2, $4 );
+		      if( Test_Dims( lParse,  $2, $4 ) ) {
+			$$ = New_Func(lParse,  0, min2_fct, 2, $2, $4, 0, 0, 0, 0, 0 );
+			TEST($$);
+			if( SIZE($2)<SIZE($4) ) Copy_Dims( lParse,$$, $4);
 		      } else {
 			yyerror(scanner, lParse, "Dimensions of min(a,b) arguments "
 				"are not compatible");
 			YYERROR;
 		      }
-		   } else if (FSTRCMP((yyvsp[-4].str),"MAX(") == 0) {
-		      PROMOTE( (yyvsp[-3].Node), (yyvsp[-1].Node) );
-		      if( Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
-			(yyval.Node) = New_Func(lParse,  0, max2_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 0, 0, 0, 0 );
-			TEST((yyval.Node));
-			if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		   } else if (FSTRCMP($1,"MAX(") == 0) {
+		      PROMOTE( $2, $4 );
+		      if( Test_Dims( lParse,  $2, $4 ) ) {
+			$$ = New_Func(lParse,  0, max2_fct, 2, $2, $4, 0, 0, 0, 0, 0 );
+			TEST($$);
+			if( SIZE($2)<SIZE($4) ) Copy_Dims( lParse,$$, $4);
 		      } else {
 			yyerror(scanner, lParse, "Dimensions of max(a,b) arguments "
 				"are not compatible");
 			YYERROR;
 		      }
-		   } else if (FSTRCMP((yyvsp[-4].str),"SETNULL(") == 0) {
-		     if (OPER((yyvsp[-3].Node)) != CONST_OP
-			 || SIZE((yyvsp[-3].Node)) != 1) {
+		   } else if (FSTRCMP($1,"SETNULL(") == 0) {
+		     if (OPER($2) != CONST_OP
+			 || SIZE($2) != 1) {
 		       yyerror(scanner, lParse, "SETNULL first argument must be a scalar constant");
 		       YYERROR;
 		     }
 		     /* Make sure first arg is same type as second arg */
-		     if ( TYPE((yyvsp[-3].Node)) != TYPE((yyvsp[-1].Node)) ) (yyvsp[-3].Node) = New_Unary(lParse,  TYPE((yyvsp[-1].Node)), 0, (yyvsp[-3].Node) );
-		     (yyval.Node) = New_Func(lParse,  0, setnull_fct, 2, (yyvsp[-1].Node), (yyvsp[-3].Node), 0, 0, 0, 0, 0 );
-		   } else if (FSTRCMP((yyvsp[-4].str),"AXISELEM(") == 0) {  /* AXISELEM(V,n) */
-		     if (OPER((yyvsp[-1].Node)) != CONST_OP
-			 || SIZE((yyvsp[-1].Node)) != 1) {
+		     if ( TYPE($2) != TYPE($4) ) $2 = New_Unary(lParse,  TYPE($4), 0, $2 );
+		     $$ = New_Func(lParse,  0, setnull_fct, 2, $4, $2, 0, 0, 0, 0, 0 );
+		   } else if (FSTRCMP($1,"AXISELEM(") == 0) {  /* AXISELEM(V,n) */
+		     if (OPER($4) != CONST_OP
+			 || SIZE($4) != 1) {
 		       yyerror(scanner, lParse, "AXISELEM second argument must be a scalar constant");
 		       YYERROR;
 		     }
-		     if (OPER((yyvsp[-3].Node)) == CONST_OP) {
+		     if (OPER($2) == CONST_OP) {
 		       long one = 1;
-		       (yyval.Node) = New_Const(lParse,  LONG, &one, sizeof(one) );
+		       $$ = New_Const(lParse,  LONG, &one, sizeof(one) );
 		     } else {
-		       if ( TYPE((yyvsp[-1].Node)) != LONG ) (yyvsp[-1].Node) = New_Unary(lParse, LONG, 0, (yyvsp[-1].Node));
-		       (yyval.Node) = New_Func(lParse, 0, axiselem_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0, 0, 0, 0, 0 );
-		       TEST((yyval.Node));
-		       TYPE((yyval.Node)) = LONG;
+		       if ( TYPE($4) != LONG ) $4 = New_Unary(lParse, LONG, 0, $4);
+		       $$ = New_Func(lParse, 0, axiselem_fct, 2, $2, $4, 0, 0, 0, 0, 0 );
+		       TEST($$);
+		       TYPE($$) = LONG;
 		     }
-		   } else if (FSTRCMP((yyvsp[-4].str),"NAXES(") == 0) {  /* NAXES(V,n) */
-		     if (OPER((yyvsp[-1].Node)) != CONST_OP
-			 || SIZE((yyvsp[-1].Node)) != 1) {
+		   } else if (FSTRCMP($1,"NAXES(") == 0) {  /* NAXES(V,n) */
+		     if (OPER($4) != CONST_OP
+			 || SIZE($4) != 1) {
 		       yyerror(scanner, lParse, "NAXES second argument must be a scalar constant");
 		       YYERROR;
 		     }
-		     if (OPER((yyvsp[-3].Node)) == CONST_OP) { /* if V is constant, return 1 in every case */
+		     if (OPER($2) == CONST_OP) { /* if V is constant, return 1 in every case */
 		       long one = 1;
-		       (yyval.Node) = New_Const(lParse,  LONG, &one, sizeof(one) );
+		       $$ = New_Const(lParse,  LONG, &one, sizeof(one) );
 		     } else {                    /* determine now the dimension of the expression */
 		       long iaxis;
 		       int naxis;
-		       if ( TYPE((yyvsp[-1].Node)) != LONG ) (yyvsp[-1].Node) = New_Unary(lParse, LONG, 0, (yyvsp[-1].Node));
+		       if ( TYPE($4) != LONG ) $4 = New_Unary(lParse, LONG, 0, $4);
 		       /* Since it is already constant, we can extract long value directly */
-		       iaxis = (lParse->Nodes[(yyvsp[-1].Node)].value.data.lng);
-		       naxis = lParse->Nodes[(yyvsp[-3].Node)].value.naxis;
+		       iaxis = (lParse->Nodes[$4].value.data.lng);
+		       naxis = lParse->Nodes[$2].value.naxis;
 
 		       if (iaxis == 0)          iaxis = naxis;   /* NAXIS(V,0) = NAXIS */
-		       else if (iaxis <= naxis) iaxis = lParse->Nodes[(yyvsp[-3].Node)].value.naxes[iaxis-1]; /* NAXIS(V,n) = NAXISn */
+		       else if (iaxis <= naxis) iaxis = lParse->Nodes[$2].value.naxes[iaxis-1]; /* NAXIS(V,n) = NAXISn */
 		       else                     iaxis = 1;       /* Out of bounds use 1 */
 
-		       (yyval.Node) = New_Const(lParse,  LONG, &iaxis, sizeof(iaxis) );
-		       TEST((yyval.Node));
+		       $$ = New_Const(lParse,  LONG, &iaxis, sizeof(iaxis) );
+		       TEST($$);
 		     }
-		   } else if (FSTRCMP((yyvsp[-4].str),"ARRAY(") == 0) {  /* NAXES(expr,n) */
-		     (yyval.Node) = New_Array(lParse, (yyvsp[-3].Node), (yyvsp[-1].Node));
-		     TEST((yyval.Node));
+		   } else if (FSTRCMP($1,"ARRAY(") == 0) {  /* NAXES(expr,n) */
+		     $$ = New_Array(lParse, $2, $4);
+		     TEST($$);
 		   } else {
 		      yyerror(scanner, lParse, "Function(expr,expr) not supported");
 		      YYERROR;
 		   }
                 }
-#line 2651 "eval_y.c"
-    break;
-
-  case 62: /* expr: FUNCTION expr ',' expr ',' expr ',' expr ')'  */
-#line 886 "eval.y"
+       | FUNCTION expr ',' expr ',' expr ',' expr ')'
                 { 
-		  if (FSTRCMP((yyvsp[-8].str),"ANGSEP(") == 0) {
-		    if( TYPE((yyvsp[-7].Node)) != DOUBLE ) (yyvsp[-7].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-7].Node) );
-		    if( TYPE((yyvsp[-5].Node)) != DOUBLE ) (yyvsp[-5].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node) );
-		    if( TYPE((yyvsp[-3].Node)) != DOUBLE ) (yyvsp[-3].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node) );
-		    if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
-		    if( Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) && Test_Dims( lParse,  (yyvsp[-5].Node), (yyvsp[-3].Node) ) && 
-			Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
-		      (yyval.Node) = New_Func(lParse,  0, angsep_fct, 4, (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),0,0,0 );
-		      TEST((yyval.Node)); 
-		      if( SIZE((yyvsp[-7].Node))<SIZE((yyvsp[-5].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
-		      if( SIZE((yyvsp[-5].Node))<SIZE((yyvsp[-3].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-3].Node));
-		      if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		  if (FSTRCMP($1,"ANGSEP(") == 0) {
+		    if( TYPE($2) != DOUBLE ) $2 = New_Unary(lParse,  DOUBLE, 0, $2 );
+		    if( TYPE($4) != DOUBLE ) $4 = New_Unary(lParse,  DOUBLE, 0, $4 );
+		    if( TYPE($6) != DOUBLE ) $6 = New_Unary(lParse,  DOUBLE, 0, $6 );
+		    if( TYPE($8) != DOUBLE ) $8 = New_Unary(lParse,  DOUBLE, 0, $8 );
+		    if( Test_Dims( lParse,  $2, $4 ) && Test_Dims( lParse,  $4, $6 ) && 
+			Test_Dims( lParse,  $6, $8 ) ) {
+		      $$ = New_Func(lParse,  0, angsep_fct, 4, $2, $4, $6, $8,0,0,0 );
+		      TEST($$); 
+		      if( SIZE($2)<SIZE($4) ) Copy_Dims( lParse,$$, $4);
+		      if( SIZE($4)<SIZE($6) ) Copy_Dims( lParse,$$, $6);
+		      if( SIZE($6)<SIZE($8) ) Copy_Dims( lParse,$$, $8);
 		    } else {
 		      yyerror(scanner, lParse, "Dimensions of ANGSEP arguments "
 			      "are not compatible");
@@ -2675,332 +906,182 @@ yyreduce:
 		      YYERROR;
 		   }
                 }
-#line 2679 "eval_y.c"
-    break;
 
-  case 63: /* expr: expr '[' expr ']'  */
-#line 910 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-3].Node), 1, (yyvsp[-1].Node),  0,  0,  0,   0 ); TEST((yyval.Node)); }
-#line 2685 "eval_y.c"
-    break;
 
-  case 64: /* expr: expr '[' expr ',' expr ']'  */
-#line 912 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-5].Node), 2, (yyvsp[-3].Node), (yyvsp[-1].Node),  0,  0,   0 ); TEST((yyval.Node)); }
-#line 2691 "eval_y.c"
-    break;
+       | GTIOVERLAP STRING ',' expr ',' expr ')'
+                {  $$ = New_GTI(lParse, gtiover_fct,  $2, $4, $6, "*START*", "*STOP*");
+                   TEST($$);                                        }
+       | GTIOVERLAP STRING ',' expr ',' expr ',' STRING ',' STRING ')'
+                {  $$ = New_GTI(lParse, gtiover_fct,  $2, $4, $6, $8, $10 );
+                   TEST($$);                                        }
 
-  case 65: /* expr: expr '[' expr ',' expr ',' expr ']'  */
-#line 914 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-7].Node), 3, (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),  0,   0 ); TEST((yyval.Node)); }
-#line 2697 "eval_y.c"
-    break;
+       | expr '[' expr ']'
+                { $$ = New_Deref(lParse,  $1, 1, $3,  0,  0,  0,   0 ); TEST($$); }
+       | expr '[' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 2, $3, $5,  0,  0,   0 ); TEST($$); }
+       | expr '[' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 3, $3, $5, $7,  0,   0 ); TEST($$); }
+       | expr '[' expr ',' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 4, $3, $5, $7, $9,   0 ); TEST($$); }
+       | expr '[' expr ',' expr ',' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 5, $3, $5, $7, $9, $11 ); TEST($$); }
+       | INTCAST expr
+		{ $$ = New_Unary(lParse,  LONG,   INTCAST, $2 );  TEST($$);  }
+       | INTCAST bexpr
+                { $$ = New_Unary(lParse,  LONG,   INTCAST, $2 );  TEST($$);  }
+       | FLTCAST expr
+		{ $$ = New_Unary(lParse,  DOUBLE, FLTCAST, $2 );  TEST($$);  }
+       | FLTCAST bexpr
+                { $$ = New_Unary(lParse,  DOUBLE, FLTCAST, $2 );  TEST($$);  }
+       ;
 
-  case 66: /* expr: expr '[' expr ',' expr ',' expr ',' expr ']'  */
-#line 916 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-9].Node), 4, (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),   0 ); TEST((yyval.Node)); }
-#line 2703 "eval_y.c"
-    break;
-
-  case 67: /* expr: expr '[' expr ',' expr ',' expr ',' expr ',' expr ']'  */
-#line 918 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-11].Node), 5, (yyvsp[-9].Node), (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node) ); TEST((yyval.Node)); }
-#line 2709 "eval_y.c"
-    break;
-
-  case 68: /* expr: INTCAST expr  */
-#line 920 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  LONG,   INTCAST, (yyvsp[0].Node) );  TEST((yyval.Node));  }
-#line 2715 "eval_y.c"
-    break;
-
-  case 69: /* expr: INTCAST bexpr  */
-#line 922 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  LONG,   INTCAST, (yyvsp[0].Node) );  TEST((yyval.Node));  }
-#line 2721 "eval_y.c"
-    break;
-
-  case 70: /* expr: FLTCAST expr  */
-#line 924 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  DOUBLE, FLTCAST, (yyvsp[0].Node) );  TEST((yyval.Node));  }
-#line 2727 "eval_y.c"
-    break;
-
-  case 71: /* expr: FLTCAST bexpr  */
-#line 926 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  DOUBLE, FLTCAST, (yyvsp[0].Node) );  TEST((yyval.Node));  }
-#line 2733 "eval_y.c"
-    break;
-
-  case 72: /* bexpr: BOOLEAN  */
-#line 930 "eval.y"
-                { (yyval.Node) = New_Const(lParse,  BOOLEAN, &((yyvsp[0].log)), sizeof(char) ); TEST((yyval.Node)); }
-#line 2739 "eval_y.c"
-    break;
-
-  case 73: /* bexpr: BCOLUMN  */
-#line 932 "eval.y"
-                { (yyval.Node) = New_Column(lParse,  (yyvsp[0].lng) ); TEST((yyval.Node)); }
-#line 2745 "eval_y.c"
-    break;
-
-  case 74: /* bexpr: BCOLUMN '{' expr '}'  */
-#line 934 "eval.y"
+bexpr:   BOOLEAN
+                { $$ = New_Const(lParse,  BOOLEAN, &($1), sizeof(char) ); TEST($$); }
+       | BCOLUMN
+                { $$ = New_Column(lParse,  $1 ); TEST($$); }
+       | BCOLUMN '{' expr '}'
                 {
-                  if( TYPE((yyvsp[-1].Node)) != LONG
-		      || OPER((yyvsp[-1].Node)) != CONST_OP ) {
+                  if( TYPE($3) != LONG
+		      || OPER($3) != CONST_OP ) {
 		     yyerror(scanner, lParse, "Offset argument must be a constant integer");
 		     YYERROR;
 		  }
-                  (yyval.Node) = New_Offset(lParse,  (yyvsp[-3].lng), (yyvsp[-1].Node) ); TEST((yyval.Node));
+                  $$ = New_Offset(lParse,  $1, $3 ); TEST($$);
                 }
-#line 2758 "eval_y.c"
-    break;
+       | bits EQ bits
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, EQ,  $3 ); TEST($$);
+		  SIZE($$) = 1;                                     }
+       | bits NE bits
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, NE,  $3 ); TEST($$); 
+		  SIZE($$) = 1;                                     }
+       | bits LT bits
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, LT,  $3 ); TEST($$); 
+		  SIZE($$) = 1;                                     }
+       | bits LTE bits
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, LTE, $3 ); TEST($$); 
+		  SIZE($$) = 1;                                     }
+       | bits GT bits
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, GT,  $3 ); TEST($$); 
+		  SIZE($$) = 1;                                     }
+       | bits GTE bits
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, GTE, $3 ); TEST($$); 
+		  SIZE($$) = 1;                                     }
+       | expr GT expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, GT,  $3 );
+                  TEST($$);                                               }
+       | expr LT expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, LT,  $3 );
+                  TEST($$);                                               }
+       | expr GTE expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, GTE, $3 );
+                  TEST($$);                                               }
+       | expr LTE expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, LTE, $3 );
+                  TEST($$);                                               }
+       | expr '~' expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, '~', $3 );
+                  TEST($$);                                               }
+       | expr EQ expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, EQ,  $3 );
+                  TEST($$);                                               }
+       | expr NE expr
+                { PROMOTE($1,$3); $$ = New_BinOp(lParse,  BOOLEAN, $1, NE,  $3 );
+                  TEST($$);                                               }
+       | sexpr EQ sexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, EQ,  $3 ); TEST($$);
+                  SIZE($$) = 1; }
+       | sexpr NE sexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, NE,  $3 ); TEST($$);
+                  SIZE($$) = 1; }
+       | sexpr GT sexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, GT,  $3 ); TEST($$);
+                  SIZE($$) = 1; }
+       | sexpr GTE sexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, GTE, $3 ); TEST($$);
+                  SIZE($$) = 1; }
+       | sexpr LT sexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, LT,  $3 ); TEST($$);
+                  SIZE($$) = 1; }
+       | sexpr LTE sexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, LTE, $3 ); TEST($$);
+                  SIZE($$) = 1; }
+       | bexpr AND bexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, AND, $3 ); TEST($$); }
+       | bexpr OR bexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, OR,  $3 ); TEST($$); }
+       | bexpr EQ bexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, EQ,  $3 ); TEST($$); }
+       | bexpr NE bexpr
+                { $$ = New_BinOp(lParse,  BOOLEAN, $1, NE,  $3 ); TEST($$); }
 
-  case 75: /* bexpr: bits EQ bits  */
-#line 943 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), EQ,  (yyvsp[0].Node) ); TEST((yyval.Node));
-		  SIZE((yyval.Node)) = 1;                                     }
-#line 2765 "eval_y.c"
-    break;
+       | expr '=' expr ':' expr
+                { PROMOTE($1,$3); PROMOTE($1,$5); PROMOTE($3,$5);
+		  $3 = New_BinOp(lParse,  BOOLEAN, $3, LTE, $1 );
+                  $5 = New_BinOp(lParse,  BOOLEAN, $1, LTE, $5 );
+                  $$ = New_BinOp(lParse,  BOOLEAN, $3, AND, $5 );
+                  TEST($$);                                         }
 
-  case 76: /* bexpr: bits NE bits  */
-#line 946 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), NE,  (yyvsp[0].Node) ); TEST((yyval.Node)); 
-		  SIZE((yyval.Node)) = 1;                                     }
-#line 2772 "eval_y.c"
-    break;
-
-  case 77: /* bexpr: bits LT bits  */
-#line 949 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LT,  (yyvsp[0].Node) ); TEST((yyval.Node)); 
-		  SIZE((yyval.Node)) = 1;                                     }
-#line 2779 "eval_y.c"
-    break;
-
-  case 78: /* bexpr: bits LTE bits  */
-#line 952 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LTE, (yyvsp[0].Node) ); TEST((yyval.Node)); 
-		  SIZE((yyval.Node)) = 1;                                     }
-#line 2786 "eval_y.c"
-    break;
-
-  case 79: /* bexpr: bits GT bits  */
-#line 955 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GT,  (yyvsp[0].Node) ); TEST((yyval.Node)); 
-		  SIZE((yyval.Node)) = 1;                                     }
-#line 2793 "eval_y.c"
-    break;
-
-  case 80: /* bexpr: bits GTE bits  */
-#line 958 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GTE, (yyvsp[0].Node) ); TEST((yyval.Node)); 
-		  SIZE((yyval.Node)) = 1;                                     }
-#line 2800 "eval_y.c"
-    break;
-
-  case 81: /* bexpr: expr GT expr  */
-#line 961 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GT,  (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2807 "eval_y.c"
-    break;
-
-  case 82: /* bexpr: expr LT expr  */
-#line 964 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LT,  (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2814 "eval_y.c"
-    break;
-
-  case 83: /* bexpr: expr GTE expr  */
-#line 967 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GTE, (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2821 "eval_y.c"
-    break;
-
-  case 84: /* bexpr: expr LTE expr  */
-#line 970 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LTE, (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2828 "eval_y.c"
-    break;
-
-  case 85: /* bexpr: expr '~' expr  */
-#line 973 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), '~', (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2835 "eval_y.c"
-    break;
-
-  case 86: /* bexpr: expr EQ expr  */
-#line 976 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), EQ,  (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2842 "eval_y.c"
-    break;
-
-  case 87: /* bexpr: expr NE expr  */
-#line 979 "eval.y"
-                { PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node)); (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), NE,  (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                               }
-#line 2849 "eval_y.c"
-    break;
-
-  case 88: /* bexpr: sexpr EQ sexpr  */
-#line 982 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), EQ,  (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = 1; }
-#line 2856 "eval_y.c"
-    break;
-
-  case 89: /* bexpr: sexpr NE sexpr  */
-#line 985 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), NE,  (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = 1; }
-#line 2863 "eval_y.c"
-    break;
-
-  case 90: /* bexpr: sexpr GT sexpr  */
-#line 988 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GT,  (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = 1; }
-#line 2870 "eval_y.c"
-    break;
-
-  case 91: /* bexpr: sexpr GTE sexpr  */
-#line 991 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), GTE, (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = 1; }
-#line 2877 "eval_y.c"
-    break;
-
-  case 92: /* bexpr: sexpr LT sexpr  */
-#line 994 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LT,  (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = 1; }
-#line 2884 "eval_y.c"
-    break;
-
-  case 93: /* bexpr: sexpr LTE sexpr  */
-#line 997 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LTE, (yyvsp[0].Node) ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = 1; }
-#line 2891 "eval_y.c"
-    break;
-
-  case 94: /* bexpr: bexpr AND bexpr  */
-#line 1000 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), AND, (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 2897 "eval_y.c"
-    break;
-
-  case 95: /* bexpr: bexpr OR bexpr  */
-#line 1002 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), OR,  (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 2903 "eval_y.c"
-    break;
-
-  case 96: /* bexpr: bexpr EQ bexpr  */
-#line 1004 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), EQ,  (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 2909 "eval_y.c"
-    break;
-
-  case 97: /* bexpr: bexpr NE bexpr  */
-#line 1006 "eval.y"
-                { (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), NE,  (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 2915 "eval_y.c"
-    break;
-
-  case 98: /* bexpr: expr '=' expr ':' expr  */
-#line 1009 "eval.y"
-                { PROMOTE((yyvsp[-4].Node),(yyvsp[-2].Node)); PROMOTE((yyvsp[-4].Node),(yyvsp[0].Node)); PROMOTE((yyvsp[-2].Node),(yyvsp[0].Node));
-		  (yyvsp[-2].Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), LTE, (yyvsp[-4].Node) );
-                  (yyvsp[0].Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-4].Node), LTE, (yyvsp[0].Node) );
-                  (yyval.Node) = New_BinOp(lParse,  BOOLEAN, (yyvsp[-2].Node), AND, (yyvsp[0].Node) );
-                  TEST((yyval.Node));                                         }
-#line 2925 "eval_y.c"
-    break;
-
-  case 99: /* bexpr: bexpr '?' bexpr ':' bexpr  */
-#line 1016 "eval.y"
+       | bexpr '?' bexpr ':' bexpr
                 {
-                  if( ! Test_Dims( lParse, (yyvsp[-2].Node),(yyvsp[0].Node)) ) {
+                  if( ! Test_Dims( lParse, $3,$5) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' arguments");
 		     YYERROR;
                   }
-                  (yyval.Node) = New_Func(lParse,  0, ifthenelse_fct, 3, (yyvsp[-2].Node), (yyvsp[0].Node), (yyvsp[-4].Node),
+                  $$ = New_Func(lParse,  0, ifthenelse_fct, 3, $3, $5, $1,
                                  0, 0, 0, 0 );
-                  TEST((yyval.Node));
-                  if( SIZE((yyvsp[-2].Node))<SIZE((yyvsp[0].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[0].Node));
-                  if( ! Test_Dims( lParse, (yyvsp[-4].Node),(yyval.Node)) ) {
+                  TEST($$);
+                  if( SIZE($3)<SIZE($5) )  Copy_Dims( lParse,$$, $5);
+                  if( ! Test_Dims( lParse, $1,$$) ) {
                      yyerror(scanner, lParse, "Incompatible dimensions in '?:' condition");
 		     YYERROR;
                   }
-                  if( SIZE((yyval.Node))<SIZE((yyvsp[-4].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-4].Node));
+                  if( SIZE($$)<SIZE($1) )  Copy_Dims( lParse,$$, $1);
                 }
-#line 2945 "eval_y.c"
-    break;
 
-  case 100: /* bexpr: BFUNCTION expr ')'  */
-#line 1033 "eval.y"
+       | BFUNCTION expr ')'
                 {
-		   if (FSTRCMP((yyvsp[-2].str),"ISNULL(") == 0) {
-		      (yyval.Node) = New_Func(lParse,  0, isnull_fct, 1, (yyvsp[-1].Node), 0, 0,
+		   if (FSTRCMP($1,"ISNULL(") == 0) {
+		      $$ = New_Func(lParse,  0, isnull_fct, 1, $2, 0, 0,
 				     0, 0, 0, 0 );
-		      TEST((yyval.Node)); 
+		      TEST($$); 
                       /* Use expression's size, but return BOOLEAN */
-		      TYPE((yyval.Node)) = BOOLEAN;
+		      TYPE($$) = BOOLEAN;
 		   } else {
 		      yyerror(scanner, lParse, "Boolean Function(expr) not supported");
 		      YYERROR;
 		   }
 		}
-#line 2962 "eval_y.c"
-    break;
-
-  case 101: /* bexpr: BFUNCTION bexpr ')'  */
-#line 1046 "eval.y"
+       | BFUNCTION bexpr ')'
                 {
-		   if (FSTRCMP((yyvsp[-2].str),"ISNULL(") == 0) {
-		      (yyval.Node) = New_Func(lParse,  0, isnull_fct, 1, (yyvsp[-1].Node), 0, 0,
+		   if (FSTRCMP($1,"ISNULL(") == 0) {
+		      $$ = New_Func(lParse,  0, isnull_fct, 1, $2, 0, 0,
 				     0, 0, 0, 0 );
-		      TEST((yyval.Node)); 
+		      TEST($$); 
                       /* Use expression's size, but return BOOLEAN */
-		      TYPE((yyval.Node)) = BOOLEAN;
+		      TYPE($$) = BOOLEAN;
 		   } else {
 		      yyerror(scanner, lParse, "Boolean Function(expr) not supported");
 		      YYERROR;
 		   }
 		}
-#line 2979 "eval_y.c"
-    break;
-
-  case 102: /* bexpr: BFUNCTION sexpr ')'  */
-#line 1059 "eval.y"
+       | BFUNCTION sexpr ')'
                 {
-		   if (FSTRCMP((yyvsp[-2].str),"ISNULL(") == 0) {
-		      (yyval.Node) = New_Func(lParse,  BOOLEAN, isnull_fct, 1, (yyvsp[-1].Node), 0, 0,
+		   if (FSTRCMP($1,"ISNULL(") == 0) {
+		      $$ = New_Func(lParse,  BOOLEAN, isnull_fct, 1, $2, 0, 0,
 				     0, 0, 0, 0 );
-		      TEST((yyval.Node)); 
+		      TEST($$); 
 		   } else {
 		      yyerror(scanner, lParse, "Boolean Function(expr) not supported");
 		      YYERROR;
 		   }
 		}
-#line 2994 "eval_y.c"
-    break;
-
-  case 103: /* bexpr: FUNCTION bexpr ',' bexpr ')'  */
-#line 1070 "eval.y"
+       | FUNCTION bexpr ',' bexpr ')'
                 {
-		   if (FSTRCMP((yyvsp[-4].str),"DEFNULL(") == 0) {
-		      if( SIZE((yyvsp[-3].Node))>=SIZE((yyvsp[-1].Node)) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) {
-			 (yyval.Node) = New_Func(lParse,  0, defnull_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
+		   if (FSTRCMP($1,"DEFNULL(") == 0) {
+		      if( SIZE($2)>=SIZE($4) && Test_Dims( lParse,  $2, $4 ) ) {
+			 $$ = New_Func(lParse,  0, defnull_fct, 2, $2, $4, 0,
 					0, 0, 0, 0 );
-			 TEST((yyval.Node)); 
+			 TEST($$); 
 		      } else {
 			 yyerror(scanner, lParse, "Dimensions of DEFNULL arguments are not compatible");
 			 YYERROR;
@@ -3010,570 +1091,251 @@ yyreduce:
 		      YYERROR;
 		   }
 		}
-#line 3014 "eval_y.c"
-    break;
-
-  case 104: /* bexpr: BFUNCTION expr ',' expr ',' expr ')'  */
-#line 1086 "eval.y"
-                {
-		   if( TYPE((yyvsp[-5].Node)) != DOUBLE ) (yyvsp[-5].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node) );
-		   if( TYPE((yyvsp[-3].Node)) != DOUBLE ) (yyvsp[-3].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node) );
-		   if( TYPE((yyvsp[-1].Node)) != DOUBLE ) (yyvsp[-1].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node) );
-		   if( ! (Test_Dims( lParse,  (yyvsp[-5].Node), (yyvsp[-3].Node) ) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) ) {
+       | BFUNCTION expr ',' expr ',' expr ')'
+		{
+		   if( TYPE($2) != DOUBLE ) $2 = New_Unary(lParse,  DOUBLE, 0, $2 );
+		   if( TYPE($4) != DOUBLE ) $4 = New_Unary(lParse,  DOUBLE, 0, $4 );
+		   if( TYPE($6) != DOUBLE ) $6 = New_Unary(lParse,  DOUBLE, 0, $6 );
+		   if( ! (Test_Dims( lParse,  $2, $4 ) && Test_Dims( lParse,  $4, $6 ) ) ) {
 		       yyerror(scanner, lParse, "Dimensions of NEAR arguments "
 			       "are not compatible");
 		       YYERROR;
 		   } else {
-		     if (FSTRCMP((yyvsp[-6].str),"NEAR(") == 0) {
-		       (yyval.Node) = New_Func(lParse,  BOOLEAN, near_fct, 3, (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),
+		     if (FSTRCMP($1,"NEAR(") == 0) {
+		       $$ = New_Func(lParse,  BOOLEAN, near_fct, 3, $2, $4, $6,
 				      0, 0, 0, 0 );
 		     } else {
 		       yyerror(scanner, lParse, "Boolean Function not supported");
 		       YYERROR;
 		     }
-		     TEST((yyval.Node)); 
+		     TEST($$); 
 
-		     if( SIZE((yyval.Node))<SIZE((yyvsp[-5].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
-		     if( SIZE((yyvsp[-5].Node))<SIZE((yyvsp[-3].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-3].Node));
-		     if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		     if( SIZE($$)<SIZE($2) )  Copy_Dims( lParse,$$, $2);
+		     if( SIZE($2)<SIZE($4) )  Copy_Dims( lParse,$$, $4);
+		     if( SIZE($4)<SIZE($6) )  Copy_Dims( lParse,$$, $6);
 		   }
 		}
-#line 3042 "eval_y.c"
-    break;
-
-  case 105: /* bexpr: BFUNCTION expr ',' expr ',' expr ',' expr ',' expr ')'  */
-#line 1110 "eval.y"
-                {
-		   if( TYPE((yyvsp[-9].Node)) != DOUBLE ) (yyvsp[-9].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-9].Node) );
-		   if( TYPE((yyvsp[-7].Node)) != DOUBLE ) (yyvsp[-7].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-7].Node) );
-		   if( TYPE((yyvsp[-5].Node)) != DOUBLE ) (yyvsp[-5].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node) );
-		   if( TYPE((yyvsp[-3].Node)) != DOUBLE ) (yyvsp[-3].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node) );
-		   if( TYPE((yyvsp[-1].Node))!= DOUBLE ) (yyvsp[-1].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node));
-		   if( ! (Test_Dims( lParse,  (yyvsp[-9].Node), (yyvsp[-7].Node) ) && Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) && 
-			  Test_Dims( lParse,  (yyvsp[-5].Node), (yyvsp[-3].Node) ) && Test_Dims( lParse,  (yyvsp[-3].Node), (yyvsp[-1].Node) )) ) {
+       | BFUNCTION expr ',' expr ',' expr ',' expr ',' expr ')'
+	        {
+		   if( TYPE($2) != DOUBLE ) $2 = New_Unary(lParse,  DOUBLE, 0, $2 );
+		   if( TYPE($4) != DOUBLE ) $4 = New_Unary(lParse,  DOUBLE, 0, $4 );
+		   if( TYPE($6) != DOUBLE ) $6 = New_Unary(lParse,  DOUBLE, 0, $6 );
+		   if( TYPE($8) != DOUBLE ) $8 = New_Unary(lParse,  DOUBLE, 0, $8 );
+		   if( TYPE($10)!= DOUBLE ) $10= New_Unary(lParse,  DOUBLE, 0, $10);
+		   if( ! (Test_Dims( lParse,  $2, $4 ) && Test_Dims( lParse,  $4, $6 ) && 
+			  Test_Dims( lParse,  $6, $8 ) && Test_Dims( lParse,  $8, $10 )) ) {
 		     yyerror(scanner, lParse, "Dimensions of CIRCLE arguments "
 			     "are not compatible");
 		     YYERROR;
 		   } else {
-		     if (FSTRCMP((yyvsp[-10].str),"CIRCLE(") == 0) {
-		       (yyval.Node) = New_Func(lParse,  BOOLEAN, circle_fct, 5, (yyvsp[-9].Node), (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node),
-				      (yyvsp[-1].Node), 0, 0 );
+		     if (FSTRCMP($1,"CIRCLE(") == 0) {
+		       $$ = New_Func(lParse,  BOOLEAN, circle_fct, 5, $2, $4, $6, $8,
+				      $10, 0, 0 );
 		     } else {
 		       yyerror(scanner, lParse, "Boolean Function not supported");
 		       YYERROR;
 		     }
-		     TEST((yyval.Node)); 
-		     if( SIZE((yyval.Node))<SIZE((yyvsp[-9].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-9].Node));
-		     if( SIZE((yyvsp[-9].Node))<SIZE((yyvsp[-7].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-7].Node));
-		     if( SIZE((yyvsp[-7].Node))<SIZE((yyvsp[-5].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
-		     if( SIZE((yyvsp[-5].Node))<SIZE((yyvsp[-3].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-3].Node));
-		     if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		     TEST($$); 
+		     if( SIZE($$)<SIZE($2) )  Copy_Dims( lParse,$$, $2);
+		     if( SIZE($2)<SIZE($4) )  Copy_Dims( lParse,$$, $4);
+		     if( SIZE($4)<SIZE($6) )  Copy_Dims( lParse,$$, $6);
+		     if( SIZE($6)<SIZE($8) )  Copy_Dims( lParse,$$, $8);
+		     if( SIZE($8)<SIZE($10) ) Copy_Dims( lParse,$$, $10);
 		   }
 		}
-#line 3074 "eval_y.c"
-    break;
-
-  case 106: /* bexpr: BFUNCTION expr ',' expr ',' expr ',' expr ',' expr ',' expr ',' expr ')'  */
-#line 1138 "eval.y"
+       | BFUNCTION expr ',' expr ',' expr ',' expr ',' expr ',' expr ',' expr ')'
                 {
-		   if( TYPE((yyvsp[-13].Node)) != DOUBLE ) (yyvsp[-13].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-13].Node) );
-		   if( TYPE((yyvsp[-11].Node)) != DOUBLE ) (yyvsp[-11].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-11].Node) );
-		   if( TYPE((yyvsp[-9].Node)) != DOUBLE ) (yyvsp[-9].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-9].Node) );
-		   if( TYPE((yyvsp[-7].Node)) != DOUBLE ) (yyvsp[-7].Node) = New_Unary(lParse,  DOUBLE, 0, (yyvsp[-7].Node) );
-		   if( TYPE((yyvsp[-5].Node))!= DOUBLE ) (yyvsp[-5].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-5].Node));
-		   if( TYPE((yyvsp[-3].Node))!= DOUBLE ) (yyvsp[-3].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-3].Node));
-		   if( TYPE((yyvsp[-1].Node))!= DOUBLE ) (yyvsp[-1].Node)= New_Unary(lParse,  DOUBLE, 0, (yyvsp[-1].Node));
-		   if( ! (Test_Dims( lParse,  (yyvsp[-13].Node), (yyvsp[-11].Node) ) && Test_Dims( lParse,  (yyvsp[-11].Node), (yyvsp[-9].Node) ) && 
-			  Test_Dims( lParse,  (yyvsp[-9].Node), (yyvsp[-7].Node) ) && Test_Dims( lParse,  (yyvsp[-7].Node), (yyvsp[-5].Node) ) &&
-			  Test_Dims( lParse, (yyvsp[-5].Node),(yyvsp[-3].Node) ) && Test_Dims( lParse, (yyvsp[-3].Node), (yyvsp[-1].Node) ) ) ) {
+		   if( TYPE($2) != DOUBLE ) $2 = New_Unary(lParse,  DOUBLE, 0, $2 );
+		   if( TYPE($4) != DOUBLE ) $4 = New_Unary(lParse,  DOUBLE, 0, $4 );
+		   if( TYPE($6) != DOUBLE ) $6 = New_Unary(lParse,  DOUBLE, 0, $6 );
+		   if( TYPE($8) != DOUBLE ) $8 = New_Unary(lParse,  DOUBLE, 0, $8 );
+		   if( TYPE($10)!= DOUBLE ) $10= New_Unary(lParse,  DOUBLE, 0, $10);
+		   if( TYPE($12)!= DOUBLE ) $12= New_Unary(lParse,  DOUBLE, 0, $12);
+		   if( TYPE($14)!= DOUBLE ) $14= New_Unary(lParse,  DOUBLE, 0, $14);
+		   if( ! (Test_Dims( lParse,  $2, $4 ) && Test_Dims( lParse,  $4, $6 ) && 
+			  Test_Dims( lParse,  $6, $8 ) && Test_Dims( lParse,  $8, $10 ) &&
+			  Test_Dims( lParse, $10,$12 ) && Test_Dims( lParse, $12, $14 ) ) ) {
 		     yyerror(scanner, lParse, "Dimensions of BOX or ELLIPSE arguments "
 			     "are not compatible");
 		     YYERROR;
 		   } else {
-		     if (FSTRCMP((yyvsp[-14].str),"BOX(") == 0) {
-		       (yyval.Node) = New_Func(lParse,  BOOLEAN, box_fct, 7, (yyvsp[-13].Node), (yyvsp[-11].Node), (yyvsp[-9].Node), (yyvsp[-7].Node),
-				      (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node) );
-		     } else if (FSTRCMP((yyvsp[-14].str),"ELLIPSE(") == 0) {
-		       (yyval.Node) = New_Func(lParse,  BOOLEAN, elps_fct, 7, (yyvsp[-13].Node), (yyvsp[-11].Node), (yyvsp[-9].Node), (yyvsp[-7].Node),
-				      (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node) );
+		     if (FSTRCMP($1,"BOX(") == 0) {
+		       $$ = New_Func(lParse,  BOOLEAN, box_fct, 7, $2, $4, $6, $8,
+				      $10, $12, $14 );
+		     } else if (FSTRCMP($1,"ELLIPSE(") == 0) {
+		       $$ = New_Func(lParse,  BOOLEAN, elps_fct, 7, $2, $4, $6, $8,
+				      $10, $12, $14 );
 		     } else {
 		       yyerror(scanner, lParse, "SAO Image Function not supported");
 		       YYERROR;
 		     }
-		     TEST((yyval.Node)); 
-		     if( SIZE((yyval.Node))<SIZE((yyvsp[-13].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-13].Node));
-		     if( SIZE((yyvsp[-13].Node))<SIZE((yyvsp[-11].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-11].Node));
-		     if( SIZE((yyvsp[-11].Node))<SIZE((yyvsp[-9].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-9].Node));
-		     if( SIZE((yyvsp[-9].Node))<SIZE((yyvsp[-7].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[-7].Node));
-		     if( SIZE((yyvsp[-7].Node))<SIZE((yyvsp[-5].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-5].Node));
-		     if( SIZE((yyvsp[-5].Node))<SIZE((yyvsp[-3].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-3].Node));
-		     if( SIZE((yyvsp[-3].Node))<SIZE((yyvsp[-1].Node)) ) Copy_Dims( lParse,(yyval.Node), (yyvsp[-1].Node));
+		     TEST($$); 
+		     if( SIZE($$)<SIZE($2) )  Copy_Dims( lParse,$$, $2);
+		     if( SIZE($2)<SIZE($4) )  Copy_Dims( lParse,$$, $4);
+		     if( SIZE($4)<SIZE($6) )  Copy_Dims( lParse,$$, $6);
+		     if( SIZE($6)<SIZE($8) )  Copy_Dims( lParse,$$, $8);
+		     if( SIZE($8)<SIZE($10) ) Copy_Dims( lParse,$$, $10);
+		     if( SIZE($10)<SIZE($12) ) Copy_Dims( lParse,$$, $12);
+		     if( SIZE($12)<SIZE($14) ) Copy_Dims( lParse,$$, $14);
 		   }
 		}
-#line 3114 "eval_y.c"
-    break;
 
-  case 107: /* bexpr: GTIFILTER ')'  */
-#line 1175 "eval.y"
+       | GTIFILTER ')'
                 { /* Use defaults for all elements */
-		   (yyval.Node) = New_GTI(lParse, gtifilt_fct,  "", -99, -99, "*START*", "*STOP*" );
-                   TEST((yyval.Node));                                        }
-#line 3122 "eval_y.c"
-    break;
-
-  case 108: /* bexpr: GTIFILTER STRING ')'  */
-#line 1179 "eval.y"
+		   $$ = New_GTI(lParse, gtifilt_fct,  "", -99, -99, "*START*", "*STOP*" );
+                   TEST($$);                                        }
+       | GTIFILTER STRING ')'
                 { /* Use defaults for all except filename */
-		  (yyval.Node) = New_GTI(lParse, gtifilt_fct,  (yyvsp[-1].str), -99, -99, "*START*", "*STOP*" );
-                   TEST((yyval.Node));                                        }
-#line 3130 "eval_y.c"
-    break;
+		  $$ = New_GTI(lParse, gtifilt_fct,  $2, -99, -99, "*START*", "*STOP*" );
+                   TEST($$);                                        }
+       | GTIFILTER STRING ',' expr ')'
+                {  $$ = New_GTI(lParse, gtifilt_fct,  $2, $4, -99, "*START*", "*STOP*" );
+                   TEST($$);                                        }
+       | GTIFILTER STRING ',' expr ',' STRING ',' STRING ')'
+                {  $$ = New_GTI(lParse, gtifilt_fct,  $2, $4, -99, $6, $8 );
+                   TEST($$);                                        }
 
-  case 109: /* bexpr: GTIFILTER STRING ',' expr ')'  */
-#line 1183 "eval.y"
-                {  (yyval.Node) = New_GTI(lParse, gtifilt_fct,  (yyvsp[-3].str), (yyvsp[-1].Node), -99, "*START*", "*STOP*" );
-                   TEST((yyval.Node));                                        }
-#line 3137 "eval_y.c"
-    break;
 
-  case 110: /* bexpr: GTIFILTER STRING ',' expr ',' STRING ',' STRING ')'  */
-#line 1186 "eval.y"
-                {  (yyval.Node) = New_GTI(lParse, gtifilt_fct,  (yyvsp[-7].str), (yyvsp[-5].Node), -99, (yyvsp[-3].str), (yyvsp[-1].str) );
-                   TEST((yyval.Node));                                        }
-#line 3144 "eval_y.c"
-    break;
-
-  case 111: /* bexpr: GTIOVERLAP STRING ',' expr ',' expr ')'  */
-#line 1191 "eval.y"
-                {  (yyval.Node) = New_GTI(lParse, gtiover_fct,  (yyvsp[-5].str), (yyvsp[-3].Node), (yyvsp[-1].Node), "*START*", "*STOP*");
-                   TEST((yyval.Node));                                        }
-#line 3151 "eval_y.c"
-    break;
-
-  case 112: /* bexpr: GTIOVERLAP STRING ',' expr ',' expr ',' STRING ',' STRING ')'  */
-#line 1194 "eval.y"
-                {  (yyval.Node) = New_GTI(lParse, gtiover_fct,  (yyvsp[-9].str), (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].str), (yyvsp[-1].str) );
-                   TEST((yyval.Node));                                        }
-#line 3158 "eval_y.c"
-    break;
-
-  case 113: /* bexpr: GTIFIND ')'  */
-#line 1199 "eval.y"
+       /* GTIFIND('myfile.gti', TIME_EXPR, 'START', 'STOP') */
+       | GTIFIND ')'
                 { /* Use defaults for all elements */
-		   (yyval.Node) = New_GTI(lParse, gtifind_fct,  "", -99, -99, "*START*", "*STOP*" );
-                   TEST((yyval.Node));                                        }
-#line 3166 "eval_y.c"
-    break;
-
-  case 114: /* bexpr: GTIFIND STRING ')'  */
-#line 1203 "eval.y"
+		   $$ = New_GTI(lParse, gtifind_fct,  "", -99, -99, "*START*", "*STOP*" );
+                   TEST($$);                                        }
+       | GTIFIND STRING ')'
                 { /* Use defaults for all except filename */
-		  (yyval.Node) = New_GTI(lParse, gtifind_fct,  (yyvsp[-1].str), -99, -99, "*START*", "*STOP*" );
-                   TEST((yyval.Node));                                        }
-#line 3174 "eval_y.c"
-    break;
+		  $$ = New_GTI(lParse, gtifind_fct,  $2, -99, -99, "*START*", "*STOP*" );
+                   TEST($$);                                        }
+       | GTIFIND STRING ',' expr ')'
+                {  $$ = New_GTI(lParse, gtifind_fct,  $2, $4, -99, "*START*", "*STOP*" );
+                   TEST($$);                                        }
+       | GTIFIND STRING ',' expr ',' STRING ',' STRING ')'
+                {  $$ = New_GTI(lParse, gtifind_fct,  $2, $4, -99, $6, $8 );
+                   TEST($$);                                        }
 
-  case 115: /* bexpr: GTIFIND STRING ',' expr ')'  */
-#line 1207 "eval.y"
-                {  (yyval.Node) = New_GTI(lParse, gtifind_fct,  (yyvsp[-3].str), (yyvsp[-1].Node), -99, "*START*", "*STOP*" );
-                   TEST((yyval.Node));                                        }
-#line 3181 "eval_y.c"
-    break;
 
-  case 116: /* bexpr: GTIFIND STRING ',' expr ',' STRING ',' STRING ')'  */
-#line 1210 "eval.y"
-                {  (yyval.Node) = New_GTI(lParse, gtifind_fct,  (yyvsp[-7].str), (yyvsp[-5].Node), -99, (yyvsp[-3].str), (yyvsp[-1].str) );
-                   TEST((yyval.Node));                                        }
-#line 3188 "eval_y.c"
-    break;
-
-  case 117: /* bexpr: REGFILTER STRING ')'  */
-#line 1215 "eval.y"
+       | REGFILTER STRING ')'
                 { /* Use defaults for all except filename */
-                   (yyval.Node) = New_REG(lParse,  (yyvsp[-1].str), -99, -99, "" );
-                   TEST((yyval.Node));                                        }
-#line 3196 "eval_y.c"
-    break;
+                   $$ = New_REG(lParse,  $2, -99, -99, "" );
+                   TEST($$);                                        }
+       | REGFILTER STRING ',' expr ',' expr ')'
+                {  $$ = New_REG(lParse,  $2, $4, $6, "" );
+                   TEST($$);                                        }
+       | REGFILTER STRING ',' expr ',' expr ',' STRING ')'
+                {  $$ = New_REG(lParse,  $2, $4, $6, $8 );
+                   TEST($$);                                        }
 
-  case 118: /* bexpr: REGFILTER STRING ',' expr ',' expr ')'  */
-#line 1219 "eval.y"
-                {  (yyval.Node) = New_REG(lParse,  (yyvsp[-5].str), (yyvsp[-3].Node), (yyvsp[-1].Node), "" );
-                   TEST((yyval.Node));                                        }
-#line 3203 "eval_y.c"
-    break;
+       | bexpr '[' expr ']'
+                { $$ = New_Deref(lParse,  $1, 1, $3,  0,  0,  0,   0 ); TEST($$); }
+       | bexpr '[' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 2, $3, $5,  0,  0,   0 ); TEST($$); }
+       | bexpr '[' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 3, $3, $5, $7,  0,   0 ); TEST($$); }
+       | bexpr '[' expr ',' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 4, $3, $5, $7, $9,   0 ); TEST($$); }
+       | bexpr '[' expr ',' expr ',' expr ',' expr ',' expr ']'
+                { $$ = New_Deref(lParse,  $1, 5, $3, $5, $7, $9, $11 ); TEST($$); }
+       | NOT bexpr
+                { $$ = New_Unary(lParse,  BOOLEAN, NOT, $2 ); TEST($$); }
+       | '(' bexpr ')'
+                { $$ = $2; }
+       ;
 
-  case 119: /* bexpr: REGFILTER STRING ',' expr ',' expr ',' STRING ')'  */
-#line 1222 "eval.y"
-                {  (yyval.Node) = New_REG(lParse,  (yyvsp[-7].str), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].str) );
-                   TEST((yyval.Node));                                        }
-#line 3210 "eval_y.c"
-    break;
-
-  case 120: /* bexpr: bexpr '[' expr ']'  */
-#line 1226 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-3].Node), 1, (yyvsp[-1].Node),  0,  0,  0,   0 ); TEST((yyval.Node)); }
-#line 3216 "eval_y.c"
-    break;
-
-  case 121: /* bexpr: bexpr '[' expr ',' expr ']'  */
-#line 1228 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-5].Node), 2, (yyvsp[-3].Node), (yyvsp[-1].Node),  0,  0,   0 ); TEST((yyval.Node)); }
-#line 3222 "eval_y.c"
-    break;
-
-  case 122: /* bexpr: bexpr '[' expr ',' expr ',' expr ']'  */
-#line 1230 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-7].Node), 3, (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),  0,   0 ); TEST((yyval.Node)); }
-#line 3228 "eval_y.c"
-    break;
-
-  case 123: /* bexpr: bexpr '[' expr ',' expr ',' expr ',' expr ']'  */
-#line 1232 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-9].Node), 4, (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node),   0 ); TEST((yyval.Node)); }
-#line 3234 "eval_y.c"
-    break;
-
-  case 124: /* bexpr: bexpr '[' expr ',' expr ',' expr ',' expr ',' expr ']'  */
-#line 1234 "eval.y"
-                { (yyval.Node) = New_Deref(lParse,  (yyvsp[-11].Node), 5, (yyvsp[-9].Node), (yyvsp[-7].Node), (yyvsp[-5].Node), (yyvsp[-3].Node), (yyvsp[-1].Node) ); TEST((yyval.Node)); }
-#line 3240 "eval_y.c"
-    break;
-
-  case 125: /* bexpr: NOT bexpr  */
-#line 1236 "eval.y"
-                { (yyval.Node) = New_Unary(lParse,  BOOLEAN, NOT, (yyvsp[0].Node) ); TEST((yyval.Node)); }
-#line 3246 "eval_y.c"
-    break;
-
-  case 126: /* bexpr: '(' bexpr ')'  */
-#line 1238 "eval.y"
-                { (yyval.Node) = (yyvsp[-1].Node); }
-#line 3252 "eval_y.c"
-    break;
-
-  case 127: /* sexpr: STRING  */
-#line 1242 "eval.y"
-                { (yyval.Node) = New_Const(lParse,  STRING, (yyvsp[0].str), strlen((yyvsp[0].str))+1 ); TEST((yyval.Node));
-                  SIZE((yyval.Node)) = strlen((yyvsp[0].str)); }
-#line 3259 "eval_y.c"
-    break;
-
-  case 128: /* sexpr: SCOLUMN  */
-#line 1245 "eval.y"
-                { (yyval.Node) = New_Column(lParse,  (yyvsp[0].lng) ); TEST((yyval.Node)); }
-#line 3265 "eval_y.c"
-    break;
-
-  case 129: /* sexpr: SCOLUMN '{' expr '}'  */
-#line 1247 "eval.y"
+sexpr:   STRING
+                { $$ = New_Const(lParse,  STRING, $1, strlen($1)+1 ); TEST($$);
+                  SIZE($$) = strlen($1); }
+       | SCOLUMN
+                { $$ = New_Column(lParse,  $1 ); TEST($$); }
+       | SCOLUMN '{' expr '}'
                 {
-                  if( TYPE((yyvsp[-1].Node)) != LONG
-		      || OPER((yyvsp[-1].Node)) != CONST_OP ) {
+                  if( TYPE($3) != LONG
+		      || OPER($3) != CONST_OP ) {
 		     yyerror(scanner, lParse, "Offset argument must be a constant integer");
 		     YYERROR;
 		  }
-                  (yyval.Node) = New_Offset(lParse,  (yyvsp[-3].lng), (yyvsp[-1].Node) ); TEST((yyval.Node));
+                  $$ = New_Offset(lParse,  $1, $3 ); TEST($$);
                 }
-#line 3278 "eval_y.c"
-    break;
-
-  case 130: /* sexpr: SNULLREF  */
-#line 1256 "eval.y"
-                { (yyval.Node) = New_Func(lParse,  STRING, null_fct, 0, 0, 0, 0, 0, 0, 0, 0 ); }
-#line 3284 "eval_y.c"
-    break;
-
-  case 131: /* sexpr: '(' sexpr ')'  */
-#line 1258 "eval.y"
-                { (yyval.Node) = (yyvsp[-1].Node); }
-#line 3290 "eval_y.c"
-    break;
-
-  case 132: /* sexpr: sexpr '+' sexpr  */
-#line 1260 "eval.y"
+       | SNULLREF
+                { $$ = New_Func(lParse,  STRING, null_fct, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+       | '(' sexpr ')'
+                { $$ = $2; }
+       | sexpr '+' sexpr
                 { 
-		  if (SIZE((yyvsp[-2].Node))+SIZE((yyvsp[0].Node)) >= MAX_STRLEN) {
+		  if (SIZE($1)+SIZE($3) >= MAX_STRLEN) {
 		    yyerror(scanner, lParse, "Combined string size exceeds " MAX_STRLEN_S " characters");
 		    YYERROR;
 		  }
-		  (yyval.Node) = New_BinOp(lParse,  STRING, (yyvsp[-2].Node), '+', (yyvsp[0].Node) );  TEST((yyval.Node));
-		  SIZE((yyval.Node)) = SIZE((yyvsp[-2].Node)) + SIZE((yyvsp[0].Node));
+		  $$ = New_BinOp(lParse,  STRING, $1, '+', $3 );  TEST($$);
+		  SIZE($$) = SIZE($1) + SIZE($3);
 		}
-#line 3303 "eval_y.c"
-    break;
-
-  case 133: /* sexpr: bexpr '?' sexpr ':' sexpr  */
-#line 1269 "eval.y"
+       | bexpr '?' sexpr ':' sexpr
                 {
 		  int outSize;
-                  if( SIZE((yyvsp[-4].Node))!=1 ) {
+                  if( SIZE($1)!=1 ) {
                      yyerror(scanner, lParse, "Cannot have a vector string column");
 		     YYERROR;
                   }
 		  /* Since the output can be calculated now, as a constant
 		     scalar, we must precalculate the output size, in
 		     order to avoid an overflow. */
-		  outSize = SIZE((yyvsp[-2].Node));
-		  if (SIZE((yyvsp[0].Node)) > outSize) outSize = SIZE((yyvsp[0].Node));
-                  (yyval.Node) = New_FuncSize(lParse,  0, ifthenelse_fct, 3, (yyvsp[-2].Node), (yyvsp[0].Node), (yyvsp[-4].Node),
+		  outSize = SIZE($3);
+		  if (SIZE($5) > outSize) outSize = SIZE($5);
+                  $$ = New_FuncSize(lParse,  0, ifthenelse_fct, 3, $3, $5, $1,
 				     0, 0, 0, 0, outSize);
 		  
-                  TEST((yyval.Node));
-                  if( SIZE((yyvsp[-2].Node))<SIZE((yyvsp[0].Node)) )  Copy_Dims( lParse,(yyval.Node), (yyvsp[0].Node));
+                  TEST($$);
+                  if( SIZE($3)<SIZE($5) )  Copy_Dims( lParse,$$, $5);
                 }
-#line 3325 "eval_y.c"
-    break;
 
-  case 134: /* sexpr: FUNCTION sexpr ',' sexpr ')'  */
-#line 1288 "eval.y"
+       | FUNCTION sexpr ',' sexpr ')'
                 { 
-		  if (FSTRCMP((yyvsp[-4].str),"DEFNULL(") == 0) {
+		  if (FSTRCMP($1,"DEFNULL(") == 0) {
 		     int outSize;
 		     /* Since the output can be calculated now, as a constant
 			scalar, we must precalculate the output size, in
 			order to avoid an overflow. */
-		     outSize = SIZE((yyvsp[-3].Node));
-		     if (SIZE((yyvsp[-1].Node)) > outSize) outSize = SIZE((yyvsp[-1].Node));
+		     outSize = SIZE($2);
+		     if (SIZE($4) > outSize) outSize = SIZE($4);
 		     
-		     (yyval.Node) = New_FuncSize(lParse,  0, defnull_fct, 2, (yyvsp[-3].Node), (yyvsp[-1].Node), 0,
+		     $$ = New_FuncSize(lParse,  0, defnull_fct, 2, $2, $4, 0,
 					0, 0, 0, 0, outSize );
-		     TEST((yyval.Node)); 
-		     if( SIZE((yyvsp[-1].Node))>SIZE((yyvsp[-3].Node)) ) SIZE((yyval.Node)) = SIZE((yyvsp[-1].Node));
+		     TEST($$); 
+		     if( SIZE($4)>SIZE($2) ) SIZE($$) = SIZE($4);
 		  } else {
 		     yyerror(scanner, lParse, "Function(string,string) not supported");
 		     YYERROR;
 		  }
 		}
-#line 3348 "eval_y.c"
-    break;
-
-  case 135: /* sexpr: FUNCTION sexpr ',' expr ',' expr ')'  */
-#line 1307 "eval.y"
+       | FUNCTION sexpr ',' expr ',' expr ')'
                 { 
-		  if (FSTRCMP((yyvsp[-6].str),"STRMID(") == 0) {
+		  if (FSTRCMP($1,"STRMID(") == 0) {
 		    int len;
-		    if( TYPE((yyvsp[-3].Node)) != LONG || SIZE((yyvsp[-3].Node)) != 1 ||
-			TYPE((yyvsp[-1].Node)) != LONG || SIZE((yyvsp[-1].Node)) != 1) {
+		    if( TYPE($4) != LONG || SIZE($4) != 1 ||
+			TYPE($6) != LONG || SIZE($6) != 1) {
 		      yyerror(scanner, lParse, "When using STRMID(S,P,N), P and N must be integers (and not vector columns)");
 		      YYERROR;
 		    }
-		    if (OPER((yyvsp[-1].Node)) == CONST_OP) {
+		    if (OPER($6) == CONST_OP) {
 		      /* Constant value: use that directly */
-		      len = (lParse->Nodes[(yyvsp[-1].Node)].value.data.lng);
+		      len = (lParse->Nodes[$6].value.data.lng);
 		    } else {
 		      /* Variable value: use the maximum possible (from $2) */
-		      len = SIZE((yyvsp[-5].Node));
+		      len = SIZE($2);
 		    }
 		    if (len <= 0 || len >= MAX_STRLEN) {
 		      yyerror(scanner, lParse, "STRMID(S,P,N), N must be 1-" MAX_STRLEN_S);
 		      YYERROR;
 		    }
-		    (yyval.Node) = New_FuncSize(lParse,  0, strmid_fct, 3, (yyvsp[-5].Node), (yyvsp[-3].Node),(yyvsp[-1].Node),0,0,0,0,len);
-		    TEST((yyval.Node));
+		    $$ = New_FuncSize(lParse,  0, strmid_fct, 3, $2, $4,$6,0,0,0,0,len);
+		    TEST($$);
 		  } else {
 		     yyerror(scanner, lParse, "Function(string,expr,expr) not supported");
 		     YYERROR;
 		  }
 		}
-#line 3379 "eval_y.c"
-    break;
 
+	;
 
-#line 3383 "eval_y.c"
-
-      default: break;
-    }
-  /* User semantic actions sometimes alter yychar, and that requires
-     that yytoken be updated with the new translation.  We take the
-     approach of translating immediately before every use of yytoken.
-     One alternative is translating here after every semantic action,
-     but that translation would be missed if the semantic action invokes
-     YYABORT, YYACCEPT, or YYERROR immediately after altering yychar or
-     if it invokes YYBACKUP.  In the case of YYABORT or YYACCEPT, an
-     incorrect destructor might then be invoked immediately.  In the
-     case of YYERROR or YYBACKUP, subsequent parser actions might lead
-     to an incorrect destructor call or verbose syntax error message
-     before the lookahead is translated.  */
-  YY_SYMBOL_PRINT ("-> $$ =", YY_CAST (yysymbol_kind_t, yyr1[yyn]), &yyval, &yyloc);
-
-  YYPOPSTACK (yylen);
-  yylen = 0;
-
-  *++yyvsp = yyval;
-
-  /* Now 'shift' the result of the reduction.  Determine what state
-     that goes to, based on the state we popped back to and the rule
-     number reduced by.  */
-  {
-    const int yylhs = yyr1[yyn] - YYNTOKENS;
-    const int yyi = yypgoto[yylhs] + *yyssp;
-    yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyssp
-               ? yytable[yyi]
-               : yydefgoto[yylhs]);
-  }
-
-  goto yynewstate;
-
-
-/*--------------------------------------.
-| yyerrlab -- here on detecting error.  |
-`--------------------------------------*/
-yyerrlab:
-  /* Make sure we have latest lookahead translation.  See comments at
-     user semantic actions for why this is necessary.  */
-  yytoken = yychar == FITS_PARSER_YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
-  /* If not already recovering from an error, report this error.  */
-  if (!yyerrstatus)
-    {
-      ++yynerrs;
-      yyerror (scanner, lParse, YY_("syntax error"));
-    }
-
-  if (yyerrstatus == 3)
-    {
-      /* If just tried and failed to reuse lookahead token after an
-         error, discard it.  */
-
-      if (yychar <= FITS_PARSER_YYEOF)
-        {
-          /* Return failure if at end of input.  */
-          if (yychar == FITS_PARSER_YYEOF)
-            YYABORT;
-        }
-      else
-        {
-          yydestruct ("Error: discarding",
-                      yytoken, &yylval, scanner, lParse);
-          yychar = FITS_PARSER_YYEMPTY;
-        }
-    }
-
-  /* Else will try to reuse lookahead token after shifting the error
-     token.  */
-  goto yyerrlab1;
-
-
-/*---------------------------------------------------.
-| yyerrorlab -- error raised explicitly by YYERROR.  |
-`---------------------------------------------------*/
-yyerrorlab:
-  /* Pacify compilers when the user code never invokes YYERROR and the
-     label yyerrorlab therefore never appears in user code.  */
-  if (0)
-    YYERROR;
-  ++yynerrs;
-
-  /* Do not reclaim the symbols of the rule whose action triggered
-     this YYERROR.  */
-  YYPOPSTACK (yylen);
-  yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
-  yystate = *yyssp;
-  goto yyerrlab1;
-
-
-/*-------------------------------------------------------------.
-| yyerrlab1 -- common code for both syntax error and YYERROR.  |
-`-------------------------------------------------------------*/
-yyerrlab1:
-  yyerrstatus = 3;      /* Each real token shifted decrements this.  */
-
-  /* Pop stack until we find a state that shifts the error token.  */
-  for (;;)
-    {
-      yyn = yypact[yystate];
-      if (!yypact_value_is_default (yyn))
-        {
-          yyn += YYSYMBOL_YYerror;
-          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYSYMBOL_YYerror)
-            {
-              yyn = yytable[yyn];
-              if (0 < yyn)
-                break;
-            }
-        }
-
-      /* Pop the current state because it cannot handle the error token.  */
-      if (yyssp == yyss)
-        YYABORT;
-
-
-      yydestruct ("Error: popping",
-                  YY_ACCESSING_SYMBOL (yystate), yyvsp, scanner, lParse);
-      YYPOPSTACK (1);
-      yystate = *yyssp;
-      YY_STACK_PRINT (yyss, yyssp);
-    }
-
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  *++yyvsp = yylval;
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
-
-
-  /* Shift the error token.  */
-  YY_SYMBOL_PRINT ("Shifting", YY_ACCESSING_SYMBOL (yyn), yyvsp, yylsp);
-
-  yystate = yyn;
-  goto yynewstate;
-
-
-/*-------------------------------------.
-| yyacceptlab -- YYACCEPT comes here.  |
-`-------------------------------------*/
-yyacceptlab:
-  yyresult = 0;
-  goto yyreturnlab;
-
-
-/*-----------------------------------.
-| yyabortlab -- YYABORT comes here.  |
-`-----------------------------------*/
-yyabortlab:
-  yyresult = 1;
-  goto yyreturnlab;
-
-
-/*-----------------------------------------------------------.
-| yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
-`-----------------------------------------------------------*/
-yyexhaustedlab:
-  yyerror (scanner, lParse, YY_("memory exhausted"));
-  yyresult = 2;
-  goto yyreturnlab;
-
-
-/*----------------------------------------------------------.
-| yyreturnlab -- parsing is finished, clean up and return.  |
-`----------------------------------------------------------*/
-yyreturnlab:
-  if (yychar != FITS_PARSER_YYEMPTY)
-    {
-      /* Make sure we have latest lookahead translation.  See comments at
-         user semantic actions for why this is necessary.  */
-      yytoken = YYTRANSLATE (yychar);
-      yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval, scanner, lParse);
-    }
-  /* Do not reclaim the symbols of the rule whose action triggered
-     this YYABORT or YYACCEPT.  */
-  YYPOPSTACK (yylen);
-  YY_STACK_PRINT (yyss, yyssp);
-  while (yyssp != yyss)
-    {
-      yydestruct ("Cleanup: popping",
-                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, scanner, lParse);
-      YYPOPSTACK (1);
-    }
-#ifndef yyoverflow
-  if (yyss != yyssa)
-    YYSTACK_FREE (yyss);
-#endif
-
-  return yyresult;
-}
-
-#line 1336 "eval.y"
-
+%%
 
 /*************************************************************************/
 /*  Start of "New" routines which build the expression Nodal structure   */
@@ -4338,11 +2100,6 @@ static int New_Array( ParseData *lParse, int valueNode, int dimNode )
 	- 5 or fewer dimensions 
    */
 
-   if (SIZE(valueNode) > 1) {
-     yyerror(0, lParse, "ARRAY(V,n) value V must have vector dimension of 1");
-     return (-1);
-   }
-
    dims = &(lParse->Nodes[dimNode]);
    for (i=0; i<MAXDIMS; i++) naxes[i] = 1;
 
@@ -4379,6 +2136,16 @@ static int New_Array( ParseData *lParse, int valueNode, int dimNode )
      nelem *= naxes[i];
    }
 
+   if (SIZE(valueNode) == nelem && nelem > 1) {
+     /* "reform" operation - do nothing */
+   } else if (SIZE(valueNode) > 1 && nelem > 1) {
+     yyerror(0, lParse, "ARRAY(V,d) mismatch between number of elements in V and d");
+     return (-1);
+   } else if (SIZE(valueNode) > 1) {
+     yyerror(0, lParse, "ARRAY(V,n) value V must have vector dimension of 1");
+     return (-1);
+   }
+   
    n = Alloc_Node(lParse);
    if( n>=0 ) {
       this             = lParse->Nodes + n;
@@ -8238,8 +6005,8 @@ static void Do_Array( ParseData *lParse, Node *this )
      if( that->operation == CONST_OP ) {
 
        idx = lParse->nRows*this->value.nelem + offset;
-       while( (idx--)>=0 ) {
-	       
+       while( idx-- ) {
+
 	 this->value.undef[idx] = 0;
 
 	 switch( this->type ) {
@@ -8254,8 +6021,30 @@ static void Do_Array( ParseData *lParse, Node *this )
 	   break;
 	 }
        }
+
+     } else if (that->value.nelem > 1) { /* array "REFORM" */
+       /* Note that dimensions change but total number of elements is same,
+	  so we just do a straight copy */
+      
+       idx = lParse->nRows*this->value.nelem;
+       while( idx-- ) {
+
+	 this->value.undef[idx] = that->value.undef[idx];
+
+	 switch( this->type ) {
+	 case BOOLEAN:
+	   this->value.data.logptr[idx] = that->value.data.logptr[idx];
+	   break;
+	 case LONG:
+	   this->value.data.lngptr[idx] = that->value.data.lngptr[idx];
+	   break;
+	 case DOUBLE:
+	   this->value.data.dblptr[idx] = that->value.data.dblptr[idx];
+	   break;
+	 }
+       }
        
-     } else {
+     } else { /* Any promotion of scalar to vector/array */
        
        row  = lParse->nRows;
        idx  = row * this->value.nelem - 1;
