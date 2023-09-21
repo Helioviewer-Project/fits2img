@@ -36,6 +36,7 @@ static const char _versionid_[] __attribute__((unused)) =
 
 int main(int argc, char **argv) {
     int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
+    int keep_filename = 0;
     char *appname = NULL, *contact = NULL, *outdir = NULL;
     char *yuv = NULL, *cm = NULL, *func = NULL;
     char *dateobs = NULL, *telescop = NULL, *instrume = NULL, *detector = NULL, *wavelnth = NULL;
@@ -72,6 +73,8 @@ int main(int argc, char **argv) {
          "Output a PGM file instead of a PNG", NULL },
         { "jhv", 'J', 0, G_OPTION_ARG_NONE, &jhv,
          "Output a file suitable for use with Helioviewer", NULL },
+        { "keep-filename", 'k', 0, G_OPTION_ARG_NONE, &keep_filename,
+         "Keep original filename (for --jhv)", NULL },
         { "cratio", 0, 0, G_OPTION_ARG_DOUBLE, &cratio,
          "OpenJPEG compression ratio", G_STRINGIFY(DEF_CRATIO) },
         { "nlayers", 0, 0, G_OPTION_ARG_INT, &nlayers,
@@ -139,9 +142,14 @@ int main(int argc, char **argv) {
     } else {
         char *name;
         if (jhv) {
-            char *jhvname = p2sc_name_swap_jhv(p->dateobs, p->telescop, p->instrume,
-                                               p->detector, p->wavelnth);
-            name = p2sc_name_swap_qlk(outdir, jhvname, "jp2");
+            if (keep_filename) {
+                name = p2sc_name_swap_qlk(outdir, p->name, "jp2");
+            } else {
+                char *jhvname = p2sc_name_swap_jhv(p->dateobs, p->telescop, p->instrume,
+                                                   p->detector, p->wavelnth);
+                name = p2sc_name_swap_qlk(outdir, jhvname, "jp2");
+                g_free(jhvname);
+            }
 
             swap_j2kparams_t j2kp = {
                 .cratio = cratio,
@@ -155,8 +163,6 @@ int main(int argc, char **argv) {
                 .debug = debug
             };
             swap_write_j2k(name, g, p->w, p->h, &j2kp);
-
-            g_free(jhvname);
         } else if (pgm) {
             name = p2sc_name_swap_qlk(outdir, p->name, "pgm");
             swap_write_pgm(name, (const guint16 *) g, p->w, p->h, 255);
