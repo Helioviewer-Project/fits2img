@@ -9,6 +9,7 @@ static const char _versionid_[] __attribute__((unused)) =
     "$Id: fits2img.c 2636 2014-11-21 18:22:17Z bogdan $";
 
 #include <string.h>
+#include <stdio.h>
 #include <glib.h>
 
 #include "p2sc_name.h"
@@ -36,7 +37,7 @@ static const char _versionid_[] __attribute__((unused)) =
 
 int main(int argc, char **argv) {
     int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
-    int keep_filename = 0;
+    int keep_filename = 0, print_filename = 0;
     char *appname = NULL, *contact = NULL, *outdir = NULL;
     char *yuv = NULL, *cm = NULL, *func = NULL;
     char *dateobs = NULL, *telescop = NULL, *instrume = NULL, *detector = NULL, *wavelnth = NULL;
@@ -75,6 +76,8 @@ int main(int argc, char **argv) {
          "Output a file suitable for use with Helioviewer", NULL },
         { "keep-filename", 'k', 0, G_OPTION_ARG_NONE, &keep_filename,
          "Keep original filename (for --jhv)", NULL },
+        { "print-filename", 'p', 0, G_OPTION_ARG_NONE, &print_filename,
+         "Print output filename", NULL },
         { "cratio", 0, 0, G_OPTION_ARG_DOUBLE, &cratio,
          "OpenJPEG compression ratio", G_STRINGIFY(DEF_CRATIO) },
         { "nlayers", 0, 0, G_OPTION_ARG_INT, &nlayers,
@@ -173,6 +176,7 @@ int main(int argc, char **argv) {
             name = p2sc_name_swap_qlk(outdir, p->name, "png");
             swap_write_png(name, g, p->w, p->h, swap_palette_rgb_get(cm), p->xml, strategy);
         }
+        printf("%s\n", name);
         g_free(name);
     }
 
