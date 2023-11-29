@@ -176,7 +176,8 @@ int main(int argc, char **argv) {
             name = p2sc_name_swap_qlk(outdir, p->name, "png");
             swap_write_png(name, g, p->w, p->h, swap_palette_rgb_get(cm), p->xml, strategy);
         }
-        printf("%s\n", name);
+        if (print_filename)
+            printf("%s\n", name);
         g_free(name);
     }
 
