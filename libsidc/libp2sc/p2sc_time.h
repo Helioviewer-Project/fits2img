@@ -32,7 +32,7 @@ extern "C" {
 #define p2sc_ticks2double(ticks) (((guint64) (ticks) & 0x3fffffffffffULL) * OBET_RES)
 #define p2sc_double2ticks(secs)  ((guint64) ((double) (secs) * (1. / OBET_RES) + .5))
 
-#ifndef NO_TRACE_TIME
+#if (defined(__x86_64__) || defined(__i386__)) && !defined(NO_TRACE_TIME)
 
 #include <sys/times.h>
 #include <unistd.h>

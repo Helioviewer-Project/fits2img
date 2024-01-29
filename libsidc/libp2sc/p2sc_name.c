@@ -8,6 +8,7 @@
 static const char _versionid_[] __attribute__((unused)) =
     "$Id: p2sc_name.c 5108 2014-06-19 12:29:23Z bogdan $";
 
+#include <stdio.h>
 #include <string.h>
 #include <glib.h>
 
