@@ -5,8 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__((unused)) =
-    "$Id: fits2img.c 2636 2014-11-21 18:22:17Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) = "$Id: fits2img.c 2636 2014-11-21 18:22:17Z bogdan $";
 
 #include <string.h>
 #include <stdio.h>
@@ -119,8 +118,7 @@ int main(int argc, char **argv) {
     }
 
     contact = contact == NULL ? g_strdup("swhv@oma.be") : contact;
-    procfits_t *p =
-        fitsproc(argv[1], contact, noverify, dateobs, telescop, instrume, detector, wavelnth);
+    procfits_t *p = fitsproc(argv[1], contact, noverify, dateobs, telescop, instrume, detector, wavelnth);
     g_free(contact);
     g_free(dateobs), g_free(telescop), g_free(instrume), g_free(detector), g_free(wavelnth);
 
