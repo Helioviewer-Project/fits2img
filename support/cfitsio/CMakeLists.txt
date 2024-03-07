@@ -21,7 +21,8 @@ set(SRC_FILES
     putcol.c putcolb.c putcold.c putcole.c putcoli.c putcolj.c putcolk.c
     putcoll.c putcols.c putcolsb.c putcolu.c putcolui.c putcoluj.c putcoluk.c
     putkey.c quantize.c region.c ricecomp.c scalnull.c simplerng.c swapproc.c
-    wcssub.c wcsutil.c zcompress.c zuncompress.c)
+    wcssub.c wcsutil.c zcompress.c zuncompress.c
+)
 
 foreach(SRC ${SRC_FILES})
     list(APPEND FITS_SRCS ${CFITSIO}/${SRC})
@@ -31,20 +32,20 @@ add_library(cfitsio STATIC ${FITS_SRCS})
 target_link_libraries(cfitsio m z)
 sidc_install_lib(cfitsio)
 
-add_executable(speed ${CFITSIO}/speed.c)
+add_executable(speed ${CFITSIO}/utilities/speed.c)
 target_link_libraries(speed cfitsio)
 
-add_executable(fpack ${CFITSIO}/fpackutil.c ${CFITSIO}/fpack.c)
+add_executable(fpack ${CFITSIO}/utilities/fpackutil.c ${CFITSIO}/utilities/fpack.c)
 target_link_libraries(fpack cfitsio)
 
-add_executable(funpack ${CFITSIO}/fpackutil.c ${CFITSIO}/funpack.c)
+add_executable(funpack ${CFITSIO}/utilities/fpackutil.c ${CFITSIO}/utilities/funpack.c)
 target_link_libraries(funpack cfitsio)
 
-add_executable(fits_imcopy ${CFITSIO}/imcopy.c)
+add_executable(fits_imcopy ${CFITSIO}/utilities/imcopy.c)
 target_link_libraries(fits_imcopy cfitsio)
 install(TARGETS fits_imcopy DESTINATION support)
 
-add_executable(fitscopy ${CFITSIO}/fitscopy.c)
+add_executable(fitscopy ${CFITSIO}/utilities/fitscopy.c)
 target_link_libraries(fitscopy cfitsio)
 install(TARGETS fitscopy DESTINATION support)
 
