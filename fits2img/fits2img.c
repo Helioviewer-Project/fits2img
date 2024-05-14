@@ -35,7 +35,7 @@ static const char _versionid_[] __attribute__((unused)) = "$Id: fits2img.c 2636 
 #define DEF_STRATEGY     3
 
 int main(int argc, char **argv) {
-    int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, debug = 0, pgm = 0;
+    int datedir = 0, noverify = 0, jpeg = 0, jhv = 0, crispen = 0, debug = 0, pgm = 0;
     int keep_filename = 0, print_filename = 0;
     char *appname = NULL, *contact = NULL, *outdir = NULL;
     char *yuv = NULL, *cm = NULL, *func = NULL;
@@ -67,6 +67,8 @@ int main(int argc, char **argv) {
          "Clip lower pixel values", G_STRINGIFY(DEF_CLIP_MIN) },
         { "max-clip", 'M', 0, G_OPTION_ARG_DOUBLE, &clipmax,
          "Clip higher pixel values", G_STRINGIFY(DEF_CLIP_MAX) },
+        { "crispen", 0, 0, G_OPTION_ARG_NONE, &crispen,
+         "Apply a crispening filter", NULL },
         { "jpeg", 'j', 0, G_OPTION_ARG_INT, &jpeg,
          "Output a JPEG file of a certain quality instead of a PNG", "75" },
         { "pgm", 'P', 0, G_OPTION_ARG_NONE, &pgm,
@@ -124,6 +126,10 @@ int main(int argc, char **argv) {
 
     guint8 *g;
     swap_clamp(p->im, p->w, p->h, clipmin, clipmax);
+
+    if (crispen)
+        swap_crispen(p->im, p->w, p->h);
+
     if (func && !strcmp(func, "log"))
         g = swap_xfer_log(p->im, p->w, p->h, clipmin, clipmax, log_exponent);
     else
