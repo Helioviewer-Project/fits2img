@@ -124,7 +124,6 @@ int main(int argc, char **argv) {
 
     guint8 *g;
     swap_clamp(p->im, p->w, p->h, clipmin, clipmax);
-    swap_crispen(p->im, p->w, p->h);
     if (func && !strcmp(func, "log"))
         g = swap_xfer_log(p->im, p->w, p->h, clipmin, clipmax, log_exponent);
     else
