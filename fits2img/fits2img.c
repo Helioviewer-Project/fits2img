@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
         { "yuv", 'y', 0, G_OPTION_ARG_STRING, &yuv,
          "Append YUV420 to a file instead", "name" },
         { "colormap", 'C', 0, G_OPTION_ARG_STRING, &cm,
-         "Use a colormap: aia171, citrus, hot, jet", "name" },
+         "Use a colormap: aia171, eui174, eui304, eui1216, citrus, hot, jet", "name" },
         { "no-verify", 'N', 0, G_OPTION_ARG_NONE, &noverify,
          "Do not verify FITS checksums", NULL },
         { "date-obs", 0, 0, G_OPTION_ARG_STRING, &dateobs,

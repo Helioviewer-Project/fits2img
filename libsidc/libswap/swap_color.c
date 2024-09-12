@@ -5,13 +5,15 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__((unused)) =
-    "$Id: swap_color.c 5113 2014-06-19 15:07:34Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) = "$Id: swap_color.c 5113 2014-06-19 15:07:34Z bogdan $";
 
 #include <string.h>
 #include <glib.h>
 
 #include "color/color_aia171.h"
+#include "color/color_eui174.h"
+#include "color/color_eui304.h"
+#include "color/color_eui1216.h"
 #include "color/color_citrus.h"
 #include "color/color_gray.h"
 #include "color/color_hot.h"
@@ -23,7 +25,13 @@ swap_palette_t *swap_palette_rgb_get(const char *cm) {
     if (cm) {
         if (!strcmp(cm, "aia171"))
             return &cm_aia171_rgb;
-        if (!strcmp(cm, "citrus"))
+        else if (!strcmp(cm, "eui174"))
+            return &cm_eui174_rgb;
+        else if (!strcmp(cm, "eui304"))
+            return &cm_eui304_rgb;
+        else if (!strcmp(cm, "eui1216"))
+            return &cm_eui1216_rgb;
+        else if (!strcmp(cm, "citrus"))
             return &cm_citrus_rgb;
         else if (!strcmp(cm, "hot"))
             return &cm_hot_rgb;
@@ -84,6 +92,15 @@ static void cm_rgb2yuv(const char *cm, unsigned char (*cmyuv)[3]) {
         if (!strcmp(cm, "aia171")) {
             rgb2yuv(cm_aia171, cmyuv);
             return;
+        } else if (!strcmp(cm, "eui174")) {
+            rgb2yuv(cm_eui174, cmyuv);
+            return;
+        } else if (!strcmp(cm, "eui304")) {
+            rgb2yuv(cm_eui304, cmyuv);
+            return;
+        } else if (!strcmp(cm, "eui1216")) {
+            rgb2yuv(cm_eui1216, cmyuv);
+            return;
         } else if (!strcmp(cm, "citrus")) {
             rgb2yuv(cm_citrus, cmyuv);
             return;
@@ -126,18 +143,14 @@ void swap_yuv2yuv420(swap_image_yuv_t *im) {
             int val;
             size_t idx = (j / 2) * (w / 2) + (i / 2);
 
-            val =
-                ((int) u[j * w + i] +
-                 (int) u[j * w + (i + 1)] +
-                 (int) u[(j + 1) * w + i] + (int) u[(j + 1) * w + (i + 1)] + 2) >> 2;
+            val = ((int) u[j * w + i] +
+                   (int) u[j * w + (i + 1)] + (int) u[(j + 1) * w + i] + (int) u[(j + 1) * w + (i + 1)] + 2) >> 2;
             if (val > 255)
                 val = 255;
             u[idx] = val;
 
-            val =
-                ((int) v[j * w + i] +
-                 (int) v[j * w + (i + 1)] +
-                 (int) v[(j + 1) * w + i] + (int) v[(j + 1) * w + (i + 1)] + 2) >> 2;
+            val = ((int) v[j * w + i] +
+                   (int) v[j * w + (i + 1)] + (int) v[(j + 1) * w + i] + (int) v[(j + 1) * w + (i + 1)] + 2) >> 2;
             if (val > 255)
                 val = 255;
             v[idx] = val;
