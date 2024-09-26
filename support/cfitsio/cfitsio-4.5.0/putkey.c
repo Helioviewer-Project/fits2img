@@ -2564,12 +2564,12 @@ int ffphprll( fitsfile *fptr, /* I - FITS file pointer                        */
         }
 
       /* write standard block of self-documentating comments */
-      /*ffprec(fptr,
+/*    ffprec(fptr,
       "COMMENT   FITS (Flexible Image Transport System) format is defined in 'Astronomy",
       status);
       ffprec(fptr,
       "COMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H",
-      status);*/
+      status); */
     }
 
     else  /* an IMAGE extension */
