@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(SIDC_SWHV C)
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -37,7 +37,7 @@ link_directories(${PKG_LIBRARY_DIRS})
 
 set(SUPPORT  ${CMAKE_CURRENT_SOURCE_DIR}/support)
 
-set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio-4.5.0)
+set(CFITSIO  ${SUPPORT}/cfitsio/cfitsio-4.6.2)
 set(GENX     ${SUPPORT}/genx)
 set(JPEG     ${SUPPORT}/jpeg/jpeg-8d)
 set(OPENJPEG ${SUPPORT}/openjpeg/libopenjpeg-2012-03-08)
