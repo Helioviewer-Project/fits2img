@@ -11,6 +11,7 @@ static const char _versionid_[] __attribute__((unused)) = "$Id: swap_color.c 511
 #include <glib.h>
 
 #include "color/color_aia171.h"
+#include "color/color_aspiics.h"
 #include "color/color_eui174.h"
 #include "color/color_eui304.h"
 #include "color/color_eui1216.h"
@@ -25,6 +26,14 @@ swap_palette_t *swap_palette_rgb_get(const char *cm) {
     if (cm) {
         if (!strcmp(cm, "aia171"))
             return &cm_aia171_rgb;
+        else if (!strcmp(cm, "aspiicsWBF"))
+            return &cm_aspiicsWBF_rgb;
+        else if (!strcmp(cm, "aspiicsFE"))
+            return &cm_aspiicsFE_rgb;
+        else if (!strcmp(cm, "aspiicsHE"))
+            return &cm_aspiicsHE_rgb;
+        else if (!strcmp(cm, "aspiicsPolWBF"))
+            return &cm_aspiicsPolWBF_rgb;
         else if (!strcmp(cm, "eui174"))
             return &cm_eui174_rgb;
         else if (!strcmp(cm, "eui304"))

@@ -1,8 +1,7 @@
 
 /* Author: Bogdan Nicula, ROB */
 
-static const char _versionid_[] __attribute__((unused)) =
-    "$Id: fits2pgm.c 5110 2014-06-19 12:37:15Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) = "$Id: fits2pgm.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <glib.h>
 
@@ -19,7 +18,7 @@ int main(int argc, char **argv) {
 
     sfts_find_hdukey(f, "DATE-OBS");
 
-    float *im = (float *) sfts_read_image(f, &w, &h, SFLOAT), v;
+    float *im = (float *) sfts_read_image(f, &w, &h, SFLOAT, TRUE), v;  // flip=TRUE for visualization
     g_free(sfts_free(f));
 
     guint16 *imout = (guint16 *) g_malloc(w * h * sizeof *imout);

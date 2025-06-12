@@ -5,8 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__((unused)) =
-    "$Id: fitsproc.c 4468 2015-04-30 12:51:27Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) = "$Id: fitsproc.c 4468 2015-04-30 12:51:27Z bogdan $";
 
 #include <string.h>
 #include <glib.h>
@@ -50,7 +49,7 @@ procfits_t *fitsproc(const char *name, const char *contact, int noverify,
     p->wavelnth = wavelnth ? g_strdup(wavelnth) : sfts_read_keystring(f, "WAVELNTH");
 
     p->xml = process_header(f, contact);
-    p->im = (float *) sfts_read_image(f, &(p->w), &(p->h), SFLOAT);
+    p->im = (float *) sfts_read_image(f, &(p->w), &(p->h), SFLOAT, TRUE);   // flip=TRUE for image conversion
 
     g_free(sfts_free(f));
 

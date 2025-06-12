@@ -57,9 +57,9 @@ extern "C" {
     void sfts_copy(sfts_t *, sfts_t *);
     void sfts_copy_header(sfts_t *, sfts_t *);
 
-    void *sfts_read_image(sfts_t *, size_t *, size_t *, int);
+    void *sfts_read_image(sfts_t *, size_t *, size_t *, int, gboolean);
     void sfts_create_image(sfts_t *, size_t, size_t, int);
-    void sfts_write_image(sfts_t *, const void *, size_t, size_t, int);
+    void sfts_write_image(sfts_t *, const void *, size_t, size_t, int, gboolean);
 
     void sfts_find_hdukey(sfts_t *, const char *);
 

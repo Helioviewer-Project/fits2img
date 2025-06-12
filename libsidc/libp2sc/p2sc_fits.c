@@ -5,8 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__((unused)) =
-    "$Id: p2sc_fits.c 5204 2015-04-30 19:12:42Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) = "$Id: p2sc_fits.c 5204 2015-04-30 19:12:42Z bogdan $";
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -273,7 +272,7 @@ void sfts_copy_header(sfts_t *in, sfts_t *out) {
     CHK_FTS(out);
 }
 
-void *sfts_read_image(sfts_t *f, size_t *ww, size_t *hh, int t) {
+void *sfts_read_image(sfts_t *f, size_t *ww, size_t *hh, int t, gboolean flip_rows) {
     int *s = &f->stat, naxis = 0, ft, ls;
     long axes[] = { 1, 1 };
     long pels[] = { 1, 1 };
@@ -315,16 +314,18 @@ void *sfts_read_image(sfts_t *f, size_t *ww, size_t *hh, int t) {
     fits_read_pix(f->fts, ft, pels, w * h, NULL, pix, NULL, s);
     CHK_FTS(f);
 
-    void *line = g_malloc(ls);
-    for (size_t j = 0; j < h / 2; ++j) {
-        void *first = (guint8 *) pix + j * ls;
-        void *last = (guint8 *) pix + (h - 1 - j) * ls;
+    if (flip_rows) {
+        void *line = g_malloc(ls);
+        for (size_t j = 0; j < h / 2; ++j) {
+            void *first = (guint8 *) pix + j * ls;
+            void *last = (guint8 *) pix + (h - 1 - j) * ls;
 
-        memcpy(line, last, ls);
-        memcpy(last, first, ls);
-        memcpy(first, line, ls);
+            memcpy(line, last, ls);
+            memcpy(last, first, ls);
+            memcpy(first, line, ls);
+        }
+        g_free(line);
     }
-    g_free(line);
 
     *ww = w;
     *hh = h;
@@ -362,7 +363,7 @@ void sfts_create_image(sfts_t *f, size_t w, size_t h, int t) {
     CHK_FTS(f);
 }
 
-void sfts_write_image(sfts_t *f, const void *pix, size_t w, size_t h, int t) {
+void sfts_write_image(sfts_t *f, const void *pix, size_t w, size_t h, int t, gboolean flip_rows) {
     int *s = &f->stat, ft, ls;
     long pels[] = { 1, 1 };
 
@@ -396,10 +397,12 @@ void sfts_write_image(sfts_t *f, const void *pix, size_t w, size_t h, int t) {
         return;
     }
 
-    void *line = g_malloc(ls);
+    const void *addr;
+    void *line = g_malloc(ls); // avoid discard of const qualifier
     for (size_t j = 0; j < h; ++j) {
         pels[1] = j + 1;
-        memcpy(line, (const guint8 *) pix + (h - 1 - j) * ls, ls);
+        addr = flip_rows ? (const guint8 *) pix + (h - 1 - j) * ls : (const guint8 *) pix + j * ls;
+        memcpy(line, addr, ls);
         fits_write_pix(f->fts, ft, pels, w, line, s);
     }
     g_free(line);

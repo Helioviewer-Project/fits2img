@@ -5,8 +5,7 @@
  * Author: Bogdan Nicula
  */
 
-static const char _versionid_[] __attribute__((unused)) =
-    "$Id: swap_warp.c 5110 2014-06-19 12:37:15Z bogdan $";
+static const char _versionid_[] __attribute__((unused)) = "$Id: swap_warp.c 5110 2014-06-19 12:37:15Z bogdan $";
 
 #include <unistd.h>
 #include <math.h>
@@ -48,8 +47,7 @@ static void rota(double a, double mo[3][3]) {
 }
 
 float *swap_affine(swap_bicubic_t *f, const float *in, size_t w, size_t h,
-                   double sx, double sy, double roll, double tx, double ty,
-                   double a, size_t ow, size_t oh) {
+                   double sx, double sy, double roll, double tx, double ty, double a, size_t ow, size_t oh) {
     size_t i, j;
     float *out = (float *) g_malloc0(ow * oh * sizeof *out), *outi = out;
 
@@ -84,9 +82,7 @@ float *swap_affine(swap_bicubic_t *f, const float *in, size_t w, size_t h,
     if (memcmp(m, iden, sizeof m)) {
         for (j = 0; j < oh; ++j)
             for (i = 0; i < ow; ++i)
-                *outi++ = swap_bicubic(f, in, w, h,
-                                       m[0][0] * i + m[0][1] * j + m[0][2],
-                                       m[1][0] * i + m[1][1] * j + m[1][2]);
+                *outi++ = swap_bicubic(f, in, w, h, m[0][0] * i + m[0][1] * j + m[0][2], m[1][0] * i + m[1][1] * j + m[1][2]);
     } else {
         size_t row = MIN(w, ow) * sizeof *in;
         oh = MIN(h, oh);
@@ -99,8 +95,7 @@ float *swap_affine(swap_bicubic_t *f, const float *in, size_t w, size_t h,
 
 #define AA 2.
 
-static void polar_prep(guint32 *lut, size_t w, size_t h, guint16 *num,
-                       int nang, int nrad, double xc, double yc) {
+static void polar_prep(guint32 *lut, size_t w, size_t h, guint16 *num, int nang, int nrad, double xc, double yc) {
     int ri, ai, k;
     size_t i, j, idx = 0;
     double x, y, r0, r1, r2, r3, rm, lrm, a, r, lr;
@@ -140,8 +135,7 @@ static void polar_prep(guint32 *lut, size_t w, size_t h, guint16 *num,
     }
 }
 
-static void polar_intp(swap_bicubic_t *f, const float *in, size_t w, size_t h,
-                       guint32 *lut, guint16 *num, float *out) {
+static void polar_intp(swap_bicubic_t *f, const float *in, size_t w, size_t h, guint32 *lut, guint16 *num, float *out) {
     size_t i, j, k, idx = 0;
 
     for (j = 0; j <= AA * (h - 1); ++j)
@@ -161,15 +155,13 @@ static void polar_intp(swap_bicubic_t *f, const float *in, size_t w, size_t h,
 
 #define POLAR_FITS SIDC_INSTALL_LIB "/data/polar.fits"
 
-float *swap_polar(const float *in, size_t w, size_t h, size_t nang, size_t nrad,
-                  double xc, double yc) {
+float *swap_polar(const float *in, size_t w, size_t h, size_t nang, size_t nrad, double xc, double yc) {
     guint32 *lut;
     guint16 *num;
 
     size_t lw = (w - 1) * AA + 1, lh = (h - 1) * AA + 1;
 
-    if (FORCE_COMPUTE || AA != 2 || nang != NANG || nrad != NRAD || xc != XC ||
-        yc != YC || access(POLAR_FITS, R_OK)) {
+    if (FORCE_COMPUTE || AA != 2 || nang != NANG || nrad != NRAD || xc != XC || yc != YC || access(POLAR_FITS, R_OK)) {
         lut = (guint32 *) g_malloc(lw * lh * sizeof *lut);
         num = (guint16 *) g_malloc0(nang * nrad * sizeof *num);
 
@@ -179,9 +171,9 @@ float *swap_polar(const float *in, size_t w, size_t h, size_t nang, size_t nrad,
             sfts_t *f = sfts_create("polar.fits", NULL);
 
             sfts_create_image(f, lw, lh, SUINT32);
-            sfts_write_image(f, lut, lw, lh, SUINT32);
+            sfts_write_image(f, lut, lw, lh, SUINT32, TRUE);    // flip=TRUE for compatibility with existing file
             sfts_create_image(f, nang, nrad, SUINT16);
-            sfts_write_image(f, num, nang, nrad, SUINT16);
+            sfts_write_image(f, num, nang, nrad, SUINT16, TRUE);    // flip=TRUE for compatibility with existing file
 
             sfts_goto_hdu(f, 1);
             g_free(sfts_free(f));
@@ -190,17 +182,15 @@ float *swap_polar(const float *in, size_t w, size_t h, size_t nang, size_t nrad,
         size_t rw, rh;
         sfts_t *f = sfts_openro(POLAR_FITS);
 
-        lut = (guint32 *) sfts_read_image(f, &rw, &rh, SUINT32);
+        lut = (guint32 *) sfts_read_image(f, &rw, &rh, SUINT32, TRUE);  // image was written flipped -> flip=TRUE
         if (rw != lw || rh != lh)
             P2SC_Msg(LVL_FATAL_INTERNAL_ERROR,
-                     "Size of image read (%zd, %zd) different than expected (%zd, %zd)",
-                     rw, rh, lw, lh);
+                     "Size of image read (%zd, %zd) different than expected (%zd, %zd)", rw, rh, lw, lh);
         sfts_goto_hdu(f, 2);
-        num = (guint16 *) sfts_read_image(f, &rw, &rh, SUINT16);
+        num = (guint16 *) sfts_read_image(f, &rw, &rh, SUINT16, TRUE);  // image was written flipped -> flip=TRUE
         if (rw != nang || rh != nrad)
             P2SC_Msg(LVL_FATAL_INTERNAL_ERROR,
-                     "Size of image read (%zd, %zd) different than expected (%zd, %zd)",
-                     rw, rh, nang, nrad);
+                     "Size of image read (%zd, %zd) different than expected (%zd, %zd)", rw, rh, nang, nrad);
 
         g_free(sfts_free(f));
     }
@@ -249,8 +239,7 @@ static inline int rnd(double a) {
 #define AAA 6
 #define AAR 4
 
-float *swap_polar2(const float *in, size_t w, size_t h, size_t nang,
-                   size_t nrad, double xc, double yc, double R) {
+float *swap_polar2(const float *in, size_t w, size_t h, size_t nang, size_t nrad, double xc, double yc, double R) {
     size_t i, j, ssa = AAA * nang, ssr = AAR * nrad;
     float *pol = (float *) g_malloc(ssa * ssr * sizeof *pol), *p = pol, *out;
     double *s = (double *) g_malloc(ssa * sizeof *s);
